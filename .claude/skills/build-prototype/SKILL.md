@@ -1,18 +1,23 @@
 ---
 name: build-prototype
 description: >-
-  สร้างหรืออัปเดต Prototype UI/UX (static HTML/CSS ต่อหน้าจอ) ใน
-  docs/02-design/01-prototypes/vN/ โดยสังเคราะห์จาก Requirement (01-spec),
-  Backlog, Feature List, และ User Journey ที่มีอยู่ในโปรเจกต์ Projexa พร้อม
-  อ้างอิง Design System จาก DESIGN.md เสมอ รองรับการระบุสโคปเจาะจง (หน้าจอ/
-  โมดูล/MoSCoW level) ใช้เมื่อ user ขอสร้าง/ทำ/อัปเดต prototype, mockup,
-  wireframe, หรือต้นแบบหน้าตาของหน้าจอระบบ
+  สร้างหรืออัปเดต Prototype UI/UX แบบ Interactive (HTML/CSS/JS ต่อหน้าจอ ใช้
+  vanilla JS จำลอง interaction จริงฝั่ง client เช่น เพิ่ม/ลบแถว, เปิด/ปิด
+  popover ประวัติ, สลับ tab, toast แจ้งสถานะ) ใน docs/02-design/01-prototypes/vN/
+  โดยสังเคราะห์จาก Requirement (01-spec), Backlog, Feature List, และ User
+  Journey ที่มีอยู่ในโปรเจกต์ Projexa พร้อมอ้างอิง Design System จาก
+  DESIGN.md เสมอ รองรับการระบุสโคปเจาะจง (หน้าจอ/โมดูล/MoSCoW level) ใช้เมื่อ
+  user ขอสร้าง/ทำ/อัปเดต prototype, mockup, wireframe, หรือต้นแบบหน้าตาของ
+  หน้าจอระบบ
 ---
 
 # Build Prototype
 
-Skill นี้คุมขั้นตอนสร้าง **ต้นแบบหน้าตาของระบบ (UI/UX Prototype)** แบบ static
-HTML/CSS ต่อหน้าจอ ลงใน `docs/02-design/01-prototypes/vN/` โดยดึงข้อมูลจาก
+Skill นี้คุมขั้นตอนสร้าง **ต้นแบบหน้าตาของระบบ (UI/UX Prototype)** แบบ
+Interactive HTML/CSS/JS ต่อหน้าจอ (ใช้ vanilla JS ฝั่ง client จำลอง
+interaction จริง เช่น เพิ่ม/ลบแถว, เปิด/ปิด popover ประวัติ, สลับ tab, toast
+แจ้งสถานะ — ไม่พึ่ง framework/บริการภายนอก เพื่อให้เปิดออฟไลน์ได้และไม่ผูกกับ
+backend จริง) ลงใน `docs/02-design/01-prototypes/vN/` โดยดึงข้อมูลจาก
 เอกสาร 4 ชุดที่มีอยู่แล้วในโปรเจกต์ — spec รายหน้าจอ (`01-requirements/01-spec/`),
 `backlog.md`, `feature-list.md`, `user-journey.md` — และควบคุมหน้าตาด้วย
 `DESIGN.md` ตามหลัก **Human-in-the-loop** ของ Projexa (ดู `CLAUDE.md`): ไม่มี
@@ -125,9 +130,10 @@ skill `gen-feature-journey` ก่อน ถ้าไฟล์ spec รายห
 - สรุปการเปลี่ยนแปลงจากเวอร์ชันก่อนหน้า (ถ้ามีเวอร์ชันก่อน) สำหรับใส่ใน
   `_meta.md`
 
-sub agent จะจัดการให้ครบ: (ถ้าสั่ง) เขียน `DESIGN.md`, สร้าง/แก้ HTML ต่อ
-หน้าจอ, สร้าง/แก้ `index.html` ของเวอร์ชันนั้น, เขียน `_meta.md`, อัปเดต
-`docs/02-design/01-prototypes/index.md`, และบันทึก `docs/05-log/`
+sub agent จะจัดการให้ครบ: (ถ้าสั่ง) เขียน `DESIGN.md`, สร้าง/แก้ `style.css` +
+`script.js` ของเวอร์ชัน, สร้าง/แก้ HTML ต่อหน้าจอพร้อม interaction จริง
+(vanilla JS), สร้าง/แก้ `index.html` ของเวอร์ชันนั้น, เขียน `_meta.md`,
+อัปเดต `docs/02-design/01-prototypes/index.md`, และบันทึก `docs/05-log/`
 
 ### 7. รายงานผลกลับ user
 
@@ -136,7 +142,7 @@ SA/PM/Design Lead ยืนยัน** ตามหลัก Human-in-the-loop �
 ไม่บังคับ) ว่า user ต้องการ:
 
 - เปิดดู `index.html` ของเวอร์ชันนั้นใน Browser pane เลยไหม (ใช้
-  `preview_start`/`navigate`), หรือ
+  `preview_start`/`navigate`) เพื่อลองกด interaction จริงก่อนส่งรีวิว หรือ
 - เผยแพร่เป็น Artifact เพื่อส่งลิงก์ให้ผู้มีส่วนได้ส่วนเสียรีวิวง่ายขึ้น (ต้อง
   โหลด skill `artifact-design` ก่อนใช้ Artifact tool เสมอตามข้อกำหนดของ
   Artifact tool เอง)
