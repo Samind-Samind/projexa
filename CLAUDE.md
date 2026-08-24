@@ -1,50 +1,50 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+ไฟล์นี้ให้คำแนะนำแก่ Claude Code (claude.ai/code) เมื่อทำงานกับโค้ดใน repository นี้
 
-## Repository state
+## สถานะของ Repository
 
-This repo currently contains **planning and design documentation only** — there is no source code, package manifest, build system, linter, or test suite yet. Do not search for or assume the existence of `package.json`, CI config, or a src tree; none exists. When implementation work begins, this file should be updated with real build/lint/test commands and code architecture notes.
+ตอนนี้ repo นี้มีเฉพาะ **เอกสารวางแผนและออกแบบระบบเท่านั้น** — ยังไม่มีซอร์สโค้ด, package manifest, build system, linter หรือ test suite ใดๆ อย่าค้นหาหรือสมมติว่ามี `package.json`, ไฟล์ตั้งค่า CI หรือโฟลเดอร์ src อยู่ เพราะยังไม่มี เมื่อเริ่มลงมือพัฒนาโค้ดจริง ควรอัปเดตไฟล์นี้ให้มีคำสั่ง build/lint/test จริง และหมายเหตุเกี่ยวกับสถาปัตยกรรมของโค้ด
 
-## What this project is
+## โปรเจกต์นี้คืออะไร
 
-**Projexa** — a TOR-driven (Terms of Reference) project and document management system. Its core idea, described in [Projexa-System-Design-R1.md](Projexa-System-Design-R1.md), is shifting the team's workflow from "document-centered" to "data-centered": data is entered once, and every deliverable document (REQ, SDD, TSC, User Manual) is a generated "view" of that single dataset, starting from an uploaded TOR file.
+**Projexa** — ระบบบริหารโครงการและเอกสารที่ขับเคลื่อนด้วย TOR (Terms of Reference) แนวคิดหลักซึ่งอธิบายไว้ใน [Projexa-System-Design-R1.md](Projexa-System-Design-R1.md) คือการเปลี่ยนแกนการทำงานของทีมจาก "เอกสารเป็นศูนย์กลาง" เป็น "ข้อมูลเป็นศูนย์กลาง": ข้อมูลถูกกรอกเพียงครั้งเดียว และเอกสารส่งมอบทุกฉบับ (REQ, SDD, TSC, User Manual) คือ "มุมมอง" ที่ถูก generate ออกมาจากชุดข้อมูลเดียวกัน โดยเริ่มต้นจากการอัปโหลดไฟล์ TOR
 
-All planning documentation is written in **Thai**, matching the project's target users. Keep new documentation in this repo in Thai unless told otherwise.
+เอกสารวางแผนทั้งหมดเขียนเป็น **ภาษาไทย** ให้ตรงกับกลุ่มผู้ใช้เป้าหมายของโปรเจกต์ ให้เขียนเอกสารใหม่ใน repo นี้เป็นภาษาไทยต่อไป เว้นแต่จะมีการแจ้งเป็นอย่างอื่น
 
-### Design principles carried through the whole system
-- **Single Source of Truth** — data is recorded once; documents pull from it, never retype it.
-- **Full Traceability** — every screen / test case / document section must trace back to a TOR clause (`TorClause → Requirement → Screen → TestCase → TestResult`).
-- **Human-in-the-loop** — AI proposes, humans confirm; nothing enters the system unconfirmed.
-- **Everything is logged** — every status/owner change records who, when, why.
-- **Template compliance** — document formatting is controlled by the org's `.dotx` templates, never freeformed by AI.
+### หลักการออกแบบที่ยึดตลอดทั้งระบบ
+- **Single Source of Truth** — ข้อมูลถูกบันทึกที่เดียว เอกสารดึงไปใช้ ไม่ต้องพิมพ์ซ้ำ
+- **Full Traceability** — ทุกหน้าจอ / test case / หัวข้อในเอกสาร ต้องสาวกลับไปยังข้อใน TOR ได้ (`TorClause → Requirement → Screen → TestCase → TestResult`)
+- **Human-in-the-loop** — AI เป็นผู้เสนอ คนเป็นผู้ยืนยัน ไม่มีข้อมูลใดเข้าระบบโดยไม่ผ่านการยืนยัน
+- **Everything is logged** — ทุกการเปลี่ยนสถานะ/ผู้รับผิดชอบ ต้องบันทึกว่าใคร เมื่อไหร่ ทำไม
+- **Template compliance** — รูปแบบเอกสารถูกควบคุมด้วย Template `.dotx` ขององค์กร ห้ามให้ AI จัดรูปแบบเอง
 
-### Architecture sketch (from the system design doc)
+### โครงร่างสถาปัตยกรรม (จากเอกสารออกแบบระบบ)
 ```
 Presentation Layer   — Web app (responsive)
 Application Layer    — Project / Analysis / Tracking / Document-Generator services
-AI Orchestration     — TOR Parser / Design Analyzer / Doc Writer / Test Gen (all return structured JSON only)
+AI Orchestration     — TOR Parser / Design Analyzer / Doc Writer / Test Gen (คืนค่าเป็น structured JSON เท่านั้น)
 Data Layer           — Database / File Storage / Audit Log
 ```
-Key design rule: the AI layer is strictly separated from the Document Generator. AI never produces `.docx` files directly — it returns JSON, and a separate Document Generator fills that JSON into `.dotx` templates.
+กติกาการออกแบบสำคัญ: AI Layer ต้องแยกออกจาก Document Generator อย่างชัดเจน AI ไม่เคยสร้างไฟล์ `.docx` เอง — AI คืนค่าเป็น JSON แล้วให้ Document Generator ซึ่งเป็นคนละส่วนนำ JSON นั้นไปเติมลง Template `.dotx`
 
-Proposed stack (not yet implemented): React/Next.js + TypeScript frontend, NestJS or FastAPI backend, PostgreSQL (JSONB for AI extraction results), S3-compatible storage, `python-docx`/`docxtpl` for `.docx` generation (kept as a Python service even in a Node backend), Claude API for the AI layer, JWT + RBAC for auth.
+Stack ที่เสนอไว้ (ยังไม่ได้ลงมือทำจริง): Frontend เป็น React/Next.js + TypeScript, Backend เป็น NestJS หรือ FastAPI, Database เป็น PostgreSQL (ใช้ JSONB เก็บผลสกัดจาก AI), File Storage แบบ S3-compatible, ใช้ `python-docx`/`docxtpl` สำหรับสร้างไฟล์ `.docx` (แยกเป็น Python service แม้ backend หลักจะเป็น Node), ใช้ Claude API เป็น AI layer, และ Auth แบบ JWT + RBAC
 
-See [Projexa-System-Design-R1.md](Projexa-System-Design-R1.md) for full detail: data model/entities (§4), the 26-screen module breakdown (§5), screen status lifecycle rules (§6), AI component contracts and guardrails (§7), the document-generation pipeline (§8), end-to-end workflow (§9), and the reduced 13-screen MVP scope for the RAISE project (§10).
+ดูรายละเอียดเต็มได้ที่ [Projexa-System-Design-R1.md](Projexa-System-Design-R1.md): โครงสร้างข้อมูล/entities (§4), รายการ 26 หน้าจอแบ่งตามโมดูล (§5), กฎวงจรสถานะของหน้าจอ (§6), ข้อกำหนดและกติกาของ AI component (§7), ขั้นตอนการสร้างเอกสาร (§8), workflow แบบ end-to-end (§9), และขอบเขต MVP 13 หน้าจอสำหรับโครงการ RAISE (§10)
 
-## Docs folder structure
+## โครงสร้างโฟลเดอร์ Docs
 
-`docs/` is an Obsidian vault (see `.gitignore` — `.obsidian/` is excluded) organized as a linear workflow, with every `index.md` cross-linking to adjacent stages via `[[wikilink]]` syntax:
+`docs/` เป็น Obsidian vault (ดู `.gitignore` — มีการ exclude `.obsidian/` ไว้) จัดเรียงตามลำดับ workflow เป็นเส้นตรง โดยทุกไฟล์ `index.md` จะลิงก์ไขว้ไปยังขั้นตอนถัดไป/ก่อนหน้าด้วยรูปแบบ `[[wikilink]]`:
 
 ```
-01-requirements/  → 01-spec (source of truth for requirements) → 02-plan (roadmap/milestones) → 03-task (actionable breakdown)
-02-design/        → 01-prototypes (UI/UX mockups) → 02-technical (architecture, DB schema, API design)
-03-testing/       → 01-test-plan (test cases) → 02-test-result (pass/fail, bugs)
-04-retrospectives/ — lessons learned per phase/sprint/milestone
-05-log/            — chronological changelog / decision log, written continuously alongside all other stages
-00-archived/       — superseded or cancelled docs; move docs here instead of deleting them
+01-requirements/  → 01-spec (ต้นทางของความต้องการ) → 02-plan (roadmap/milestone) → 03-task (งานย่อยที่ลงมือทำได้จริง)
+02-design/        → 01-prototypes (ต้นแบบ UI/UX) → 02-technical (สถาปัตยกรรม, DB schema, การออกแบบ API)
+03-testing/       → 01-test-plan (test case) → 02-test-result (ผล pass/fail, บั๊ก)
+04-retrospectives/ — บทเรียนที่ได้หลังจบแต่ละ phase/sprint/milestone
+05-log/            — changelog/decision log แบบเรียงตามลำดับเวลา บันทึกคู่ขนานไปตลอดทุกขั้นตอน
+00-archived/       — เอกสารที่เลิกใช้แล้วหรือถูกยกเลิก ให้ย้ายมาเก็บที่นี่แทนการลบ
 ```
 
-The overall flow is `requirements → design → testing → retrospectives`, with `log` running in parallel throughout and `archived` as the destination for anything replaced or cancelled — never delete project docs outright, move them to `00-archived/` instead.
+ภาพรวมของ workflow คือ `requirements → design → testing → retrospectives` โดย `log` จะถูกบันทึกคู่ขนานไปตลอดทั้งโปรเจกต์ และ `archived` เป็นปลายทางของทุกอย่างที่ถูกแทนที่หรือยกเลิก — ห้ามลบเอกสารของโปรเจกต์ทิ้งตรงๆ ให้ย้ายไปไว้ที่ `00-archived/` แทน
 
-Note: this docs folder structure/convention was originally copied from a generic docs template (an earlier version referred to a placeholder project name); treat the structure/convention as the reusable part, independent of any specific project name.
+หมายเหตุ: โครงสร้าง/รูปแบบโฟลเดอร์ docs นี้คัดลอกมาจาก docs template ทั่วไป (เวอร์ชันก่อนหน้ามีชื่อโปรเจกต์ placeholder ปนอยู่) ให้ยึดโครงสร้าง/รูปแบบนี้เป็นส่วนที่นำมาใช้ซ้ำได้ โดยไม่ผูกกับชื่อโปรเจกต์ใดโปรเจกต์หนึ่ง
