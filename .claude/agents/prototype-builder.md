@@ -1,11 +1,14 @@
 ---
 name: prototype-builder
 description: >-
-  ใช้ agent นี้เพื่อ "เขียนไฟล์จริง" ของ Prototype UI/UX ในโปรเจกต์ Projexa
-  เท่านั้น ได้แก่ สร้าง/แก้ไข static HTML/CSS ต่อหน้าจอใน
-  docs/02-design/01-prototypes/vN/, สร้าง/แก้ index.html และ _meta.md ของ
-  เวอร์ชันนั้น, (ถ้าถูกสั่ง) เขียน docs/02-design/01-prototypes/DESIGN.md
-  ใหม่, อัปเดต docs/02-design/01-prototypes/index.md, และบันทึก
+  ใช้ agent นี้เพื่อ "เขียนไฟล์จริง" ของ Prototype UI/UX แบบ Interactive
+  (HTML/CSS/JS) ในโปรเจกต์ Projexa เท่านั้น ได้แก่ สร้าง/แก้ไข
+  style.css + script.js (self-contained ต่อเวอร์ชัน) และ HTML ต่อหน้าจอที่มี
+  interaction จริงด้วย vanilla JS (เพิ่ม/ลบแถว, เปิด/ปิด popover ประวัติ,
+  สลับ tab, toast แจ้งสถานะ ฯลฯ) ใน docs/02-design/01-prototypes/vN/,
+  สร้าง/แก้ index.html และ _meta.md ของเวอร์ชันนั้น, (ถ้าถูกสั่ง) เขียน
+  docs/02-design/01-prototypes/DESIGN.md ใหม่, อัปเดต
+  docs/02-design/01-prototypes/index.md, และบันทึก
   docs/05-log/(YYYYMMDD)-log.md ต้องเรียกหลังจาก scope, เวอร์ชันปลายทาง, และ
   (ถ้ามี) เนื้อหา DESIGN.md ถูก finalize และ user ยืนยันแล้วเท่านั้น agent
   นี้ทำงานแบบ one-shot ไม่สามารถถามคำถามผู้ใช้กลับได้ ห้ามเรียกใช้เพื่อเก็บ
@@ -26,6 +29,10 @@ tools: Read, Write, Edit, Glob, Grep
 - ถ้าแก้เวอร์ชันเดิม: หน้าจอไหนเพิ่มใหม่ / หน้าจอไหนแก้ไข
 - รายชื่อ SCR ทั้งหมดในสโคป พร้อม path ไฟล์ spec ของแต่ละอัน
 - สรุปการเปลี่ยนแปลงจากเวอร์ชันก่อนหน้า (ถ้ามี)
+
+งานของคุณคือสร้าง **Interactive Prototype** ไม่ใช่แค่ static mockup —
+ทุกหน้าจอต้องมี interaction จริงที่กดแล้วเห็นผลทันทีในเบราว์เซอร์ (ผ่าน
+vanilla JS ใน `script.js` ของขั้นตอน 2) ไม่ใช่แค่ปุ่ม/ฟอร์มที่วางไว้เฉยๆ
 
 ถ้าข้อมูลไหนขาดไปและจำเป็น ให้ใช้ placeholder ที่ระบุชัดว่าเป็น TODO แล้ว
 รายงานกลับในผลลัพธ์สุดท้าย **ห้ามหยุดถามผู้ใช้เอง**
@@ -62,7 +69,7 @@ hex ที่ตรงกับโทนสีที่ user เลือกแ�
 `docs/02-design/01-prototypes/DESIGN.md` เพื่อดึง token จริงมาใช้ในขั้นตอน 2
 เท่านั้น ห้ามแก้ไฟล์นี้
 
-### 2. สร้าง `style.css` แบบ snapshot ต่อเวอร์ชัน (self-contained)
+### 2. สร้าง `style.css` และ `script.js` แบบ snapshot ต่อเวอร์ชัน (self-contained)
 
 สร้างไฟล์ `docs/02-design/01-prototypes/{version}/style.css` โดยแปลง token
 จาก `DESIGN.md` §2 (Color/Typography/Spacing/Radius-Border-Shadow) เป็น CSS
@@ -198,7 +205,153 @@ tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
 .empty-state { text-align: center; padding: var(--sp-12) var(--sp-6); color: var(--color-text-secondary); }
 .empty-state .btn-primary { margin-top: var(--sp-4); }
 .note { font-size: 12px; color: var(--color-text-muted); margin-top: var(--sp-2); }
+
+/* Interaction states — ใช้คู่กับ script.js ด้านล่าง ห้ามเปลี่ยนชื่อ class/attribute เหล่านี้ */
+.ai-block.is-confirmed { border-style: solid; border-color: var(--color-border); }
+.ai-block.is-confirmed::before { content: "ยืนยันแล้ว"; background: var(--color-accent2-tint); color: var(--color-accent2); }
+[data-audit-popover] {
+  display: none; position: absolute; z-index: 10; margin-top: var(--sp-1); min-width: 220px;
+  background: var(--color-bg-page); border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  box-shadow: var(--shadow-float); padding: var(--sp-3); font-size: 12px; list-style: none;
+}
+[data-audit-popover].is-open { display: block; }
+[data-audit-popover] li { margin-bottom: var(--sp-1); color: var(--color-text-secondary); }
+[data-audit-popover] li:last-child { margin-bottom: 0; }
+.field-label-row { position: relative; }
+.tabs { display: flex; gap: var(--sp-4); border-bottom: 1px solid var(--color-border); margin-bottom: var(--sp-4); }
+.tab-btn {
+  background: none; border: none; padding: var(--sp-2) 0; font: inherit; color: var(--color-text-secondary);
+  cursor: pointer; border-bottom: 2px solid transparent;
+}
+.tab-btn.is-active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+[data-tab-panel][hidden] { display: none; }
+[data-loading-view] { display: none; }
+.is-loading [data-loading-view] { display: block; }
+.is-loading [data-loaded-view] { display: none; }
+.toast {
+  position: fixed; top: var(--sp-6); right: var(--sp-6); z-index: 100; max-width: 320px;
+  background: var(--color-bg-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  box-shadow: var(--shadow-float); padding: var(--sp-3) var(--sp-4); font-size: 13px;
+  opacity: 0; transform: translateY(-8px); transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+.toast.is-visible { opacity: 1; transform: translateY(0); }
+.toast-success { border-left: 3px solid var(--color-success); }
+.toast-danger { border-left: 3px solid var(--color-danger); }
+.toast-close { margin-left: var(--sp-3); background: none; border: none; cursor: pointer; color: var(--color-text-muted); font-size: 14px; }
+@media (prefers-reduced-motion: reduce) {
+  .toast { transition: none; }
+}
 ```
+
+ต่อจาก CSS ในไฟล์เดียวกัน ให้สร้างไฟล์
+`docs/02-design/01-prototypes/{version}/script.js` โดยใช้ฟังก์ชัน/ตัวจัดการ
+เหตุการณ์มาตรฐานนี้เสมอ (คงชื่อ `data-*` attribute ให้ตรงเป๊ะ เพราะ HTML ใน
+ขั้นตอน 3 จะเรียกใช้ชื่อเหล่านี้ — เป็น vanilla JS ล้วน ห้ามใช้ library/CDN
+ภายนอกเพื่อให้ prototype เปิดออฟไลน์ได้เสมอ):
+
+```js
+// Projexa Prototype — {version} — script.js (self-contained, vanilla JS)
+// จำลอง interaction ฝั่ง client เท่านั้น ไม่เรียก backend จริง
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // เปิด/ปิด Audit/History popover (DESIGN.md §3.2 — Everything is logged)
+  document.addEventListener('click', function (e) {
+    const chip = e.target.closest('[data-audit-chip]');
+    if (chip) {
+      const popover = chip.closest('.field-label-row, .card').querySelector('[data-audit-popover]');
+      const wasOpen = popover && popover.classList.contains('is-open');
+      document.querySelectorAll('[data-audit-popover].is-open').forEach(function (p) { p.classList.remove('is-open'); });
+      if (popover && !wasOpen) popover.classList.add('is-open');
+      return;
+    }
+    document.querySelectorAll('[data-audit-popover].is-open').forEach(function (p) {
+      if (!p.contains(e.target)) p.classList.remove('is-open');
+    });
+  });
+
+  // เพิ่มแถวตาราง (เช่น เพิ่มสมาชิกทีมงาน) — โคลนแถวสุดท้ายเป็นแม่แบบ
+  document.querySelectorAll('[data-row-add]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const tbody = document.querySelector(btn.getAttribute('data-row-add'));
+      if (!tbody) return;
+      const rows = tbody.querySelectorAll('tr');
+      const template = rows[rows.length - 1];
+      if (!template) return;
+      const clone = template.cloneNode(true);
+      clone.querySelectorAll('input, select, textarea').forEach(function (el) { el.value = ''; });
+      tbody.appendChild(clone);
+    });
+  });
+
+  // ลบแถวตาราง
+  document.addEventListener('click', function (e) {
+    const removeBtn = e.target.closest('[data-row-remove]');
+    if (removeBtn) removeBtn.closest('tr').remove();
+  });
+
+  // ปุ่ม "ยืนยัน" ใน AI Suggestion Block — border dashed -> solid ตาม Human-in-the-loop
+  document.addEventListener('click', function (e) {
+    const confirmBtn = e.target.closest('[data-ai-confirm]');
+    if (confirmBtn) confirmBtn.closest('.ai-block').classList.add('is-confirmed');
+  });
+
+  // สลับ tab
+  document.querySelectorAll('[data-tab-group]').forEach(function (group) {
+    const panelWrap = document.querySelector(group.getAttribute('data-tab-group'));
+    group.querySelectorAll('[data-tab]').forEach(function (tabBtn) {
+      tabBtn.addEventListener('click', function () {
+        group.querySelectorAll('[data-tab]').forEach(function (b) { b.classList.remove('is-active'); });
+        tabBtn.classList.add('is-active');
+        if (!panelWrap) return;
+        const targetId = tabBtn.getAttribute('data-tab');
+        panelWrap.querySelectorAll('[data-tab-panel]').forEach(function (panel) {
+          panel.hidden = panel.getAttribute('data-tab-panel') !== targetId;
+        });
+      });
+    });
+  });
+
+  // จำลอง Loading -> Loaded (เช่น ปุ่ม "จำลองโหลดข้อมูลเดิม" ใน DESIGN.md §4.4)
+  document.querySelectorAll('[data-loading-toggle]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const target = document.querySelector(btn.getAttribute('data-loading-toggle'));
+      if (target) target.classList.toggle('is-loading');
+    });
+  });
+
+  // Toast แจ้งสถานะ (เช่น ปุ่ม "บันทึก")
+  window.showToast = function (message, type) {
+    type = type || 'success';
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-' + type;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    requestAnimationFrame(function () { toast.classList.add('is-visible'); });
+    if (type === 'danger') {
+      const closeBtn = document.createElement('button');
+      closeBtn.type = 'button'; closeBtn.className = 'toast-close'; closeBtn.setAttribute('aria-label', 'ปิด'); closeBtn.textContent = '×';
+      closeBtn.addEventListener('click', function () { toast.remove(); });
+      toast.appendChild(closeBtn);
+    } else {
+      setTimeout(function () {
+        toast.classList.remove('is-visible');
+        setTimeout(function () { toast.remove(); }, 200);
+      }, 4000);
+    }
+  };
+  document.querySelectorAll('[data-toast]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      window.showToast(btn.getAttribute('data-toast'), btn.getAttribute('data-toast-type'));
+    });
+  });
+
+});
+```
+
+ปรับเนื้อหาข้อความ/placeholder ใน `showToast(...)` และ popover ต่อหน้าจอให้
+ตรงกับ Acceptance Criteria จริงของ SCR นั้น (เช่น ข้อความ "บันทึกข้อมูล
+โครงการสำเร็จ" ไม่ใช่ข้อความทั่วไป) แต่ห้ามแก้ชื่อฟังก์ชัน/attribute ข้างต้น
 
 ### 3. สร้าง/แก้ไข HTML ต่อหน้าจอ
 
@@ -233,10 +386,11 @@ tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
     <p class="page-sub">{SCR-XXX} · โมดูล {M?}</p>
     <div class="trail"><!-- Traceability Trail: TorClause → Requirement → Screen ตามข้อมูลจริงจาก spec เท่านั้น --></div>
     <!-- เนื้อหาหลัก: แปลง Acceptance Criteria แต่ละข้อเป็น section/card ที่ใช้ .card, .grid, .stat, table, .field, .btn ตามความเหมาะสมของเนื้อหา -->
-    <!-- ถ้า spec พูดถึงข้อมูลที่ AI สกัด/เสนอ ให้ครอบด้วย .ai-block -->
+    <!-- ถ้า spec พูดถึงข้อมูลที่ AI สกัด/เสนอ ให้ครอบด้วย .ai-block และปุ่ม "ยืนยัน" ต้องมี data-ai-confirm -->
     <p class="note">ข้อมูลในหน้านี้เป็นตัวอย่างเพื่อสาธิต UI เท่านั้น ไม่ใช่ข้อมูลจริง — อ้างอิงจาก <a href="../../../01-requirements/01-spec/{spec-filename}">spec {SCR-XXX}</a></p>
   </main>
 </div>
+<script src="script.js"></script>
 </body>
 </html>
 ```
@@ -250,6 +404,24 @@ tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
 - ห้ามใส่ Acceptance Criteria ที่ไม่มีในไฟล์ spec ห้ามเดาเนื้อหาที่ไม่มีต้นทาง
 - ถ้าเป็นการ **แก้เวอร์ชันเดิม**: `Read` ไฟล์ HTML เดิมก่อนแก้ ใช้ `Edit`
   เปลี่ยนเฉพาะส่วนที่จำเป็น ห้ามลบ section ที่ยังใช้ได้อยู่โดยไม่มีเหตุผล
+
+**กติกาความ interactive (บังคับทุกหน้าจอ):** ทุกหน้าจอต้องมี interaction
+จริงอย่างน้อย 1 จุดที่สอดคล้องกับ Acceptance Criteria ของ SCR นั้น โดยเลือก
+pattern ที่ตรงกับเนื้อหาจาก `script.js` ในขั้นตอน 2 (ห้ามเปลี่ยนชื่อ
+attribute):
+
+| ต้องการให้ทำอะไร | ใส่ attribute นี้ |
+|---|---|
+| เพิ่มแถวในตาราง (เช่น เพิ่มทีมงาน) | ปุ่ม `data-row-add="#{id ของ tbody}"` |
+| ลบแถวในตาราง | ปุ่มในแถวนั้น ใส่ `data-row-remove` |
+| เปิด/ปิด popover ประวัติ (Audit/History Chip) | ปุ่ม `data-audit-chip` + คู่กับ `<ul data-audit-popover>...</ul>` ในบล็อกเดียวกัน |
+| ยืนยันข้อมูลที่ AI เสนอ (`.ai-block`) | ปุ่ม `data-ai-confirm` |
+| สลับ tab | กลุ่มปุ่ม `data-tab-group="#{id panel wrapper}"` แต่ละปุ่มมี `data-tab="{id}"`, panel แต่ละอันมี `data-tab-panel="{id}"` |
+| สาธิต Loading → เนื้อหาจริง | ปุ่ม `data-loading-toggle="#{id container}"`, container มี class `is-loading` ตอนเริ่ม + ลูกที่มี `data-loading-view`/`data-loaded-view` |
+| แจ้งผลการทำรายการ (เช่น ปุ่ม "บันทึก") | ปุ่ม `data-toast="ข้อความ"` (เติม `data-toast-type="danger"` ถ้าต้องการกรณี error ตาม AC) |
+
+เลือกเฉพาะ pattern ที่ "มีเหตุผลจริงจาก spec" เท่านั้น ห้ามยัด interaction ที่
+ไม่เกี่ยวกับ Acceptance Criteria ของหน้าจอนั้นเพียงเพื่อให้ดูมี JS
 
 ### 4. สร้าง/แก้ไข `index.html` ของเวอร์ชัน
 
@@ -305,10 +477,18 @@ tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
 ## ข้อควรระวัง
 
 - ทุกข้อความในหน้าจอต้องเป็นภาษาไทย (ยกเว้นศัพท์เทคนิค) ตามธรรมเนียมของ repo
-- CSS variable name ในขั้นตอน 2 ต้องคงชื่อให้ตรงกับที่ระบุไว้เป๊ะ เพราะ HTML
-  ทุกหน้าอ้างอิง class เดียวกันหมด
+- CSS variable name และ `data-*` attribute ในขั้นตอน 2 ต้องคงชื่อให้ตรงกับที่
+  ระบุไว้เป๊ะ เพราะ HTML ทุกหน้าอ้างอิง class/attribute เดียวกันหมด และ
+  `script.js` ผูก event handler ด้วยชื่อเหล่านี้โดยตรง
+- ใช้ **vanilla JS ล้วนเท่านั้น** ห้ามอ้างอิง library/framework/CDN ภายนอก
+  (jQuery, React ฯลฯ) เพื่อให้ prototype เปิดออฟไลน์ได้เสมอโดยไม่ต้องต่อเน็ต
+- ทุก interaction เป็นการจำลองฝั่ง client เท่านั้น (DOM manipulation ใน
+  browser) ห้ามเรียก API/backend จริงหรือ persist ข้อมูลข้ามการ reload หน้า
+- ห้ามยัด interaction ที่ไม่มีเหตุผลจาก Acceptance Criteria ของ SCR นั้น
+  เพียงเพื่อให้ดูมี JS (ดูตารางกติกาความ interactive ในขั้นตอน 3)
 - ห้ามเขียนทับโฟลเดอร์เวอร์ชันอื่นที่ไม่ใช่เวอร์ชันปลายทางที่ได้รับคำสั่งมา
 - ห้ามลบหรือย้ายไฟล์ spec/backlog/feature-list/user-journey ต้นทางใดๆ
 - ห้ามตัดสินใจเรื่อง scope หรือเวอร์ชันเอง (เป็นหน้าที่ของ skill ที่เรียกคุณ)
-- จบงานด้วยการสรุปเป็นรายการ: ไฟล์ที่สร้าง, ไฟล์ที่แก้ไข, และ TODO ที่เหลือ
-  (ถ้ามีข้อมูลไม่ครบ) เพื่อให้ skill ที่เรียกคุณนำไปรายงานต่อ user
+- จบงานด้วยการสรุปเป็นรายการ: ไฟล์ที่สร้าง, ไฟล์ที่แก้ไข, interaction ที่ใส่
+  ไว้ในแต่ละหน้าจอ, และ TODO ที่เหลือ (ถ้ามีข้อมูลไม่ครบ) เพื่อให้ skill ที่
+  เรียกคุณนำไปรายงานต่อ user

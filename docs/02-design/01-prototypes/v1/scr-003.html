@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>SCR-003 ข้อมูลโครงการ — Projexa Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <h4>Projexa Prototype</h4>
+      <a class="sidebar-item" href="index.html">หน้ารวม (Index)</a>
+    </div>
+    <div class="sidebar-group">
+      <h4>M1 — จัดการโครงการและ TOR</h4>
+      <a class="sidebar-item active" href="scr-003.html">SCR-003 ข้อมูลโครงการ</a>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="breadcrumb">
+      <a href="index.html">Prototype</a><span class="sep">/</span>M1 — จัดการโครงการและ TOR<span class="sep">/</span>ข้อมูลโครงการ
+    </div>
+    <div class="page-header">
+      <h1>ข้อมูลโครงการ</h1>
+      <span class="pill pill-draft">Draft</span>
+      <span class="tag">Must Have</span>
+    </div>
+    <p class="page-sub">SCR-003 · โมดูล M1 — จัดการโครงการและ TOR</p>
+
+    <div class="trail">
+      <span class="tag">TOR Clause: ไม่มี (ยังไม่นำเข้า TOR ของโครงการนี้)</span>
+      <span class="arrow">→</span>
+      <span class="tag">Requirement: SCR-003 ข้อมูลโครงการ</span>
+      <span class="arrow">→</span>
+      <span class="tag">Screen: SCR-003</span>
+    </div>
+    <p class="note" style="margin-top:-16px; margin-bottom:24px;">
+      หน้าจอที่เกี่ยวข้องในโมดูลเดียวกัน (M1) ตาม Traceability ของ spec: SCR-001 (Dashboard ภาพรวม),
+      SCR-002 (รายการโครงการ), SCR-004 (นำเข้า/บันทึก TOR), SCR-005 (ตรวจสอบผลสกัด TOR),
+      SCR-006 (ทะเบียนความต้องการ), SCR-007 (งวดงานและเอกสารส่งมอบ) — ยังไม่ได้สร้าง prototype
+      ของหน้าจอเหล่านี้ในเวอร์ชัน v1 นี้ (อยู่นอกสโคปรอบนี้)
+    </p>
+
+    <!-- AC1 + AC2: เพิ่มโครงการใหม่ / แก้ไขข้อมูลโครงการที่มีอยู่ -->
+    <div class="card">
+      <div class="field-label-row" style="margin-bottom: var(--sp-3);">
+        <h2 style="margin-bottom:0;">แบบฟอร์มข้อมูลโครงการ</h2>
+        <button type="button" class="btn btn-secondary" data-loading-toggle="#project-form-body">จำลองการโหลดข้อมูลเดิม</button>
+      </div>
+
+      <div id="project-form-body">
+      <div data-loaded-view>
+      <div class="field readonly">
+        <div class="field-label-row">
+          <label>รหัสโครงการ</label>
+        </div>
+        <input type="text" value="PRJ-0000 (ตัวอย่าง)" readonly>
+        <p class="note">ดึงจากทะเบียนโครงการ (Single Source of Truth) — อ้างอิงต้นทางที่ SCR-002 รายการโครงการ (ยังไม่ได้สร้าง prototype ของหน้านี้ในเวอร์ชัน v1) ห้ามแก้ไขค่านี้ที่หน้าจอนี้โดยตรง</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="field">
+          <div class="field-label-row">
+            <label>ชื่อโครงการ *</label>
+            <button type="button" class="audit-chip" data-audit-chip title="ดูประวัติการเปลี่ยนแปลงของฟิลด์นี้">ประวัติการแก้ไข</button>
+            <ul data-audit-popover>
+              <li>24/08/2026 09:15 — สมชาย ใจดี (ตัวอย่าง): ตั้งชื่อโครงการเริ่มต้นเป็น "โครงการตัวอย่าง (ข้อมูลสาธิต)"</li>
+            </ul>
+          </div>
+          <input type="text" placeholder="เช่น ระบบบริหารโครงการ RAISE" value="โครงการตัวอย่าง (ข้อมูลสาธิต)">
+        </div>
+        <div class="field">
+          <div class="field-label-row">
+            <label>ลูกค้า *</label>
+            <button type="button" class="audit-chip" data-audit-chip title="ดูประวัติการเปลี่ยนแปลงของฟิลด์นี้">ประวัติการแก้ไข</button>
+            <ul data-audit-popover>
+              <li>24/08/2026 09:15 — สมชาย ใจดี (ตัวอย่าง): กรอกชื่อลูกค้าเริ่มต้นเป็น "หน่วยงานตัวอย่าง (ข้อมูลสาธิต)"</li>
+            </ul>
+          </div>
+          <input type="text" placeholder="ชื่อหน่วยงาน/ลูกค้า" value="หน่วยงานตัวอย่าง (ข้อมูลสาธิต)">
+        </div>
+        <div class="field">
+          <div class="field-label-row">
+            <label>วันที่เริ่มต้นโครงการ *</label>
+            <button type="button" class="audit-chip" data-audit-chip title="ดูประวัติการเปลี่ยนแปลงของฟิลด์นี้">ประวัติการแก้ไข</button>
+            <ul data-audit-popover>
+              <li>24/08/2026 09:15 — สมชาย ใจดี (ตัวอย่าง): ตั้งวันที่เริ่มต้นโครงการเป็น 24/08/2026</li>
+            </ul>
+          </div>
+          <input type="date" value="2026-08-24">
+        </div>
+        <div class="field">
+          <div class="field-label-row">
+            <label>วันที่สิ้นสุดโครงการ *</label>
+            <button type="button" class="audit-chip" data-audit-chip title="ดูประวัติการเปลี่ยนแปลงของฟิลด์นี้">ประวัติการแก้ไข</button>
+            <ul data-audit-popover>
+              <li>24/08/2026 09:15 — สมชาย ใจดี (ตัวอย่าง): ตั้งวันที่สิ้นสุดโครงการเป็น 28/02/2027</li>
+            </ul>
+          </div>
+          <input type="date" value="2027-02-28">
+        </div>
+        <div class="field">
+          <div class="field-label-row">
+            <label>งบประมาณโครงการ (บาท) *</label>
+            <button type="button" class="audit-chip" data-audit-chip title="ดูประวัติการเปลี่ยนแปลงของฟิลด์นี้">ประวัติการแก้ไข</button>
+            <ul data-audit-popover>
+              <li>24/08/2026 14:32 — สมหญิง วิเคราะห์ (ตัวอย่าง): แก้ไขจาก 900,000 เป็น 1,000,000 บาท</li>
+              <li>24/08/2026 09:15 — สมชาย ใจดี (ตัวอย่าง): ตั้งงบประมาณเริ่มต้นเป็น 900,000 บาท</li>
+            </ul>
+          </div>
+          <input type="text" value="1,000,000 (ตัวอย่าง)">
+        </div>
+      </div>
+      <p class="note">* ฟิลด์บังคับกรอก — ค่าที่แสดงในฟอร์มนี้เป็นข้อมูลตัวอย่างเพื่อสาธิต UI เท่านั้น ไม่ใช่ข้อมูลโครงการจริง</p>
+      </div>
+      <div data-loading-view>
+        <p class="page-sub" style="margin-bottom: var(--sp-4);">สาธิตหน้าตาของฟอร์มด้านบนขณะระบบกำลังดึงข้อมูลโครงการเดิมมาแสดงเพื่อแก้ไข (ก่อนข้อมูลจะโหลดเสร็จ)</p>
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line medium"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line medium"></div>
+        <p class="note">ใช้ skeleton แบบพื้นเรียบตาม DESIGN.md §4.4 (ไม่ animate แบบ shimmer สีสันจัด) — เป็นภาพประกอบเพื่อสาธิต UI เท่านั้น</p>
+      </div>
+      </div>
+    </div>
+
+    <!-- AC1 + AC2: ทีมงาน (เพิ่ม/ลบสมาชิกได้) -->
+    <div class="card">
+      <div class="field-label-row" style="margin-bottom: var(--sp-3);">
+        <h2 style="margin-bottom:0;">ทีมงานโครงการ</h2>
+        <button type="button" class="audit-chip" data-audit-chip title="ดูประวัติการเปลี่ยนแปลงของทีมงาน">ประวัติการแก้ไข</button>
+        <ul data-audit-popover>
+          <li>24/08/2026 09:15 — สมชาย ใจดี (ตัวอย่าง): เพิ่มสมาชิกทีมงานเริ่มต้น 3 คน (PM, BA, SA)</li>
+        </ul>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ชื่อ-นามสกุล</th>
+            <th>บทบาทในโครงการ</th>
+            <th>จัดการ</th>
+          </tr>
+        </thead>
+        <tbody id="team-rows">
+          <tr>
+            <td>สมชาย ใจดี (ตัวอย่าง)</td>
+            <td>Project Manager</td>
+            <td><button type="button" class="btn btn-secondary" data-row-remove>ลบ</button></td>
+          </tr>
+          <tr>
+            <td>สมหญิง วิเคราะห์ (ตัวอย่าง)</td>
+            <td>Business Analyst</td>
+            <td><button type="button" class="btn btn-secondary" data-row-remove>ลบ</button></td>
+          </tr>
+          <tr>
+            <td>สมศักดิ์ ทดสอบ (ตัวอย่าง)</td>
+            <td>System Analyst</td>
+            <td><button type="button" class="btn btn-secondary" data-row-remove>ลบ</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="team-actions">
+        <button type="button" class="btn btn-secondary" data-row-add="#team-rows">+ เพิ่มสมาชิกทีมงาน</button>
+      </div>
+      <p class="note">รายชื่อทีมงานที่แสดงเป็นข้อมูลตัวอย่างเพื่อสาธิต UI เท่านั้น</p>
+    </div>
+
+    <!-- AC3: บันทึกการเปลี่ยนแปลงลง audit log ตามหลัก Everything is Logged -->
+    <div class="card">
+      <h2>ประวัติการเปลี่ยนแปลง (Audit Log)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>วันที่/เวลา</th>
+            <th>ผู้แก้ไข</th>
+            <th>การเปลี่ยนแปลง</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>24/08/2026 09:15</td>
+            <td>สมชาย ใจดี (ตัวอย่าง)</td>
+            <td>สร้างโครงการ และกรอกข้อมูลเริ่มต้น</td>
+          </tr>
+          <tr>
+            <td>24/08/2026 14:32</td>
+            <td>สมหญิง วิเคราะห์ (ตัวอย่าง)</td>
+            <td>แก้ไขงบประมาณโครงการ จาก 900,000 เป็น 1,000,000 บาท</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">ทุกครั้งที่มีการบันทึกข้อมูลในหน้านี้ ระบบจะบันทึกรายการลง audit log อัตโนมัติ (ใคร แก้อะไร เมื่อไหร่) ตามหลัก Everything is logged — ตารางด้านบนเป็นข้อมูลตัวอย่างเพื่อสาธิต UI เท่านั้น</p>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-primary" data-toast="บันทึกข้อมูลโครงการสำเร็จ">บันทึก</button>
+      <button type="button" class="btn btn-secondary">ยกเลิก</button>
+    </div>
+
+    <p class="note">ข้อมูลในหน้านี้เป็นตัวอย่างเพื่อสาธิต UI เท่านั้น ไม่ใช่ข้อมูลจริง — อ้างอิงจาก <a href="../../../01-requirements/01-spec/20260824-003-scr-003-ข้อมูลโครงการ.md">spec SCR-003</a></p>
+  </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

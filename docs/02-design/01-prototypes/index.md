@@ -6,5 +6,6 @@
 - User flow และ navigation flow
 - [[DESIGN|DESIGN]] — Design System เต็มรูปแบบ (Brand Identity, Design Tokens, Components, UX Guidelines) โทน Earth tone + Minimalist + Muji-inspired
 - [[user-journey|user-journey]] — User journey ภาพรวมและรายบุคคล (Draft, สังเคราะห์อัตโนมัติ)
+- Prototype เวอร์ชันล่าสุด: [v1](v1/index.html) — สโคป: SCR-003 ข้อมูลโครงการ (Draft)
 
 ใช้สำหรับสื่อสารและตกลงหน้าตาของระบบก่อนลงมือพัฒนาจริง โดยอ้างอิงความต้องการจาก [[../../01-requirements/01-spec/index|01-spec]] และส่งต่อรายละเอียดเชิงระบบให้ [[../02-technical/index|02-technical]]
