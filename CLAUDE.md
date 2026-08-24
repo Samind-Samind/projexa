@@ -49,6 +49,8 @@ Stack ที่เสนอไว้ (ยังไม่ได้ลงมือ
 
 หมายเหตุ: โครงสร้าง/รูปแบบโฟลเดอร์ docs นี้คัดลอกมาจาก docs template ทั่วไป (เวอร์ชันก่อนหน้ามีชื่อโปรเจกต์ placeholder ปนอยู่) ให้ยึดโครงสร้าง/รูปแบบนี้เป็นส่วนที่นำมาใช้ซ้ำได้ โดยไม่ผูกกับชื่อโปรเจกต์ใดโปรเจกต์หนึ่ง
 
+ไฟล์แนบ/brand asset (โลโก้ ฯลฯ) ให้เก็บไว้ที่ `docs/02-design/01-prototypes/assets/` เท่านั้น (ที่เดียว) ห้ามวางไฟล์แนบไว้ที่ root ของ repo หรือสร้างสำเนาซ้ำไว้หลายที่
+
 ## Agent Skill / Sub-agent ที่มีในโปรเจกต์
 
 - [.claude/skills/requirement/SKILL.md](.claude/skills/requirement/SKILL.md) เก็บ requirement ดิบจาก user แบบ interactive (ถามด้วย `AskUserQuestion` เมื่อไม่ชัดเจน, ให้ user ยืนยันก่อนเขียนไฟล์เสมอ) แล้วมอบหมายให้ sub-agent [.claude/agents/requirement-writer.md](.claude/agents/requirement-writer.md) (one-shot, `Read/Write/Edit/Glob/Grep`) เขียน/แก้เอกสาร spec ใหม่ใน `01-spec/`, อัปเดต `backlog.md`, และบันทึก `05-log/` — ใช้ skill นี้เมื่อจะเพิ่ม/แก้ requirement ใหม่ในโปรเจกต์
