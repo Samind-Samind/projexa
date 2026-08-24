@@ -48,3 +48,9 @@ Stack ที่เสนอไว้ (ยังไม่ได้ลงมือ
 ภาพรวมของ workflow คือ `requirements → design → testing → retrospectives` โดย `log` จะถูกบันทึกคู่ขนานไปตลอดทั้งโปรเจกต์ และ `archived` เป็นปลายทางของทุกอย่างที่ถูกแทนที่หรือยกเลิก — ห้ามลบเอกสารของโปรเจกต์ทิ้งตรงๆ ให้ย้ายไปไว้ที่ `00-archived/` แทน
 
 หมายเหตุ: โครงสร้าง/รูปแบบโฟลเดอร์ docs นี้คัดลอกมาจาก docs template ทั่วไป (เวอร์ชันก่อนหน้ามีชื่อโปรเจกต์ placeholder ปนอยู่) ให้ยึดโครงสร้าง/รูปแบบนี้เป็นส่วนที่นำมาใช้ซ้ำได้ โดยไม่ผูกกับชื่อโปรเจกต์ใดโปรเจกต์หนึ่ง
+
+## Agent Skill / Sub-agent ที่มีในโปรเจกต์
+
+- [.claude/skills/gen-feature-journey/SKILL.md](.claude/skills/gen-feature-journey/SKILL.md) เรียกใช้ sub-agent [.claude/agents/requirements-synthesizer.md](.claude/agents/requirements-synthesizer.md) (read-only) เพื่ออ่าน `Projexa-System-Design-R1.md` + spec 26 หน้าจอ + `backlog.md` แล้ว generate/อัปเดตไฟล์ `docs/01-requirements/feature-list.md` (มีการจัดระดับ MoSCoW) และ `docs/02-design/01-prototypes/user-journey.md` (มี mermaid flowchart)
+- ไฟล์ผลลัพธ์ทั้งสองนี้เป็น**มุมมองสรุปที่ regenerate ได้เสมอ** ไม่ใช่ต้นทางของความจริง — ถ้าจะแก้ไข ให้แก้ที่ไฟล์ spec ใน `01-spec/` หรือ `backlog.md` แล้วรัน skill ใหม่ แทนการแก้ไฟล์ผลลัพธ์ตรงๆ และเมื่อ regenerate ให้เขียนทับได้เลย ไม่ต้องย้ายของเก่าไป `00-archived/` (ต่างจากเอกสารต้นทางอื่นที่ห้ามลบ/ทับตรงๆ) เพราะสร้างซ้ำจากต้นทางเดิมได้เสมอ ใช้ git history เป็นชั้นเวอร์ชันแทน
+- รายการ MoSCoW ที่ไม่ใช่ `Must` จะติดป้าย `(suggested)` เสมอ (เป็นการประเมินของ AI ไม่ได้ดึงจากข้อเท็จจริงตรงๆ) และทั้งสองไฟล์มีสถานะ Draft ที่ต้องรอ BA/PM/SA ยืนยันก่อนใช้งานจริง ตามหลัก Human-in-the-loop
