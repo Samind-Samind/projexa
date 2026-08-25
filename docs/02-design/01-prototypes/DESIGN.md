@@ -2,11 +2,12 @@
 # Projexa Design System
 
 - **วันที่สร้าง:** 2026-08-24
+- **วันที่อัปเดตล่าสุด:** 2026-08-24 — รอบแก้ไข (ปรับโทนสี/สไตล์ตาม mood board ใหม่ ไม่ใช่การสร้างไฟล์ครั้งแรก)
 - **สถานะ:** Draft — รอ Design Lead/PM ยืนยันก่อนนำไปใช้ตัดสินใจ implement จริง
 - **ขอบเขต:** ใช้ควบคุมหน้าตาและพฤติกรรมของ **Web Application (Presentation Layer)** ของ Projexa เท่านั้น **ไม่ครอบคลุม** รูปแบบเอกสารส่งมอบ (.docx) ที่ต้องยึด Template `.dotx` ขององค์กรตามหลัก Template compliance ที่ระบุใน [Projexa-System-Design-R1.md](../../../Projexa-System-Design-R1.md) §7 — สองส่วนนี้เป็นระบบภาพที่แยกจากกันโดยตั้งใจ
 - **อ้างอิง:** [Projexa-System-Design-R1.md](../../../Projexa-System-Design-R1.md), [[user-journey|user-journey]]
 
-โทนที่ยึดตลอดทั้งระบบ: **Earth tone + Minimalist + Muji-inspired** — สีดินสอฟื้น (warm neutral), พื้นที่ว่างมาก, ไม่มีองค์ประกอบตกแต่งเกินจำเป็น, ทุกองค์ประกอบมีหน้าที่ชัดเจน ไม่ใช่ของสวยงามเปล่าๆ
+โทนที่ยึดตลอดทั้งระบบ (อัปเดตรอบนี้): **Warm Minimalist + Sage & Terracotta + Soft-lift Card** — พื้นหลังครีมอุ่น, การ์ดสีขาวสะอาดลอยตัวด้วยเงานุ่ม, มุมโค้งมากขึ้นกว่าเดิม ยังคงพื้นที่ว่างมากและความเรียบง่ายของแนวเดิมไว้ แต่เปลี่ยนจากพื้นผิวแบน/border-based แบบ Muji เดิม เป็นพื้นผิวที่มีมิติเบาๆ ด้วย shadow
 
 ---
 
@@ -26,11 +27,13 @@ Projexa เปลี่ยนวิธีทำงานของทีมจา
 
 ### 1.2 โทนสีและวัสดุอ้างอิง (Mood)
 
-อ้างอิงจากปรัชญา MUJI: "ไม่มีแบรนด์" (no-brand) เน้นวัสดุธรรมชาติ, ลดทอนสิ่งไม่จำเป็น, ใช้งานได้จริง
+อ้างอิงจาก mood board ที่ผู้เกี่ยวข้องส่งภาพตัวอย่างมาให้ (ภาพหน้าจอ dashboard ของระบบอื่นที่ไม่เกี่ยวข้องกับ Projexa — ใช้เป็นแรงบันดาลใจด้านสี/สไตล์การ์ด-shadow เท่านั้น ไม่ใช่การลอกฟีเจอร์หรือโครงสร้างหน้าจอ): การ์ดสีขาวสะอาดลอยเหนือพื้นหลังโทนครีมอุ่น ให้ความรู้สึกโปร่งเบาแต่ยังสงบ, สีเขียวเสจ (sage) เป็นสี accent หลักที่ให้ความรู้สึกน่าเชื่อถือและผ่อนคลาย ไม่จัดจ้าน, สีส้มอิฐ (terracotta) ใช้เป็นจุดเน้นเฉพาะจุดเท่านั้น
 
-- สีอ้างอิงจากธรรมชาติ: กระดาษคราฟท์ ดินเผา ไม้อ่อน ใบไม้แห้ง หินปูน — **ไม่ใช้สีดำสนิทหรือสีขาวสนิท** เพื่อลดความแข็งกระด้าง
-- พื้นผิวแบน (flat) เป็นหลัก หลีกเลี่ยง gradient, drop shadow หนัก, หรือ glassmorphism
-- ความคมชัดของ UI มาจาก **การจัดวาง (layout) และ typography** ไม่ใช่จากสีหรือเอฟเฟกต์
+- สีอ้างอิง: ครีม-ขาว (พื้นหลัง/การ์ด), เขียวเสจ (accent หลัก), ส้มอิฐ (accent รอง) — ยังคง**ไม่ใช้สีดำสนิทหรือสีขาวสนิทกับข้อความ** เพื่อลดความแข็งกระด้าง (ตัวอักษรหลักยังเป็นสีน้ำตาลเข้มอมเทา ไม่ใช่ `#000000`) แม้พื้นหลังการ์ดรอบนี้จะเปลี่ยนเป็นขาวล้วนแล้วก็ตาม
+- การ์ด/Panel เปลี่ยนจากพื้นผิวแบน (flat/border-based) เดิม เป็น **การ์ดขาวลอยด้วย shadow นุ่ม** เป็นค่าเริ่มต้น และมุมโค้งมากขึ้นกว่าเดิม (ดู §2.4)
+- ความคมชัดของ UI ยังคงมาจากการจัดวาง (layout) และ typography เป็นหลัก การเปลี่ยนมาใช้ shadow ครั้งนี้มีไว้เพื่อสร้างมิติ/ลำดับชั้นของพื้นที่ให้ชัดขึ้น ไม่ใช่การเพิ่มลูกเล่นตกแต่งที่ไม่มีหน้าที่
+
+> **หมายเหตุขอบเขตการอ้างอิง:** ไม่นำองค์ประกอบตกแต่งเชิงการตลาดจากภาพอ้างอิงมาใช้ เช่น การ์ดโปรโมทที่มี gradient/วงกลมตกแต่งมุมมน หรือไอคอนหมวดหมู่สีส้มทึบ — เพราะไม่มี pattern ที่จำเป็นเทียบเท่าในระบบ Projexa ขณะนี้ ไม่ต้องเพิ่ม pattern ใหม่สำหรับสิ่งเหล่านี้
 
 ### 1.3 Logo / Wordmark
 
@@ -44,13 +47,13 @@ Projexa เปลี่ยนวิธีทำงานของทีมจา
 - **Wordmark:** "Projexa" ตัวอักษรสีน้ำตาลเข้ม (dark umber/chocolate) ตัว "x" เน้นด้วยสีทองเดียวกับ mark
 - **Tagline:** "สร้างเอกสาร • มอบหมายงาน • ติดตามความคืบหน้า" สีทอง ตัวเล็ก มีเส้นขีดคั่นซ้าย-ขวา
 
-**ข้อสังเกตสำคัญ — ความขัดแย้งกับกติกาแบน (flat) ของระบบ:** โลโก้นี้ใช้ gradient, bevel และแสงมันวาวแบบ 3D ซึ่ง**ขัดกับหลัก Muji flat-surface ใน §1.2/§2.4 ของเอกสารนี้โดยตรง** แนวทางที่แนะนำคือปฏิบัติกับโลโก้เป็น **"hero mark" ข้อยกเว้นเดียวของทั้งระบบ** ไม่ใช่ต้นแบบให้ effect อื่นๆ ใน UI ทำตาม:
+**ข้อสังเกตสำคัญ — ความขัดแย้งกับกติกาแบน (flat) ของระบบ:** โลโก้นี้ใช้ gradient, bevel และแสงมันวาวแบบ 3D ซึ่ง**ขัดกับหลัก flat-surface เดิมของระบบ**และยังคงเป็นข้อยกเว้นแม้รอบนี้ระบบจะเปลี่ยนไปใช้ shadow มากขึ้นก็ตาม แนวทางที่แนะนำคือปฏิบัติกับโลโก้เป็น **"hero mark" ข้อยกเว้นเดียวของทั้งระบบ** ไม่ใช่ต้นแบบให้ effect อื่นๆ ใน UI ทำตาม:
 
 | บริบทการใช้งาน | ใช้เวอร์ชันไหน |
 |---|---|
 | หน้า Login / Splash / เอกสารการตลาด / นามบัตร | เวอร์ชันทอง-บรอนซ์ 3D เต็มรูปแบบ (ตามภาพต้นฉบับ) |
-| Sidebar header, favicon, ไอคอนขนาดเล็กในแอป (≤ 32px) | ต้องทำ **เวอร์ชัน flat/monochrome** แยกต่างหาก (ตัด gradient/bevel ออก เหลือ silhouette สีเดียว) เพราะไล่เฉดและรายละเอียดในสัญลักษณ์จะแตกเมื่อย่อเล็ก และขัดกับพื้นผิวแบนของ UI ส่วนที่เหลือ |
-| พื้นเข้ม (เช่น `stone-900`) | ใช้เวอร์ชัน flat สีทองเดียว (`clay-500`/`#B4693E` หรือทองอ่อนลง) ไม่ใช้เวอร์ชัน 3D เต็มเพราะเงา/ไฮไลต์จะกลืนกับพื้นเข้ม |
+| Sidebar header, favicon, ไอคอนขนาดเล็กในแอป (≤ 32px) | ต้องทำ **เวอร์ชัน flat/monochrome** แยกต่างหาก (ตัด gradient/bevel ออก เหลือ silhouette สีเดียว) เพราะไล่เฉดและรายละเอียดในสัญลักษณ์จะแตกเมื่อย่อเล็ก และขัดกับพื้นผิวของ UI ส่วนที่เหลือ |
+| พื้นเข้ม (เช่น `ink-900`) | ใช้เวอร์ชัน flat สีทองเดียวของโลโก้ (คงค่า `#B4693E` เดิมไว้เป็น literal hex เฉพาะจุดนี้ — ไม่ผูกกับ token accent ของระบบที่เปลี่ยนเป็นเขียวเสจแล้ว เพราะโลโก้เป็นข้อยกเว้นตามหัวข้อนี้) ไม่ใช้เวอร์ชัน 3D เต็มเพราะเงา/ไฮไลต์จะกลืนกับพื้นเข้ม |
 | เนื้อหาในแอปทั่วไป (ปุ่ม, การ์ด, ตาราง) | **ไม่ใช้โลโก้** — คงหลัก "อยู่เบื้องหลัง ให้ข้อมูลเป็นพระเอก" ตาม §1.1 |
 
 **กติกาการใช้งาน:**
@@ -74,49 +77,49 @@ Projexa เปลี่ยนวิธีทำงานของทีมจา
 
 ### 2.1 Color Tokens
 
-หลักการ: ใช้ **neutral (สีดิน/สีกระดาษ) เป็น 90% ของพื้นที่หน้าจอ** ส่วนสี accent (`clay`, `moss`) ใช้เฉพาะจุดที่ต้องดึงความสนใจจริงๆ (primary action, สถานะสำคัญ) ห้ามใช้ accent กับพื้นที่กว้าง
+หลักการ: ใช้ **neutral (ครีม/ขาว) เป็น 90% ของพื้นที่หน้าจอ** ส่วนสี accent (`sage`, `terracotta`) ใช้เฉพาะจุดที่ต้องดึงความสนใจจริงๆ (primary action, สถานะสำคัญ) ห้ามใช้ accent กับพื้นที่กว้าง
 
-#### Neutral — "Stone & Paper"
-
-| Token | Hex | การใช้งาน |
-|---|---|---|
-| `paper-050` | `#FBF9F5` | พื้นหลังหน้าจอหลัก (page background) |
-| `paper-100` | `#F5F1E9` | พื้นหลัง surface / card / table row คู่ |
-| `stone-200` | `#E8E1D3` | เส้นแบ่ง (divider), border ของ input/card |
-| `stone-300` | `#D4CBB8` | border สถานะ disabled, skeleton loading |
-| `stone-500` | `#A79C87` | placeholder text, icon รอง, ตัวอักษร disabled |
-| `stone-700` | `#7A6F5D` | ข้อความรอง (secondary text), label |
-| `stone-900` | `#3B352A` | ข้อความหลัก (primary text), heading — ใช้แทนสีดำทั้งระบบ |
-
-#### Accent — "Clay & Moss"
+#### Neutral — "Cream & White"
 
 | Token | Hex | การใช้งาน |
 |---|---|---|
-| `clay-100` | `#F1E0D3` | พื้นหลัง tint ของปุ่ม/แท็กที่ active หรือถูกเลือก |
-| `clay-500` | `#B4693E` | Primary action (ปุ่มหลัก, ลิงก์, focus ring) — สีเอกลักษณ์ของแบรนด์ |
-| `clay-600` | `#9C5730` | สถานะ hover/active ของ `clay-500` |
-| `moss-100` | `#E4E8DA` | พื้นหลัง tint ของสถานะ "ยืนยันแล้ว/สำเร็จ" |
-| `moss-500` | `#6E7B58` | Secondary accent, สถานะ Confirmed/Approved/Done |
+| `cream-050` | `#F7F5F0` | พื้นหลังหน้าจอหลัก (page background) |
+| `white-000` | `#FFFFFF` | พื้นหลัง surface / card / table header (ขาวล้วน — เปลี่ยนจากขาวหม่นเดิม) |
+| `cream-200` | `#ECE9E2` | เส้นแบ่งที่ยังจำเป็น (table, ขอบ input) — **ไม่ใช้กับการ์ด/panel อีกต่อไป** (ดู §2.4) |
+| `cream-300` | `#DAD6CC` | border สถานะ disabled, skeleton loading |
+| `stone-500` | `#A6A296` | placeholder text, icon รอง, ตัวอักษร disabled |
+| `stone-700` | `#6F6C62` | ข้อความรอง (secondary text), label |
+| `ink-900` | `#2B2A25` | ข้อความหลัก (primary text), heading — ใช้แทนสีดำทั้งระบบ |
+
+#### Accent — "Sage & Terracotta"
+
+| Token | Hex | การใช้งาน |
+|---|---|---|
+| `sage-100` | `#E9EDE0` | พื้นหลัง tint ของปุ่ม/แท็กที่ active หรือถูกเลือก |
+| `sage-500` | `#7C8E5C` | Primary action (ปุ่มหลัก, ลิงก์, focus ring) — สีเอกลักษณ์ของแบรนด์รอบนี้ |
+| `sage-600` | `#65744A` | สถานะ hover/active ของ `sage-500` |
+| `terracotta-100` | `#FBEADA` | พื้นหลัง tint ของสถานะ "ยืนยันแล้ว/สำเร็จ" |
+| `terracotta-500` | `#E28C4F` | Secondary accent, สถานะ Confirmed/Approved/Done, จุดเน้นเฉพาะจุด |
 
 #### Semantic (สถานะ)
 
 | Token | Hex (text/icon) | Hex (bg tint) | ใช้กับ |
 |---|---|---|---|
-| `success` | `#6B7F5E` | `#E7ECE0` | บันทึกสำเร็จ, Test Result: Pass, สถานะ Confirmed |
-| `warning` | `#B3852E` | `#F5E8CE` | ใกล้ครบกำหนด, ข้อมูลรอตรวจสอบ, ผลสกัด AI ที่ยังไม่ยืนยัน |
-| `danger` | `#A85039` | `#F1DCD4` | เลยกำหนด, Test Result: Fail, ลบ/ยกเลิก |
-| `info` | `#5D7A80` | `#DEE8E9` | ข้อความแนะนำ, สถานะ In Review |
+| `success` | `#5B8A55` | `#E6F0DF` | บันทึกสำเร็จ, Test Result: Pass, สถานะ Confirmed |
+| `warning` | `#B3812E` | `#F6E9CE` | ใกล้ครบกำหนด, ข้อมูลรอตรวจสอบ, ผลสกัด AI ที่ยังไม่ยืนยัน |
+| `danger` | `#C1573A` | `#F7DFD4` | เลยกำหนด, Test Result: Fail, ลบ/ยกเลิก |
+| `info` | `#6E63C8` | `#EBE8FA` | ข้อความแนะนำ, สถานะ In Review |
 
 **Status pill มาตรฐาน** (ใช้ตรงกันทุกหน้าจอที่มีวงจรสถานะ ตาม Projexa-System-Design-R1 §6):
 
 | สถานะ | Token สี |
 |---|---|
-| Draft | `stone-500` บน `paper-100` |
+| Draft | `stone-500` บน `white-000` |
 | In Review | `info` |
-| Confirmed / Approved | `moss-500` บน `moss-100` |
-| In Progress | `clay-500` บน `clay-100` |
+| Confirmed / Approved | `terracotta-500` บน `terracotta-100` |
+| In Progress | `sage-500` บน `sage-100` |
 | Blocked / Issue | `danger` |
-| Archived | `stone-300` ตัวอักษร + ขีดทับ (strikethrough) |
+| Archived | `cream-300` ตัวอักษร + ขีดทับ (strikethrough) |
 
 **กติกาเข้าถึงได้ (accessibility):** คู่สี text/background ทุกคู่ในตารางข้างต้นต้องผ่าน contrast ratio ≥ 4.5:1 (WCAG AA) — ห้ามใช้สีเป็นตัวบอกสถานะเพียงอย่างเดียว ต้องมี label ข้อความ/ไอคอนควบคู่เสมอ (สำคัญมากสำหรับ status pill เพราะผู้ใช้บางคนอาจแยกสีไม่ชัด)
 
@@ -128,7 +131,7 @@ Projexa เปลี่ยนวิธีทำงานของทีมจา
 | ภาษาอังกฤษ/ตัวเลข | **Inter** (fallback: system-ui) | Label ภาษาอังกฤษ, ตัวเลข, วันที่ |
 | Code/รหัสอ้างอิง | **IBM Plex Mono** | รหัสหน้าจอ (SCR-001), TOR Clause ID, รหัส test case |
 
-หลัก Muji minimalism: ใช้ font-weight เพียง **3 ระดับ** ตลอดระบบ — `regular (400)`, `medium (500)`, `semibold (600)` ห้ามใช้ `bold (700)` หรือ italic เพื่อรักษาความรู้สึกสงบ
+หลักความเรียบง่าย: ใช้ font-weight เพียง **3 ระดับ** ตลอดระบบ — `regular (400)`, `medium (500)`, `semibold (600)` ห้ามใช้ `bold (700)` หรือ italic เพื่อรักษาความรู้สึกสงบ
 
 | Scale | Size / Line-height | Weight | ใช้กับ |
 |---|---|---|---|
@@ -142,7 +145,7 @@ Projexa เปลี่ยนวิธีทำงานของทีมจา
 
 ### 2.3 Spacing (4px grid)
 
-ยึดหน่วยฐาน 4px และเพิ่มพื้นที่ว่างมากกว่าระบบทั่วไป (Muji = generous whitespace):
+ยึดหน่วยฐาน 4px และเพิ่มพื้นที่ว่างมากกว่าระบบทั่วไป:
 
 `4 · 8 · 12 · 16 · 24 · 32 · 48 · 64` (px)
 
@@ -153,9 +156,14 @@ Projexa เปลี่ยนวิธีทำงานของทีมจา
 
 ### 2.4 Radius, Border, Shadow
 
-- **Border-radius:** `4px` (input, button, tag) · `8px` (card, table) · `12px` (modal, dialog) — โค้งน้อย ไม่ปัดมุมจนดูเหมือน app มือถือทั่วไป
-- **Border:** ใช้ `1px solid stone-200` เป็นหลักในการแบ่งพื้นที่ **แทนการใช้ shadow** — นี่คือกติกาสำคัญของแนว Muji
-- **Shadow:** ใช้เท่าที่จำเป็นจริงๆ เพียง 1 ระดับ คือ `0 2px 8px rgba(59, 53, 42, 0.08)` สำหรับ element ที่ลอยเหนือ layer อื่น (dropdown, modal, toast) เท่านั้น ห้ามใช้ shadow กับ card ปกติที่วางอยู่บน page
+> **หมายเหตุ:** หัวข้อนี้เป็นจุดที่เปลี่ยนมากที่สุดในรอบนี้ — พลิกหลักการเดิมที่เคย "ใช้ border แทน shadow" มาเป็น "ใช้ shadow แทน border สำหรับการ์ด/Panel"
+
+- **Border-radius:** `8px` (input, button, tag) · `16px` (card, table) · `20px` (modal, dialog) — โค้งมากขึ้นกว่าเดิมตามทิศทาง mood board ใหม่ ยังไม่ถึงระดับ pill-shape ของแอปมือถือทั่วไป
+- **Card / Panel:** เปลี่ยนจาก border-based เป็น **shadow-based** — **ไม่มี border แล้ว** ใช้ shadow มาตรฐาน (Float ด้านล่าง) เป็นตัวแบ่งพื้นที่จาก `cream-050` (bg-page) แทน
+- **Border:** ยังใช้ได้ตามปกติกับ table (เส้นแบ่งแถว, สี `cream-200`) และ input/form (ขอบฟอร์ม, สี `cream-200`) — ไม่ได้ห้ามใช้ border ทั้งหมด แค่การ์ด/Panel เท่านั้นที่เปลี่ยนไปใช้ shadow แทน
+- **Shadow:** ตอนนี้มี 2 ระดับ (เดิมมีระดับเดียว):
+  - **Float** — ใช้เป็นค่าเริ่มต้นของการ์ด/panel ทุกใบที่วางอยู่บน page (ไม่ใช่แค่ dropdown/modal เหมือนเดิม): `0 4px 24px rgba(43, 42, 37, 0.06)`
+  - **Modal** — ใช้กับ element ที่ลอยเหนือ layer อื่นจริงๆ (dropdown, modal, toast, popover) ให้เข้มกว่าระดับ Float เพื่อสื่อลำดับชั้น (z-index) ที่สูงกว่า: `0 12px 32px rgba(43, 42, 37, 0.12)`
 
 ### 2.5 Motion
 
@@ -173,19 +181,19 @@ Projexa เปลี่ยนวิธีทำงานของทีมจา
 
 | Component | กติกาออกแบบ |
 |---|---|
-| **Button** | Primary = พื้น `clay-500` ตัวอักษร `paper-050`; Secondary = พื้นโปร่ง border `stone-200` ตัวอักษร `stone-900`; Destructive = พื้นโปร่ง ตัวอักษร `danger` border `danger` เฉพาะ hover ค่อยเติมพื้น มีปุ่มระดับเดียวต่อหน้าจอที่เป็น Primary เท่านั้น (ห้ามมี Primary หลายปุ่มแข่งกัน) |
-| **Input / Textarea / Select** | พื้น `paper-050` border `1px stone-200` radius `4px` focus = border `clay-500` + ring บาง 2px สี `clay-100` label อยู่เหนือ field เสมอ (ไม่ใช้ placeholder แทน label) |
-| **Card / Panel** | พื้น `paper-100` border `1px stone-200` ไม่มี shadow ใช้แบ่งกลุ่มข้อมูลที่เกี่ยวข้องกัน ไม่ใช่ตกแต่ง |
-| **Table** | Header ใช้ `h3` scale บนพื้น `paper-100`, แถวสลับสี `paper-050`/`paper-100` แบบจางมาก (ไม่ใช่ zebra จัด), แถวที่ hover ใช้ `clay-100` บางๆ |
-| **Tag / Badge** | ใช้กับ MoSCoW label, module code — พื้น bg-tint + ตัวอักษรสีเข้มของ token เดียวกัน (เช่น `moss-100`/`moss-500`) radius `4px` padding แน่น |
+| **Button** | Primary = พื้น `sage-500` ตัวอักษร `cream-050`; Secondary = พื้นโปร่ง border `cream-200` ตัวอักษร `ink-900`; Destructive = พื้นโปร่ง ตัวอักษร `danger` border `danger` เฉพาะ hover ค่อยเติมพื้น radius `8px` มีปุ่มระดับเดียวต่อหน้าจอที่เป็น Primary เท่านั้น (ห้ามมี Primary หลายปุ่มแข่งกัน) |
+| **Input / Textarea / Select** | พื้น `cream-050` border `1px cream-200` radius `8px` focus = border `sage-500` + ring บาง 2px สี `sage-100` label อยู่เหนือ field เสมอ (ไม่ใช้ placeholder แทน label) |
+| **Card / Panel** | พื้น `white-000` (ขาวล้วน) **ไม่มี border** ใช้ shadow **Float** (§2.4) เป็นตัวแบ่งจากพื้นหลัง `cream-050` แทน radius `16px` ใช้แบ่งกลุ่มข้อมูลที่เกี่ยวข้องกัน ไม่ใช่ตกแต่ง |
+| **Table** | Header ใช้ `h3` scale บนพื้น `white-000`, แถวสลับสี `cream-050`/`white-000` แบบจางมาก (ไม่ใช่ zebra จัด), แถวที่ hover ใช้ `sage-100` บางๆ, เส้นแบ่งแถวยังใช้ border `cream-200` ตามปกติ |
+| **Tag / Badge** | ใช้กับ MoSCoW label, module code — พื้น bg-tint + ตัวอักษรสีเข้มของ token เดียวกัน (เช่น `terracotta-100`/`terracotta-500`) radius `8px` padding แน่น |
 | **Status Pill** | ดู §2.1 ตารางสถานะ ต้องมีจุด (dot) นำหน้าข้อความเสมอ เพื่อแยกจาก Tag ทั่วไป |
-| **Navigation (Sidebar)** | พื้น `paper-100`, item ที่ active = พื้น `clay-100` + ตัวอักษร `clay-600` ไม่ใช้ไอคอนสีสันจัด ไอคอนเป็น outline บาง สีเดียวกับข้อความ |
-| **Tabs** | เส้นใต้ (underline) บาง 2px สี `clay-500` สำหรับ tab ที่เลือก ไม่ใช้พื้นหลังเต็ม tab |
-| **Modal / Dialog** | radius `12px`, shadow ตาม §2.4, มี overlay สี `stone-900` ความโปร่งใส 40% เท่านั้น (ไม่ใช้ blur) |
-| **Toast / Notification** | มุมขวาบน, ไอคอนสถานะ + ข้อความสั้น, auto-dismiss 4 วินาที ยกเว้น error ต้องกดปิดเอง |
-| **Breadcrumb** | ใช้ตัวอักษร `body-sm` สี `stone-700`, ตัวคั่นเป็น `/` บาง สี `stone-300` |
-| **Empty State** | ข้อความ + คำแนะนำขั้นถัดไปเสมอ (ห้ามแสดงแค่ "ไม่มีข้อมูล") ไม่ใช้ illustration สีสันจัด ถ้าจะใช้ภาพให้เป็น line-art เดียวสี `stone-300` |
-| **Pagination** | ตัวเลขเรียบ ไม่มีพื้นหลังเต็มที่หน้าปัจจุบัน ใช้แค่ตัวอักษร `clay-600` + ขีดล่างบาง |
+| **Navigation (Sidebar)** | พื้น `white-000`, item ที่ active = พื้น `sage-100` + ตัวอักษร `sage-600` ไม่ใช้ไอคอนสีสันจัด ไอคอนเป็น outline บาง สีเดียวกับข้อความ |
+| **Tabs** | เส้นใต้ (underline) บาง 2px สี `sage-500` สำหรับ tab ที่เลือก ไม่ใช้พื้นหลังเต็ม tab |
+| **Modal / Dialog** | radius `20px`, shadow **Modal** ตาม §2.4 (เข้มกว่าการ์ดทั่วไปเพื่อสื่อลำดับชั้นที่ลอยสูงสุด), มี overlay สี `ink-900` ความโปร่งใส 40% เท่านั้น (ไม่ใช้ blur) |
+| **Toast / Notification** | มุมขวาบน, shadow **Modal** ตาม §2.4, ไอคอนสถานะ + ข้อความสั้น, auto-dismiss 4 วินาที ยกเว้น error ต้องกดปิดเอง |
+| **Breadcrumb** | ใช้ตัวอักษร `body-sm` สี `stone-700`, ตัวคั่นเป็น `/` บาง สี `cream-300` |
+| **Empty State** | ข้อความ + คำแนะนำขั้นถัดไปเสมอ (ห้ามแสดงแค่ "ไม่มีข้อมูล") ไม่ใช้ illustration สีสันจัด ถ้าจะใช้ภาพให้เป็น line-art เดียวสี `cream-300` |
+| **Pagination** | ตัวเลขเรียบ ไม่มีพื้นหลังเต็มที่หน้าปัจจุบัน ใช้แค่ตัวอักษร `sage-600` + ขีดล่างบาง |
 
 ### 3.2 Project-specific Patterns
 
@@ -193,11 +201,11 @@ Component เฉพาะของ Projexa ที่ผูกกับหลั�
 
 | Pattern | จุดประสงค์ | กติกาออกแบบ |
 |---|---|---|
-| **AI Suggestion Block** | แยกข้อมูลที่ AI สกัด/เสนอ ออกจากข้อมูลที่คนยืนยันแล้ว (Human-in-the-loop) | ใช้ border แบบ dashed สี `warning`, มีแท็กเล็ก "AI เสนอ" มุมซ้ายบน และปุ่ม "ยืนยัน" / "แก้ไข" ติดกับ block เสมอ — เมื่อคนกดยืนยันแล้ว border เปลี่ยนเป็น solid `stone-200` ปกติทันที |
-| **Traceability Trail** | แสดงสายโยง `TorClause → Requirement → Screen → TestCase → TestResult` | แสดงเป็นแถวของ pill เชื่อมด้วยเส้นบาง สี `stone-300` แต่ละ pill กดเพื่อไปยังต้นทาง/ปลายทางได้ วางไว้ใต้หัวข้อหลักของหน้าจอที่มีความสัมพันธ์นี้ |
+| **AI Suggestion Block** | แยกข้อมูลที่ AI สกัด/เสนอ ออกจากข้อมูลที่คนยืนยันแล้ว (Human-in-the-loop) | ใช้ border แบบ dashed สี `warning`, มีแท็กเล็ก "AI เสนอ" มุมซ้ายบน และปุ่ม "ยืนยัน" / "แก้ไข" ติดกับ block เสมอ — เมื่อคนกดยืนยันแล้ว border เปลี่ยนเป็น solid `cream-200` ปกติทันที |
+| **Traceability Trail** | แสดงสายโยง `TorClause → Requirement → Screen → TestCase → TestResult` | แสดงเป็นแถวของ pill เชื่อมด้วยเส้นบาง สี `cream-300` แต่ละ pill กดเพื่อไปยังต้นทาง/ปลายทางได้ วางไว้ใต้หัวข้อหลักของหน้าจอที่มีความสัมพันธ์นี้ |
 | **Audit / History Chip** | สื่อว่า "ใครแก้ ทำไม เมื่อไหร่" (Everything is logged) | ไอคอนนาฬิกาเล็กข้าง field ที่แก้ไขได้ กด/hover เพื่อเปิด popover ประวัติการเปลี่ยนแปลงแบบเรียงเวลา ไม่ต้องเปิดหน้าใหม่ |
-| **Workflow Stepper** | แสดงขั้นตอน TOR → Requirement → Design → Test → Document ในภาพรวม | เส้นแนวนอน จุดที่ผ่านแล้ว = `moss-500`, จุดปัจจุบัน = `clay-500`, จุดที่ยังไม่ถึง = `stone-300` ห้ามใช้สีเดาสถานะที่ยังไม่เกิดขึ้นจริง |
-| **TOR Upload Dropzone** | จุดเริ่มต้นของ workflow ทั้งระบบ | กรอบ dashed สี `stone-300` พื้น `paper-100` ไอคอน upload เรียบสีเดียว ไม่ใช้สีสันดึงดูดเกินจำเป็น เพราะเป็น action ที่ทำครั้งเดียวต่อโครงการ ไม่ต้องแข่งความสนใจกับ action อื่น |
+| **Workflow Stepper** | แสดงขั้นตอน TOR → Requirement → Design → Test → Document ในภาพรวม | เส้นแนวนอน จุดที่ผ่านแล้ว = `terracotta-500`, จุดปัจจุบัน = `sage-500`, จุดที่ยังไม่ถึง = `cream-300` ห้ามใช้สีเดาสถานะที่ยังไม่เกิดขึ้นจริง |
+| **TOR Upload Dropzone** | จุดเริ่มต้นของ workflow ทั้งระบบ | กรอบ dashed สี `cream-300` พื้น `white-000` ไอคอน upload เรียบสีเดียว ไม่ใช้สีสันดึงดูดเกินจำเป็น เพราะเป็น action ที่ทำครั้งเดียวต่อโครงการ ไม่ต้องแข่งความสนใจกับ action อื่น |
 | **Document Generation Trigger** | ปุ่มสั่งสร้างเอกสาร .docx จาก template | ต้องมี label ระบุ template ที่จะใช้ชัดเจน (เช่น "สร้าง REQ ตาม Template องค์กร") เพื่อย้ำว่าผลลัพธ์คุมรูปแบบด้วย `.dotx` ไม่ใช่ AI จัดหน้าเอง |
 
 ---
@@ -208,7 +216,7 @@ Component เฉพาะของ Projexa ที่ผูกกับหลั�
 
 หลักการเหล่านี้มาจาก [Projexa-System-Design-R1.md](../../../Projexa-System-Design-R1.md) และ CLAUDE.md ของโปรเจกต์ — UI ต้องสื่อสารหลักการเหล่านี้ให้ผู้ใช้ "เห็น" ได้ ไม่ใช่แค่ทำงานถูกต้องเบื้องหลัง:
 
-1. **Single Source of Truth** — ห้ามมีฟอร์มกรอกข้อมูลซ้ำที่มีอยู่แล้วในระบบ ทุก field ที่ดึงจากข้อมูลกลางต้องมีสถานะ read-only ชัดเจน (พื้น `paper-100` ตัวอักษร `stone-700`) และมีลิงก์ไปยังต้นทางเสมอ
+1. **Single Source of Truth** — ห้ามมีฟอร์มกรอกข้อมูลซ้ำที่มีอยู่แล้วในระบบ ทุก field ที่ดึงจากข้อมูลกลางต้องมีสถานะ read-only ชัดเจน (พื้น `white-000` ตัวอักษร `stone-700`) และมีลิงก์ไปยังต้นทางเสมอ
 2. **Full Traceability** — ทุกหน้าจอที่แสดง Requirement/Screen/TestCase ต้องมี Traceability Trail (§3.2) ห้ามซ่อนไว้ในเมนูลึก
 3. **Human-in-the-loop** — ข้อมูลที่มาจาก AI ต้องผ่าน AI Suggestion Block (§3.2) เสมอ ห้ามให้ข้อมูล AI ไหลเข้าระบบเป็น "ข้อเท็จจริง" โดยไม่มีจุดยืนยันของคน แม้ในกรณี auto-fill ที่ดูน่าเชื่อถือมากก็ตาม
 4. **Everything is logged** — field สำคัญ (สถานะ, ผู้รับผิดชอบ, วันที่) ต้องมี Audit/History Chip (§3.2) กดดูได้ทุกจุด
@@ -223,13 +231,13 @@ Component เฉพาะของ Projexa ที่ผูกกับหลั�
 ### 4.3 Accessibility
 
 - Contrast ratio ข้อความ/พื้นหลัง ≥ 4.5:1 ทุกจุด (ดู §2.1)
-- ทุก interactive element ต้องมี focus state ที่มองเห็นชัด (ring สี `clay-500`) รองรับการใช้ keyboard navigation ล้วน
+- ทุก interactive element ต้องมี focus state ที่มองเห็นชัด (ring สี `sage-500`) รองรับการใช้ keyboard navigation ล้วน
 - ห้ามสื่อความหมายด้วยสีอย่างเดียว (สถานะ, error, required field ต้องมี icon/label ควบคู่)
 - ขนาดตัวอักษร base ต้อง ≥ 14px และรองรับการ zoom ของ browser โดยไม่พังเลย์เอาต์
 
 ### 4.4 States (Loading / Empty / Error)
 
-- **Loading:** ใช้ skeleton (พื้น `stone-300` เรียบ, ไม่ animate แบบ shimmer สีสันจัด) ห้ามใช้ spinner หมุนตลอดหน้าจอเว้นแต่เป็น full-page transition จริงๆ
+- **Loading:** ใช้ skeleton (พื้น `cream-300` เรียบ, ไม่ animate แบบ shimmer สีสันจัด) ห้ามใช้ spinner หมุนตลอดหน้าจอเว้นแต่เป็น full-page transition จริงๆ
 - **Empty:** ต้องมีคำแนะนำ action ถัดไปเสมอ (ดู §3.1 Empty State) เช่นหน้า "ทะเบียนโครงการ" ที่ยังไม่มีโครงการ ต้องมีปุ่ม "เริ่มต้นโดยนำเข้า TOR" ไม่ใช่แค่ "ไม่มีข้อมูล"
 - **Error:** ตามหลัก Voice & Tone (§1.4) ต้องบอกสาเหตุ + ทางแก้ และใช้สี `danger` เฉพาะกับตัว error message/icon ไม่ทาสีพื้นหลังทั้ง block ด้วยสีแดงเข้ม
 
@@ -244,3 +252,5 @@ Component เฉพาะของ Projexa ที่ผูกกับหลั�
 ## หมายเหตุ
 
 เอกสารนี้เป็น **Draft ฉบับแรก** สร้างขึ้นตามคำขอให้จัดทำ Design System โทน Earth tone + Minimalist + Muji-inspired ยังไม่ผ่านการยืนยันจาก Design Lead/PM/SA — เมื่อลงมือพัฒนา UI จริง ควรนำ token ใน §2 ไปแปลงเป็นไฟล์ config จริง (เช่น Tailwind theme / CSS variables) ในโค้ดเบส และปรับปรุงเอกสารนี้ให้ตรงกับของจริงที่ implement เมื่อ repo เริ่มมีซอร์สโค้ด
+
+**อัปเดต 2026-08-24 (รอบแก้ไข):** ปรับโทนสี/สไตล์ตาม mood board ที่ผู้เกี่ยวข้องส่งภาพตัวอย่างมาให้ (ภาพ dashboard ของระบบอื่นที่ไม่เกี่ยวข้องกับ Projexa ใช้เป็นแรงบันดาลใจด้านสีและสไตล์การ์ด/shadow เท่านั้น ไม่ใช่การลอกฟีเจอร์หรือโครงสร้างหน้าจอ) เปลี่ยนจากแนว Muji flat/border-only (กลุ่มโทนสี "Stone & Paper" / "Clay & Moss") เป็นแนวการ์ดขาวลอย shadow มุมโค้งมากขึ้น (กลุ่มโทนสี "Cream & White" / "Sage & Terracotta") พลิกหลักการ border-based เดิมของการ์ด/panel มาเป็น shadow-based ยังคงสถานะ Draft รอ Design Lead/PM ยืนยันเช่นเดิม
