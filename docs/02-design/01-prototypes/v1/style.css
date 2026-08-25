@@ -1,31 +1,32 @@
 /*
   Projexa Prototype — v1 — style.css
   Self-contained snapshot ของ Design Tokens จาก docs/02-design/01-prototypes/DESIGN.md
-  ณ วันที่ 2026-08-24 (Earth tone + Minimalist + Muji-inspired)
+  อัปเดต 2026-08-24 (รอบแก้ไข): ปรับโทนสี/สไตล์ตาม mood board ใหม่
+  (Cream & White + Sage & Terracotta, การ์ดขาวลอย shadow แทน border, มุมโค้งมากขึ้น)
   ห้ามอ้างอิงไฟล์ CSS ข้ามเวอร์ชัน — เวอร์ชันถัดไปให้ก๊อปปี้ token ชุดใหม่มาไว้ที่นี่แยกต่างหาก
 */
 
 :root {
-  /* พื้นหลัง (Neutral — Stone & Paper, DESIGN.md §2.1) */
-  --color-bg-page: #FBF9F5;      /* paper-050 */
-  --color-bg-surface: #F5F1E9;   /* paper-100 */
-  --color-border: #E8E1D3;       /* stone-200 */
-  --color-border-strong: #D4CBB8;/* stone-300 */
+  /* พื้นหลัง (Neutral — Cream & White, DESIGN.md §2.1) */
+  --color-bg-page: #F7F5F0;      /* cream-050 */
+  --color-bg-surface: #FFFFFF;   /* white-000 */
+  --color-border: #ECE9E2;       /* cream-200 */
+  --color-border-strong: #DAD6CC;/* cream-300 */
   /* ข้อความ */
-  --color-text-muted: #A79C87;     /* stone-500 */
-  --color-text-secondary: #7A6F5D; /* stone-700 */
-  --color-text-primary: #3B352A;   /* stone-900 */
-  /* accent — Clay & Moss */
-  --color-accent-tint: #F1E0D3;  /* clay-100 */
-  --color-accent: #B4693E;       /* clay-500 */
-  --color-accent-hover: #9C5730; /* clay-600 */
-  --color-accent2-tint: #E4E8DA; /* moss-100 */
-  --color-accent2: #6E7B58;      /* moss-500 */
+  --color-text-muted: #A6A296;     /* stone-500 */
+  --color-text-secondary: #6F6C62; /* stone-700 */
+  --color-text-primary: #2B2A25;   /* ink-900 */
+  /* accent — Sage & Terracotta */
+  --color-accent-tint: #E9EDE0;  /* sage-100 */
+  --color-accent: #7C8E5C;       /* sage-500 */
+  --color-accent-hover: #65744A; /* sage-600 */
+  --color-accent2-tint: #FBEADA; /* terracotta-100 */
+  --color-accent2: #E28C4F;      /* terracotta-500 */
   /* semantic */
-  --color-success: #6B7F5E; --color-success-bg: #E7ECE0;
-  --color-warning: #B3852E; --color-warning-bg: #F5E8CE;
-  --color-danger:  #A85039; --color-danger-bg:  #F1DCD4;
-  --color-info:    #5D7A80; --color-info-bg:    #DEE8E9;
+  --color-success: #5B8A55; --color-success-bg: #E6F0DF;
+  --color-warning: #B3812E; --color-warning-bg: #F6E9CE;
+  --color-danger:  #C1573A; --color-danger-bg:  #F7DFD4;
+  --color-info:    #6E63C8; --color-info-bg:    #EBE8FA;
   /* typography (DESIGN.md §2.2) */
   --font-th: "IBM Plex Sans Thai", "Noto Sans Thai", system-ui, sans-serif;
   --font-en: "Inter", system-ui, sans-serif;
@@ -34,8 +35,9 @@
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
   --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
   /* radius / border / shadow (DESIGN.md §2.4) */
-  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
-  --shadow-float: 0 2px 8px rgba(59, 53, 42, 0.08);
+  --radius-sm: 8px; --radius-md: 16px; --radius-lg: 20px;
+  --shadow-float: 0 4px 24px rgba(43, 42, 37, 0.06);
+  --shadow-modal: 0 12px 32px rgba(43, 42, 37, 0.12);
 }
 
 * { box-sizing: border-box; }
@@ -82,7 +84,7 @@ body {
 }
 .tag-suggested { background: var(--color-warning-bg); color: var(--color-warning); }
 .card {
-  background: var(--color-bg-surface); border: 1px solid var(--color-border);
+  background: var(--color-bg-surface); box-shadow: var(--shadow-float);
   border-radius: var(--radius-md); padding: var(--sp-6); margin-bottom: var(--sp-6);
 }
 .card h2 { font-size: 20px; line-height: 28px; font-weight: 600; margin: 0 0 var(--sp-4); }
@@ -156,7 +158,7 @@ tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
 [data-audit-popover] {
   display: none; position: absolute; z-index: 10; margin-top: var(--sp-1); min-width: 220px;
   background: var(--color-bg-page); border: 1px solid var(--color-border); border-radius: var(--radius-md);
-  box-shadow: var(--shadow-float); padding: var(--sp-3); font-size: 12px; list-style: none;
+  box-shadow: var(--shadow-modal); padding: var(--sp-3); font-size: 12px; list-style: none;
 }
 [data-audit-popover].is-open { display: block; }
 [data-audit-popover] li { margin-bottom: var(--sp-1); color: var(--color-text-secondary); }
@@ -175,7 +177,7 @@ tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
 .toast {
   position: fixed; top: var(--sp-6); right: var(--sp-6); z-index: 100; max-width: 320px;
   background: var(--color-bg-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md);
-  box-shadow: var(--shadow-float); padding: var(--sp-3) var(--sp-4); font-size: 13px;
+  box-shadow: var(--shadow-modal); padding: var(--sp-3) var(--sp-4); font-size: 13px;
   opacity: 0; transform: translateY(-8px); transition: opacity 200ms ease-out, transform 200ms ease-out;
 }
 .toast.is-visible { opacity: 1; transform: translateY(0); }
