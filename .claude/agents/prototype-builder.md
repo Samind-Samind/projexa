@@ -241,6 +241,22 @@ tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
 @media (prefers-reduced-motion: reduce) {
   .toast { transition: none; }
 }
+
+/* .proto-note — component เฉพาะของกระบวนการทำ prototype เท่านั้น
+   ใช้แยก "หมายเหตุที่มีไว้ช่วยผู้รีวิว prototype" ออกจาก UX copy จริงที่ใช้ .note
+   ห้ามเพิ่ม .proto-note ลง DESIGN.md เด็ดขาด (DESIGN.md อธิบายเฉพาะ UI ของแอปจริง) */
+.proto-note {
+  position: relative; margin-top: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3); padding-top: calc(var(--sp-2) + 14px);
+  border: 1px dashed var(--color-info); border-radius: var(--radius-sm);
+  background: var(--color-info-bg); font-size: 12px; color: var(--color-text-secondary);
+}
+.proto-note::before {
+  content: "หมายเหตุ Prototype — จะไม่ปรากฏในแอปจริง";
+  position: absolute; top: -10px; left: var(--sp-3);
+  background: var(--color-info-bg); color: var(--color-info);
+  font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: var(--radius-sm);
+}
 ```
 
 ต่อจาก CSS ในไฟล์เดียวกัน ให้สร้างไฟล์
@@ -404,6 +420,15 @@ document.addEventListener('DOMContentLoaded', function () {
 - ห้ามใส่ Acceptance Criteria ที่ไม่มีในไฟล์ spec ห้ามเดาเนื้อหาที่ไม่มีต้นทาง
 - ถ้าเป็นการ **แก้เวอร์ชันเดิม**: `Read` ไฟล์ HTML เดิมก่อนแก้ ใช้ `Edit`
   เปลี่ยนเฉพาะส่วนที่จำเป็น ห้ามลบ section ที่ยังใช้ได้อยู่โดยไม่มีเหตุผล
+- ทุกครั้งที่จะเขียนข้อความอธิบาย/หมายเหตุในหน้าจอ ต้องแยกให้ชัดว่าเป็น
+  (ก) **UX copy จริง** ที่จะอยู่ในแอปที่พัฒนาเสร็จแล้ว → ใช้ `class="note"`
+  ตามปกติ หรือ (ข) **หมายเหตุที่มีไว้ช่วยผู้รีวิว prototype เท่านั้น** เช่น
+  บอกว่าเป็นข้อมูลตัวอย่าง, บอกว่าลิงก์ไปหน้าจอที่ยังไม่ได้สร้าง prototype,
+  บอกขอบเขตของเวอร์ชันนี้ → ต้องใช้ `class="proto-note"` เสมอ ห้ามปนกับ
+  `.note` ธรรมดา และห้ามอ้างชื่อหลักการออกแบบระบบ (เช่น "ตามหลัก
+  Human-in-the-loop") ตรงๆ ใน UX copy จริงที่ user จะเห็น เพราะเป็นภาษา
+  เอกสารไม่ใช่ copy จริง (ให้ใส่ไว้แค่ในคอมเมนต์ HTML แทนถ้าต้องการอ้างอิง
+  เหตุผลเชิงออกแบบ)
 
 **กติกาความ interactive (บังคับทุกหน้าจอ):** ทุกหน้าจอต้องมี interaction
 จริงอย่างน้อย 1 จุดที่สอดคล้องกับ Acceptance Criteria ของ SCR นั้น โดยเลือก

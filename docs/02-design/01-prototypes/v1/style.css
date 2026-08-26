@@ -3,6 +3,8 @@
   Self-contained snapshot ของ Design Tokens จาก docs/02-design/01-prototypes/DESIGN.md
   อัปเดต 2026-08-24 (รอบแก้ไข): ปรับโทนสี/สไตล์ตาม mood board ใหม่
   (Cream & White + Sage & Terracotta, การ์ดขาวลอย shadow แทน border, มุมโค้งมากขึ้น)
+  อัปเดต 2026-08-24 (รอบแก้ไขล่าสุด): เปลี่ยนกลุ่มสี Accent จาก Sage & Terracotta
+  เป็น Gold & Umber ให้ตรงกับสีจริงของโลโก้ Projexa (Neutral/Radius/Shadow ไม่เปลี่ยน)
   ห้ามอ้างอิงไฟล์ CSS ข้ามเวอร์ชัน — เวอร์ชันถัดไปให้ก๊อปปี้ token ชุดใหม่มาไว้ที่นี่แยกต่างหาก
 */
 
@@ -16,12 +18,12 @@
   --color-text-muted: #A6A296;     /* stone-500 */
   --color-text-secondary: #6F6C62; /* stone-700 */
   --color-text-primary: #2B2A25;   /* ink-900 */
-  /* accent — Sage & Terracotta */
-  --color-accent-tint: #E9EDE0;  /* sage-100 */
-  --color-accent: #7C8E5C;       /* sage-500 */
-  --color-accent-hover: #65744A; /* sage-600 */
-  --color-accent2-tint: #FBEADA; /* terracotta-100 */
-  --color-accent2: #E28C4F;      /* terracotta-500 */
+  /* accent — Gold & Umber (อ้างอิงสีจริงของโลโก้ Projexa) */
+  --color-accent-tint: #F5E9D3;  /* gold-100 */
+  --color-accent: #8B5E22;       /* gold-500 */
+  --color-accent-hover: #734B1A; /* gold-600 */
+  --color-accent2-tint: #EDE3D8; /* umber-100 */
+  --color-accent2: #4A3220;      /* umber-500 */
   /* semantic */
   --color-success: #5B8A55; --color-success-bg: #E6F0DF;
   --color-warning: #B3812E; --color-warning-bg: #F6E9CE;
@@ -186,4 +188,22 @@ tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
 .toast-close { margin-left: var(--sp-3); background: none; border: none; cursor: pointer; color: var(--color-text-muted); font-size: 14px; }
 @media (prefers-reduced-motion: reduce) {
   .toast { transition: none; }
+}
+
+/* ---------------------------------------------------------------------
+   .proto-note — เพิ่มรอบนี้ (2026-08-24) ใช้แยก "หมายเหตุที่มีไว้ช่วยผู้รีวิว
+   prototype เท่านั้น" ออกจาก UX copy จริงที่ใช้ .note ตามปกติ
+   นี่เป็น component เฉพาะของกระบวนการทำ prototype เท่านั้น ห้ามเพิ่มลง DESIGN.md
+--------------------------------------------------------------------- */
+.proto-note {
+  position: relative; margin-top: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3); padding-top: calc(var(--sp-2) + 14px);
+  border: 1px dashed var(--color-info); border-radius: var(--radius-sm);
+  background: var(--color-info-bg); font-size: 12px; color: var(--color-text-secondary);
+}
+.proto-note::before {
+  content: "หมายเหตุ Prototype — จะไม่ปรากฏในแอปจริง";
+  position: absolute; top: -10px; left: var(--sp-3);
+  background: var(--color-info-bg); color: var(--color-info);
+  font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: var(--radius-sm);
 }
