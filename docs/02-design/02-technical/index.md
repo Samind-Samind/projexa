@@ -13,3 +13,6 @@
 
 - [[architecture|architecture]] — สถาปัตยกรรมระดับสูงเชิงแนวคิด (conceptual,
   ยังไม่ผูกกับเทคโนโลยี)
+- [[database-schema|database-schema]] — โครงสร้างฐานข้อมูลระดับ Conceptual
+  พร้อม ER Diagram
+- [[api-spec|api-spec]] — รายการ API resource/endpoint ระดับ Conceptual

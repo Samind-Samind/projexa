@@ -105,6 +105,16 @@ AI ไม่เคยสร้างไฟล์ .docx เอง — AI คื�
 | `Issue` | ปัญหาและแนวทางแก้ไข | อ้าง Screen หรือ Project |
 | `DocTemplate` | แม่แบบเอกสาร .dotx + placeholder mapping | ระดับองค์กร |
 | `GeneratedDocument` | เอกสารที่ระบบสร้าง (เวอร์ชัน, งวด, ผู้สร้าง) | อ้าง Milestone + DocTemplate |
+| `User` | ผู้ใช้งานของระบบ (คนจริง) | ถูกอ้างโดยหลาย entity ในฐานะผู้ทำรายการ/ผู้รับผิดชอบ/ผู้ยืนยัน มี ProjectRoleAssignment หลายรายการ |
+| `ProjectRoleAssignment` | การกำหนด Role ให้ User ระดับโครงการ (รองรับ 1 user หลาย Role ตาม §2) | belongs to Project และ User |
+| `MasterDataItem` | ข้อมูลตั้งต้นกลาง (ประเภทเอกสาร/ประเภทหน้าจอ/สถานะ/ตำแหน่งงาน แยกด้วย category) | ถูกอ้างโดย Screen (type), DocTemplate (document_type), User (position), DeliverableDoc (document_type) |
+| `ScreenRequirement` | ตารางเชื่อม (junction) ระหว่าง Screen และ Requirement แบบ many-to-many | เชื่อม Screen กับ Requirement |
+| `ScreenFlow` | เส้นเชื่อม (edge) ระหว่างหน้าจอสำหรับผัง Flow (SCR-011) | เชื่อม Screen (from) กับ Screen (to) |
+
+> **หมายเหตุ:** รายละเอียดระดับตารางและฟิลด์ ดูที่
+> [database-schema.md](docs/02-design/02-technical/database-schema.md) —
+> รายละเอียด API ดูที่
+> [api-spec.md](docs/02-design/02-technical/api-spec.md)
 
 ### 4.2 เส้น Traceability (หัวใจของระบบ)
 
