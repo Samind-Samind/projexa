@@ -35,7 +35,7 @@
       <span class="arrow">→</span>
       <span class="tag">Screen: SCR-003</span>
     </div>
-    <p class="note" style="margin-top:-16px; margin-bottom:24px;">
+    <p class="proto-note" style="margin-top:-16px; margin-bottom:24px;">
       หน้าจอที่เกี่ยวข้องในโมดูลเดียวกัน (M1) ตาม Traceability ของ spec: SCR-001 (Dashboard ภาพรวม),
       SCR-002 (รายการโครงการ), SCR-004 (นำเข้า/บันทึก TOR), SCR-005 (ตรวจสอบผลสกัด TOR),
       SCR-006 (ทะเบียนความต้องการ), SCR-007 (งวดงานและเอกสารส่งมอบ) — ยังไม่ได้สร้าง prototype
@@ -56,7 +56,8 @@
           <label>รหัสโครงการ</label>
         </div>
         <input type="text" value="PRJ-0000 (ตัวอย่าง)" readonly>
-        <p class="note">ดึงจากทะเบียนโครงการ (Single Source of Truth) — อ้างอิงต้นทางที่ SCR-002 รายการโครงการ (ยังไม่ได้สร้าง prototype ของหน้านี้ในเวอร์ชัน v1) ห้ามแก้ไขค่านี้ที่หน้าจอนี้โดยตรง</p>
+        <p class="note">ดึงจากทะเบียนโครงการ (Single Source of Truth) — อ้างอิงต้นทางที่ SCR-002 รายการโครงการ ห้ามแก้ไขค่านี้ที่หน้าจอนี้โดยตรง</p>
+        <p class="proto-note">ลิงก์ไปยัง SCR-002 ในหน้านี้ยังกดไม่ได้ เพราะยังไม่ได้สร้าง prototype ของ SCR-002 ในเวอร์ชัน v1 นี้</p>
       </div>
 
       <div class="grid grid-2">
@@ -112,7 +113,8 @@
           <input type="text" value="1,000,000 (ตัวอย่าง)">
         </div>
       </div>
-      <p class="note">* ฟิลด์บังคับกรอก — ค่าที่แสดงในฟอร์มนี้เป็นข้อมูลตัวอย่างเพื่อสาธิต UI เท่านั้น ไม่ใช่ข้อมูลโครงการจริง</p>
+      <p class="note">* ฟิลด์บังคับกรอก</p>
+      <p class="proto-note">ค่าที่แสดงในฟอร์มนี้เป็นข้อมูลตัวอย่างเพื่อสาธิต UI เท่านั้น ไม่ใช่ข้อมูลโครงการจริง</p>
       </div>
       <div data-loading-view>
         <p class="page-sub" style="margin-bottom: var(--sp-4);">สาธิตหน้าตาของฟอร์มด้านบนขณะระบบกำลังดึงข้อมูลโครงการเดิมมาแสดงเพื่อแก้ไข (ก่อนข้อมูลจะโหลดเสร็จ)</p>
@@ -163,7 +165,7 @@
       <div class="team-actions">
         <button type="button" class="btn btn-secondary" data-row-add="#team-rows">+ เพิ่มสมาชิกทีมงาน</button>
       </div>
-      <p class="note">รายชื่อทีมงานที่แสดงเป็นข้อมูลตัวอย่างเพื่อสาธิต UI เท่านั้น</p>
+      <p class="proto-note">รายชื่อทีมงานที่แสดงเป็นข้อมูลตัวอย่างเพื่อสาธิต UI เท่านั้น</p>
     </div>
 
     <!-- AC3: บันทึกการเปลี่ยนแปลงลง audit log ตามหลัก Everything is Logged -->
@@ -190,7 +192,8 @@
           </tr>
         </tbody>
       </table>
-      <p class="note">ทุกครั้งที่มีการบันทึกข้อมูลในหน้านี้ ระบบจะบันทึกรายการลง audit log อัตโนมัติ (ใคร แก้อะไร เมื่อไหร่) ตามหลัก Everything is logged — ตารางด้านบนเป็นข้อมูลตัวอย่างเพื่อสาธิต UI เท่านั้น</p>
+      <p class="note">ทุกครั้งที่มีการบันทึกข้อมูลในหน้านี้ ระบบจะบันทึกรายการลง audit log อัตโนมัติ (ใคร แก้อะไร เมื่อไหร่)</p>
+      <p class="proto-note">ตารางด้านบนเป็นข้อมูลตัวอย่างเพื่อสาธิต UI เท่านั้น ไม่ใช่ audit log จริง</p>
     </div>
 
     <div class="form-actions">
@@ -198,7 +201,7 @@
       <button type="button" class="btn btn-secondary">ยกเลิก</button>
     </div>
 
-    <p class="note">ข้อมูลในหน้านี้เป็นตัวอย่างเพื่อสาธิต UI เท่านั้น ไม่ใช่ข้อมูลจริง — อ้างอิงจาก <a href="../../../01-requirements/01-spec/20260824-003-scr-003-ข้อมูลโครงการ.md">spec SCR-003</a></p>
+    <p class="proto-note">ข้อมูลในหน้านี้เป็นตัวอย่างเพื่อสาธิต UI เท่านั้น ไม่ใช่ข้อมูลจริง — อ้างอิงจาก <a href="../../../01-requirements/01-spec/20260824-003-scr-003-ข้อมูลโครงการ.md">spec SCR-003</a></p>
   </main>
 </div>
 <script src="script.js"></script>
