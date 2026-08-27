@@ -1,6 +1,6 @@
 # Database Schema (Conceptual) — Projexa
 
-- **วันที่สร้าง/อัปเดตล่าสุด:** 2026-08-26
+- **วันที่สร้าง/อัปเดตล่าสุด:** 2026-08-27
 - **สถานะ:** Draft — รอ SA/Dev Lead ยืนยันเป็นทางการ (ดูสถานะรายตารางด้านล่าง)
 - **ระดับเอกสาร:** Conceptual/Logical — ชนิดข้อมูลเป็นคำเชิงแนวคิด
   (Text / Number / Boolean / DateTime / Enum / JSON-flexible / Reference)
@@ -61,6 +61,7 @@ erDiagram
     User ||--o{ ProjectRoleAssignment : has
     User ||--o{ Assignment : assigned
     User ||--o{ StatusHistory : "changed_by"
+    User ||--o{ AuditLogEntry : "changed_by"
     User ||--o{ Attachment : uploaded_by
 
     MasterDataItem ||..o{ Screen : "reference: type"
@@ -71,7 +72,9 @@ erDiagram
 > **หมายเหตุ:** `Attachment` เป็น polymorphic — ผูกได้กับ `Screen` /
 > `StatusHistory` / `Project` / `TorDocument` / `GeneratedDocument` ผ่านคู่
 > `entity_type` + `entity_id` (ไม่วาดทุกเส้นในไดอะแกรมเพื่อความอ่านง่าย ให้
-> อ้างอิงคำอธิบายนี้ประกอบ diagram)
+> อ้างอิงคำอธิบายนี้ประกอบ diagram) `AuditLogEntry` ก็เป็น polymorphic แบบ
+> เดียวกัน (ผ่าน entity_type+entity_id ไปยัง `Project`/
+> `ProjectRoleAssignment`) ไม่ได้วาดทุกเส้นเช่นกัน
 
 ## บริบท/การตัดสินใจเชิงแนวคิดที่ใช้ประกอบ
 
@@ -95,8 +98,9 @@ erDiagram
 
 ## รายการตาราง (Entities)
 
-> **หมายเหตุ:** สถานะทุกตารางในรอบนี้เป็น `Draft (suggested)` ทั้งหมดตามมติ
-> ของ user (ยังไม่มีตารางใดเป็น `Confirmed`)
+> **หมายเหตุ:** สถานะตารางส่วนใหญ่ยังเป็น `Draft (suggested)` ตามมติเดิมของ
+> user — ยกเว้น `AuditLogEntry` ซึ่ง Confirmed แล้วเมื่อ 2026-08-27 (sync มา
+> จาก [[detailed-design/scr-003-ข้อมูลโครงการ|SCR-003 detailed design]])
 
 ### M1 — จัดการโครงการและ TOR
 
@@ -399,6 +403,32 @@ erDiagram
 **ความสัมพันธ์:** audit trail ของ `Screen`; อ้าง `User` (`changed_by`,
 `old_assignee_id`, `new_assignee_id`)
 
+#### AuditLogEntry
+
+- **สถานะ:** Confirmed (2026-08-27)
+- **คำอธิบาย:** ประวัติการเปลี่ยนแปลงข้อมูลของ entity ต่างๆ ในระบบ (นอกเหนือจาก
+  Screen ซึ่งมี StatusHistory อยู่แล้ว) ตามหลัก "Everything is logged" —
+  ออกแบบครั้งแรกที่ [[detailed-design/scr-003-ข้อมูลโครงการ|SCR-003 detailed design]]
+  แล้ว sync เข้าที่นี่
+- **ใช้งานโดยหน้าจอ:** SCR-003 (เริ่มต้น) — pattern เดียวกันนี้ใช้ซ้ำได้กับ
+  SCR อื่นในอนาคตที่ต้องการ audit log ระดับ field
+
+| ฟิลด์ | ชนิดข้อมูล (conceptual) | Key | Nullable | คำอธิบาย |
+|---|---|---|---|---|
+| id | Reference | PK | ไม่ | |
+| entity_type | Enum(Project, ProjectRoleAssignment) | | ไม่ | ประเภท entity ที่ถูกบันทึกประวัติ — ขยาย Enum เพิ่มได้เมื่อมี SCR อื่นต้องการ audit log แบบเดียวกัน |
+| entity_id | Reference | | ไม่ | อ้างอิงแถวของ entity_type นั้น (polymorphic reference คล้าย `Attachment`) |
+| field_name | Text | | ได้ | ชื่อฟิลด์ที่เปลี่ยน (null สำหรับ action ที่ไม่ใช่แก้ฟิลด์เดี่ยว เช่น เพิ่ม/ลบทีมงาน) |
+| old_value | JSON-flexible | | ได้ | ค่าก่อนแก้ไข (null ตอน action=Create/AddTeamMember) |
+| new_value | JSON-flexible | | ได้ | ค่าหลังแก้ไข (null ตอน action=RemoveTeamMember) |
+| changed_by | Reference→User | FK | ไม่ | |
+| changed_at | DateTime | | ไม่ | |
+| action | Enum(Create, Update, AddTeamMember, RemoveTeamMember) | | ไม่ | |
+
+**ความสัมพันธ์:** append-only log ห้ามลบ (ไม่มีฟิลด์ `is_deleted` — ตามแนวทาง
+เดียวกับ `StatusHistory`); อ้าง `User` (`changed_by`); polymorphic reference
+ไปยัง entity ต่างๆ ผ่าน `entity_type`+`entity_id` (เหมือน `Attachment`)
+
 #### Issue
 
 - **สถานะ:** Draft (suggested)
@@ -609,3 +639,9 @@ erDiagram
   (24 ตาราง) พร้อม mapping "ใช้งานโดยหน้าจอ" ต่อตาราง แทนที่ `TODO` ทั้งหมด
   เรียบร้อยแล้ว ทุกตารางยังคงสถานะ `Draft (suggested)` ตามเดิม (ยังไม่มี
   ตารางใดเป็น `Confirmed`)
+- 2026-08-27: sync มติจาก [[detailed-design/scr-003-ข้อมูลโครงการ|SCR-003
+  detailed design]] (Confirmed) — เพิ่มตารางใหม่ `AuditLogEntry` (สถานะ
+  `Confirmed`, 25 ตารางรวม) เป็น polymorphic append-only log ผ่าน
+  entity_type+entity_id (ปัจจุบันครอบคลุม `Project`, `ProjectRoleAssignment`)
+  อัปเดต ER Diagram เพิ่มเส้น `User ||--o{ AuditLogEntry` และหมายเหตุ
+  polymorphic ประกอบ diagram ตารางอื่นทั้งหมดยังคงสถานะเดิมไม่ถูกแตะต้อง

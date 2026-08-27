@@ -16,3 +16,5 @@
 - [[database-schema|database-schema]] — โครงสร้างฐานข้อมูลระดับ Conceptual
   พร้อม ER Diagram
 - [[api-spec|api-spec]] — รายการ API resource/endpoint ระดับ Conceptual
+- [[detailed-design/index|detailed-design]] — Conceptual Design + Sequence
+  Flow รายหน้าจอ/ฟีเจอร์

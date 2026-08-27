@@ -110,11 +110,15 @@ AI ไม่เคยสร้างไฟล์ .docx เอง — AI คื�
 | `MasterDataItem` | ข้อมูลตั้งต้นกลาง (ประเภทเอกสาร/ประเภทหน้าจอ/สถานะ/ตำแหน่งงาน แยกด้วย category) | ถูกอ้างโดย Screen (type), DocTemplate (document_type), User (position), DeliverableDoc (document_type) |
 | `ScreenRequirement` | ตารางเชื่อม (junction) ระหว่าง Screen และ Requirement แบบ many-to-many | เชื่อม Screen กับ Requirement |
 | `ScreenFlow` | เส้นเชื่อม (edge) ระหว่างหน้าจอสำหรับผัง Flow (SCR-011) | เชื่อม Screen (from) กับ Screen (to) |
+| `AuditLogEntry` | ประวัติการเปลี่ยนแปลงข้อมูลของ entity ต่างๆ นอกเหนือจาก Screen (ซึ่งมี StatusHistory อยู่แล้ว) ตามหลัก Everything is Logged | polymorphic reference ไปยัง entity ต่างๆ ผ่าน entity_type+entity_id, อ้าง User (changed_by) |
 
 > **หมายเหตุ:** รายละเอียดระดับตารางและฟิลด์ ดูที่
 > [database-schema.md](docs/02-design/02-technical/database-schema.md) —
 > รายละเอียด API ดูที่
 > [api-spec.md](docs/02-design/02-technical/api-spec.md)
+>
+> **หมายเหตุ:** `AuditLogEntry` ออกแบบรายละเอียดครั้งแรกที่ SCR-003 detailed
+> design แล้ว sync เข้าที่นี่ในภายหลัง วันที่ 2026-08-27
 
 ### 4.2 เส้น Traceability (หัวใจของระบบ)
 

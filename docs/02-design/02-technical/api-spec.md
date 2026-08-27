@@ -1,6 +1,6 @@
 # API Spec (Conceptual) — Projexa
 
-- **วันที่สร้าง/อัปเดตล่าสุด:** 2026-08-26
+- **วันที่สร้าง/อัปเดตล่าสุด:** 2026-08-27
 - **สถานะ:** Draft — รอ SA/Dev Lead ยืนยันเป็นทางการ (ดูสถานะราย resource
   ด้านล่าง)
 - **ระดับเอกสาร:** Conceptual — resource path/verb เป็นสัญกรณ์สื่อสารเท่านั้น
@@ -103,6 +103,16 @@
 | List/Create | `GET /projects/{id}/milestones`, `POST /projects/{id}/milestones` | จัดการงวดงาน | PM | body: `name`, `due_date`, `payment_percentage`? | `Milestone` / list |
 | Update | `PATCH /milestones/{id}` | แก้ไขงวดงาน | PM | body: field ที่แก้ | `Milestone` ที่อัปเดต |
 | List/Create | `GET /milestones/{id}/deliverable-docs`, `POST /milestones/{id}/deliverable-docs` | เอกสารที่ต้องส่งในงวดนั้น | PM | body: `document_type` | `DeliverableDoc` / list |
+
+#### AuditLogEntry — `/projects/{id}/audit-log`
+
+- **สถานะ:** Confirmed (2026-08-27)
+- **อ้างอิงหน้าจอ:** SCR-003 (Audit/History Chip ตาม DESIGN.md §3.2)
+- **Entity ที่เกี่ยวข้อง:** `AuditLogEntry`
+
+| Operation | Method + Path (conceptual) | คำอธิบาย | สิทธิ์ (Role) | Request (conceptual) | Response (conceptual) |
+|---|---|---|---|---|---|
+| List | `GET /projects/{id}/audit-log` | อ่านประวัติการเปลี่ยนแปลงของ entity ต่างๆ ในโครงการนี้ | ทุก role ที่มี `ProjectRoleAssignment` กับโครงการนี้ (read) | query: `entity_type`?, `entity_id`?, `field_name`?, `page`, `pageSize`, `sort` (default `changed_at` desc) | list ของ `AuditLogEntry` |
 
 ### M2 — วิเคราะห์และออกแบบ (SCR-008 ถึง SCR-011)
 
@@ -265,8 +275,8 @@
 |---|---|---|---|---|---|
 | List/Create | `GET /users`, `POST /users` | จัดการผู้ใช้งาน | Admin | body: `name`, `email`, `position`? | `User` / list |
 | Update/Delete | `PATCH /users/{id}`, `DELETE /users/{id}` | แก้ไข/ปิดใช้งาน (soft-delete) | Admin | body: field ที่แก้ | `User` ที่อัปเดต |
-| Assign role | `POST /projects/{id}/role-assignments` | กำหนด Role ให้ user ระดับโครงการ | Admin | body: `user_id`, `role` | `ProjectRoleAssignment` ที่สร้าง |
-| Remove role | `DELETE /role-assignments/{id}` | ถอน Role (soft-delete) | Admin | — | ตั้ง `is_deleted`=true |
+| Assign role | `POST /projects/{id}/role-assignments` | กำหนด Role ให้ user ระดับโครงการ | Admin, PM (เฉพาะโครงการที่ตนมี role PM — ตามมติ SCR-003 BR-003-4) | body: `user_id`, `role` | `ProjectRoleAssignment` ที่สร้าง |
+| Remove role | `DELETE /role-assignments/{id}` | ถอน Role (soft-delete) | Admin, PM (เฉพาะโครงการที่ตนมี role PM — ตามมติ SCR-003 BR-003-4) | — | ตั้ง `is_deleted`=true |
 
 #### MasterDataItem — `/master-data`, `/master-data/{id}`
 
@@ -296,3 +306,10 @@
   (TOR Parser, Design Analyzer, Test Generator, Document Writer) ตามกติกา
   §7.2 ข้อ 5 และแยก endpoint "AI ร่างเนื้อความบรรยาย" กับ "export/render
   จริง" ของ `GeneratedDocument` ตาม §8 เรียบร้อย
+- 2026-08-27: sync มติจาก [[detailed-design/scr-003-ข้อมูลโครงการ|SCR-003
+  detailed design]] (Confirmed) — เพิ่ม resource ใหม่ `AuditLogEntry`
+  (สถานะ `Confirmed`) พร้อม endpoint `GET /projects/{id}/audit-log`; แก้ไข
+  สิทธิ์ของ resource `User / ProjectRoleAssignment` ที่มีอยู่แล้วให้ PM
+  (เฉพาะโครงการที่ตนมี role PM ตามมติ SCR-003 BR-003-4) สามารถ Assign/Remove
+  role ได้เพิ่มจากเดิมที่จำกัดเฉพาะ Admin — resource/endpoint อื่นทั้งหมดไม่
+  ถูกแตะต้อง

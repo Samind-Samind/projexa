@@ -1,6 +1,6 @@
 # High-Level Architecture (Conceptual) — Projexa
 
-- **วันที่สร้าง/อัปเดตล่าสุด:** 2026-08-26
+- **วันที่สร้าง/อัปเดตล่าสุด:** 2026-08-27
 - **สถานะ:** Confirmed — ยืนยันโดย user เมื่อ 2026-08-26 (ทุก section)
 - **อ้างอิงต้นทาง:** [Projexa-System-Design-R1.md](../../../Projexa-System-Design-R1.md) §3 §4 §5 §7 §8 §9,
   [[../../01-requirements/backlog|backlog]],
@@ -65,12 +65,12 @@ Layer ออกเป็น 4 service ตามเดิมตรงๆ (ไม�
 | Component | รับผิดชอบ | ขอบเขต (นอกความรับผิดชอบ) | โมดูล/หน้าจอที่เกี่ยวข้อง (§5) | Entity หลัก (§4.1) | สถานะ |
 | --- | --- | --- | --- | --- | --- |
 | **Presentation Layer** | Web app แสดงผล/รับ input ทุกหน้าจอ, แสดงป้าย `AI Generated`/`Human Confirmed` | ไม่มี business logic/validation เชิงลึก | ทุกหน้าจอ (26 หน้าจอ) | — (ไม่มี entity เป็นของตัวเอง) | Confirmed (2026-08-26) |
-| **Project Service** | จัดการโครงการ, นำเข้า/เก็บ TOR, ทะเบียน REQ, งวดงาน, ผู้ใช้งาน/สิทธิ์ระดับโครงการ, ข้อมูลตั้งต้นระบบ | ไม่วิเคราะห์ออกแบบหน้าจอ, ไม่สร้างเอกสาร | M1 (SCR-001–007) + M7 (SCR-025 ผู้ใช้งาน/สิทธิ์, SCR-026 ข้อมูลตั้งต้น) | Project, TorDocument, TorClause, Requirement, Milestone, DeliverableDoc | Confirmed (2026-08-26) |
+| **Project Service** | จัดการโครงการ, นำเข้า/เก็บ TOR, ทะเบียน REQ, งวดงาน, ผู้ใช้งาน/สิทธิ์ระดับโครงการ, ข้อมูลตั้งต้นระบบ | ไม่วิเคราะห์ออกแบบหน้าจอ, ไม่สร้างเอกสาร | M1 (SCR-001–007) + M7 (SCR-025 ผู้ใช้งาน/สิทธิ์, SCR-026 ข้อมูลตั้งต้น) | Project, TorDocument, TorClause, Requirement, Milestone, DeliverableDoc, AuditLogEntry | Confirmed (2026-08-26) |
 | **Analysis Service** | รับ REQ ที่ยืนยันแล้ว, ประสานงานกับ AI Design Analyzer, จัดการทะเบียนหน้าจอ/รายละเอียด/flow | ไม่จัดการสถานะการพัฒนา/ติดตามงาน | M2 (SCR-008–011) | Module, Screen, ScreenCapability, BusinessRule | Confirmed (2026-08-26) |
 | **Tracking Service** | แผนงาน, มอบหมายผู้รับผิดชอบ, สถานะการพัฒนา + audit trail, ทดสอบ (Test Case/Result), Issue | ไม่สร้างเอกสารส่งมอบ | M3 (SCR-012–014) + M4 (SCR-015–018) + M5 (SCR-019–020) | Assignment, ScreenStatus, StatusHistory, Attachment, TestCase, TestResult, Issue | Confirmed (2026-08-26) |
 | **Document Generator** | ดึงข้อมูลจริงจาก Data Layer, รับเนื้อความบรรยายจาก AI Document Writer, render ลง Template, จัดการเวอร์ชันเอกสาร | ไม่สร้างเนื้อความบรรยายเอง (AI ทำ), ไม่ตัดสินใจ business logic | M6 (SCR-021–024) | DocTemplate, GeneratedDocument | Confirmed (2026-08-26) |
 | **AI Orchestration Layer** | TOR Parser, Design Analyzer, Test Generator, Document Writer — คืนค่า Structured JSON เท่านั้น | ห้ามเขียนข้อมูลลง Data Layer โดยตรง, ห้ามสร้างไฟล์ .docx | ครอบคลุมทุกจุดที่มี AI ใน §7.1 | — (ไม่ persist เอง) | Confirmed (2026-08-26) |
-| **Data Layer** | Database + File Storage + Audit Log (Screen StatusHistory) | ไม่มี business logic | ทุก entity ใน §4.1 | ทุก Entity | Confirmed (2026-08-26) |
+| **Data Layer** | Database + File Storage + Audit Log (Screen StatusHistory + entity-level AuditLogEntry ตาม SCR ที่กำหนด) | ไม่มี business logic | ทุก entity ใน §4.1 | ทุก Entity | Confirmed (2026-08-26) |
 
 > **หมายเหตุ:** SCR-025/SCR-026 (M7) ไม่ได้ระบุ mapping ไว้ชัดใน §3 เดิม (§3 มี
 > แค่ 4 service ไม่มี Admin service แยก) — จัดไว้ใน Project Service เพราะเป็น
@@ -203,12 +203,14 @@ sequenceDiagram
 
 - **สถานะ:** Confirmed (2026-08-26)
 
-- **Audit / Traceability:** บังคับเก็บ `StatusHistory` เฉพาะระดับ Screen ตาม §6
-  (ผู้ทำรายการ, วันเวลา, สถานะเดิม→ใหม่, ผู้รับผิดชอบเดิม→ใหม่, เหตุผล, ไฟล์
-  แนบ) เขียนแบบ synchronous ในธุรกรรมเดียวกับการเปลี่ยนสถานะเสมอ (ไม่
-  eventual) เพื่อรักษาสาย `TorClause → Requirement → Screen → TestCase →
-  TestResult` ให้สาวกลับได้ 100% ตาม §4.2/§13 (entity อื่นนอกเหนือจาก Screen
-  ไม่บังคับมี audit log แยกในเฟสนี้)
+- **Audit / Traceability:** บังคับเก็บ `StatusHistory` ระดับ Screen ตาม §6
+  เสมอ (ผู้ทำรายการ, วันเวลา, สถานะเดิม→ใหม่, ผู้รับผิดชอบเดิม→ใหม่, เหตุผล,
+  ไฟล์แนบ) นอกจากนี้ entity อื่นสามารถมี audit log ระดับ field ผ่าน
+  `AuditLogEntry` ได้เมื่อ SCR นั้นกำหนดไว้ชัดเจน (ไม่บังคับทุก entity —
+  ขยายตามความจำเป็นของแต่ละหน้าจอ เริ่มที่ SCR-003 ข้อมูลโครงการ 2026-08-27)
+  ทั้งสองกรณีเขียนแบบ synchronous ในธุรกรรมเดียวกับการเปลี่ยนแปลงข้อมูลเสมอ
+  (ไม่ eventual) เพื่อรักษาสาย `TorClause → Requirement → Screen → TestCase →
+  TestResult` ให้สาวกลับได้ 100% ตาม §4.2/§13
 - **Security / RBAC:** 7 Role ตาม §2 หนึ่งคนมีได้หลาย Role และกำหนดสิทธิ์ได้
   ระดับโครงการ — ทุก Application Layer service ต้องตรวจสิทธิ์ก่อนเข้าถึง/แก้ไข
   ข้อมูลเสมอ (enforce ที่ Application Layer ก่อนถึง Data Layer)
@@ -246,3 +248,9 @@ concerns, system boundary) ที่ §3 ไม่เคยมี ไม่ใ�
   เสมอ, ยึด consistency-first เมื่อขัดกับ performance, SSO/ช่องทางแจ้งเตือน
   เป็น placeholder สำหรับอนาคตเท่านั้น — ไม่ sync §3 ของ
   Projexa-System-Design-R1.md เพราะไม่มีความขัดแย้ง
+- 2026-08-27: sync มติจาก SCR-003 detailed design (Confirmed) เรื่อง audit
+  log ระดับ entity ผ่าน AuditLogEntry เข้า §2 (เพิ่ม AuditLogEntry ในรายการ
+  Entity ของ Project Service, ปรับคำอธิบาย Data Layer) และ §5 (ปรับ bullet
+  Audit/Traceability ให้ไม่ปิดกั้น entity อื่นนอกเหนือจาก Screen อีกต่อไป) —
+  ไม่กระทบ §3 ของ Projexa-System-Design-R1.md เพราะพูดถึง Audit Log แบบกว้าง
+  อยู่แล้ว (user ยืนยันแล้ว ไม่ต้อง sync เพิ่ม)
