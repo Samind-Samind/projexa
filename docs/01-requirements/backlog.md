@@ -30,3 +30,4 @@
 | 024 | 2026-08-24 | SCR-024 ประวัติเวอร์ชันเอกสาร | [[01-spec/20260824-024-scr-024-ประวัติเวอร์ชันเอกสาร\|SCR-024]] | Draft | Phase 2 (M6) |
 | 025 | 2026-08-24 | SCR-025 ผู้ใช้งานและสิทธิ์ | [[01-spec/20260824-025-scr-025-ผู้ใช้งานและสิทธิ์\|SCR-025]] | Draft | Phase 2 (M7) |
 | 026 | 2026-08-24 | SCR-026 ข้อมูลตั้งต้น | [[01-spec/20260824-026-scr-026-ข้อมูลตั้งต้น\|SCR-026]] | Draft | Phase 2 (M7) |
+| 027 | 2026-08-27 | Non-Functional Requirements (NFR) รวม 17 ข้อ | [[01-spec/20260827-027-non-functional-requirements\|NFR รวม]] | Draft | Cross-cutting NFR — สังเคราะห์จากการวิเคราะห์ requirement/design/test เดิมทั้งหมด |
