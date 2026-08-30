@@ -18,3 +18,10 @@
 - [[api-spec|api-spec]] — รายการ API resource/endpoint ระดับ Conceptual
 - [[detailed-design/index|detailed-design]] — Conceptual Design + Sequence
   Flow รายหน้าจอ/ฟีเจอร์
+- [[screen-tracking-nosql-module|screen-tracking-nosql-module]] — ขอบเขต
+  NoSQL Concrete Design ของโมดูล Screen Tracking (SCR-009/010/013/016)
+  สำหรับงานส่งหลักสูตร NoSQL โดยเฉพาะ — ไม่ใช่ดีไซน์ระบบจริง (ดูหมายเหตุใน
+  เอกสาร)
+- [[screen-tracking-nosql-module-sequence|screen-tracking-nosql-module-sequence]]
+  — Sequence diagram ครบ 4 flow ของโมดูล Screen Tracking ในสโคปที่ตัดลดแล้ว
+  (คนละไฟล์กับ `detailed-design/scr-009..016` ที่เป็นระบบจริง)

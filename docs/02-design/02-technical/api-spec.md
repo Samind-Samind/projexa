@@ -1,6 +1,6 @@
 # API Spec (Conceptual) — Projexa
 
-- **วันที่สร้าง/อัปเดตล่าสุด:** 2026-08-27
+- **วันที่สร้าง/อัปเดตล่าสุด:** 2026-08-30
 - **สถานะ:** Draft — รอ SA/Dev Lead ยืนยันเป็นทางการ (ดูสถานะราย resource
   ด้านล่าง)
 - **ระดับเอกสาร:** Conceptual — resource path/verb เป็นสัญกรณ์สื่อสารเท่านั้น
@@ -169,7 +169,7 @@
 | Operation | Method + Path (conceptual) | คำอธิบาย | สิทธิ์ (Role) | Request (conceptual) | Response (conceptual) |
 |---|---|---|---|---|---|
 | List | `GET /screens/{id}/assignments` | ผู้รับผิดชอบของหน้าจอ | ทุก role (read) | — | list ของ `Assignment` |
-| Batch assign | `POST /assignments/batch` | มอบหมายผู้รับผิดชอบเป็นชุด (action-oriented) | PM | body: `[{screen_id, user_id, role}]` | list ของ `Assignment` ที่สร้าง |
+| Batch assign | `POST /assignments/batch` | มอบหมายผู้รับผิดชอบเป็นชุด (action-oriented) | PM | body: `[{screen_id, user_id, role, due_date?}]` | list ของ `Assignment` ที่สร้าง |
 | Unassign | `DELETE /assignments/{id}` | ถอนมอบหมาย (soft-delete) | PM | — | ตั้ง `is_deleted`=true |
 
 ### M4 — ติดตามการดำเนินงาน (SCR-015 ถึง SCR-018)
@@ -313,3 +313,9 @@
   (เฉพาะโครงการที่ตนมี role PM ตามมติ SCR-003 BR-003-4) สามารถ Assign/Remove
   role ได้เพิ่มจากเดิมที่จำกัดเฉพาะ Admin — resource/endpoint อื่นทั้งหมดไม่
   ถูกแตะต้อง
+- 2026-08-30: แก้ request body ของ operation "Batch assign" (`POST
+  /assignments/batch`) จาก `[{screen_id, user_id, role}]` เป็น `[{screen_id,
+  user_id, role, due_date?}]` — sync ตามฟิลด์ `due_date` ที่เพิ่มเข้าตาราง
+  `Assignment` ใน [[database-schema|database-schema.md]] (ประเด็นเปิดจาก
+  Detailed Design ของ SCR-013) resource สถานะยังคง `Draft (suggested)`
+  เหมือนเดิม operation อื่น (List, Unassign) ไม่ถูกแตะต้อง
