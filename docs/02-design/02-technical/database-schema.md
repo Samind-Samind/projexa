@@ -1,6 +1,6 @@
 # Database Schema (Conceptual) — Projexa
 
-- **วันที่สร้าง/อัปเดตล่าสุด:** 2026-08-27
+- **วันที่สร้าง/อัปเดตล่าสุด:** 2026-08-30
 - **สถานะ:** Draft — รอ SA/Dev Lead ยืนยันเป็นทางการ (ดูสถานะรายตารางด้านล่าง)
 - **ระดับเอกสาร:** Conceptual/Logical — ชนิดข้อมูลเป็นคำเชิงแนวคิด
   (Text / Number / Boolean / DateTime / Enum / JSON-flexible / Reference)
@@ -350,6 +350,7 @@ erDiagram
 | screen_id | Reference→Screen | FK | ไม่ | |
 | user_id | Reference→User | FK | ไม่ | |
 | role | Enum(SA/BA/Dev/Tester) | | ไม่ | |
+| due_date | DateTime | | ได้ | กำหนดส่งงานของการมอบหมายนี้ — ตั้งพร้อมกันได้ตอน batch assign ที่ SCR-013 |
 | assigned_by | Reference→User | FK | ไม่ | |
 | assigned_at | DateTime | | ไม่ | |
 | is_deleted | Boolean | | ไม่ (default false) | |
@@ -645,3 +646,10 @@ erDiagram
   entity_type+entity_id (ปัจจุบันครอบคลุม `Project`, `ProjectRoleAssignment`)
   อัปเดต ER Diagram เพิ่มเส้น `User ||--o{ AuditLogEntry` และหมายเหตุ
   polymorphic ประกอบ diagram ตารางอื่นทั้งหมดยังคงสถานะเดิมไม่ถูกแตะต้อง
+- 2026-08-30: เพิ่มฟิลด์ `due_date` (DateTime, nullable) เข้าตาราง `Assignment`
+  — sync จากประเด็นเปิดที่พบตอนทำ Detailed Design ของ SCR-013 (ฟอร์ม batch
+  assign ใน prototype มีการตั้งวันส่งงานพร้อมกับมอบหมายผู้รับผิดชอบ ซึ่งไม่มี
+  ที่จัดเก็บในตาราง Assignment เดิม) user ยืนยันให้เพิ่มฟิลด์นี้ตรงเข้า
+  Assignment โดยตรง (ผูกกับ screen×role×user แต่ละอัน แยกจาก
+  `ScreenStatus.planned_end_date` ซึ่งเป็นกำหนดส่งของหน้าจอโดยรวม) สถานะตาราง
+  ยังคง `Draft (suggested)` เหมือนเดิม
