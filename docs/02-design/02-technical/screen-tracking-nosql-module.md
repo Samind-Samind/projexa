@@ -50,7 +50,6 @@ erDiagram
 |---|---|---|
 | id | Reference | PK |
 | code | Text | SCR-xxx (ตาม `Screen.code` เดิม) |
-| module_id | Reference→Module | |
 | name | Text | ชื่อหน้าจอ |
 | description | Text | คำอธิบาย — input ให้ AI ใช้แนะนำ `type` |
 | type | Denormalized {type_id, label} | อ้างจาก `screenTypes` แบบ snapshot ค่า label ติดมาด้วย (ตาม pattern `leaveTypes` — ไม่ query join ทุกครั้ง) |
@@ -124,6 +123,11 @@ AI อ่าน `name` + `description` ที่พิมพ์ใน SCR-010 �
 - `Assignment` แบบตารางแยกเต็มรูปแบบ (ตอนนี้ใช้ embedded array `assignees[]`
   แทน เพื่อไม่ให้เกิน "โฟลเดอร์ย่อย 1 อัน")
 - `screenTypes` ค่าอื่นนอกเหนือจาก Process/Inquiry/Report UI/Service/Report
+- `module_id` (Reference→Module ตาม `database-schema.md` เดิม) — **ตัดออกจาก
+  สโคปนี้ทั้งหมด** ไม่นำเข้ามาเป็นฟิลด์ของ `screens` เพราะ `Module` จะกลาย
+  เป็นโฟลเดอร์ประกอบตัวที่ 3 ซึ่งเกินเงื่อนไข "โฟลเดอร์ประกอบ 2 อัน" ใน
+  `SCOPE.md` — การกรอง/จัดกลุ่มในโมดูลนี้ใช้ได้แค่ตาม `type`/`current_status`
+  เท่านั้น (ดู AC-NOSQL-009-2)
 
 ## ประวัติการตัดสินใจ
 
@@ -133,3 +137,9 @@ AI อ่าน `name` + `description` ที่พิมพ์ใน SCR-010 �
   งานส่งอยู่แล้วมากที่สุด (type เป็น reference list, status เปลี่ยนได้,
   StatusHistory ที่บังคับ reason) ยืนยันกับ user แล้วว่า `database-schema.md`/
   `api-spec.md` ตัวจริง **ไม่มีการแก้ไข** เอกสารนี้เป็นเอกสารแยกต่างหากเท่านั้น
+- 2026-08-30 (รอบตรวจซ้ำ): ตัด field `module_id` (Reference→Module) ออกจาก
+  ตาราง `screens` ทั้งหมด — พบระหว่างตรวจทานว่าฟิลด์นี้ตกค้างมาจาก
+  `database-schema.md` เดิมโดยไม่ได้ตั้งใจ ทำให้ `Module` กลายเป็นโฟลเดอร์
+  ประกอบตัวที่ 3 เกินเงื่อนไข "โฟลเดอร์ประกอบ 2 อัน" ใน `SCOPE.md` (และไม่เคย
+  ปรากฏใน ER diagram §2 หรือถูกใช้กรองใน AC/Test Case ที่เขียนไว้แล้วเลย)
+  user ยืนยันให้ตัดออกจากสโคปนี้ทั้งหมด

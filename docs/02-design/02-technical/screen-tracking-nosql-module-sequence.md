@@ -18,8 +18,9 @@
 
 - **Actor:** SA (สร้าง/แก้ไข/เลือกประเภทหน้าจอ) · ผู้รับผิดชอบ Dev/Tester
   (กดเปลี่ยนสถานะ) · PM (มอบหมายผู้รับผิดชอบ)
-- **Layer:** Presentation Layer → Application Service (ชื่อ generic เพราะยัง
-  ไม่มี tech-stack.md) → Document Database
+- **Layer:** Presentation Layer → Application Service (Node.js + `firebase-admin`
+  SDK ตาม [screen-tracking-nosql-module-tech.md](screen-tracking-nosql-module-tech.md))
+  → Document Database (Firebase Firestore)
 - **Collection ที่เกี่ยวข้อง:** `screens` (หลัก), `screenTypes` + `users`
   (ประกอบ), `statusHistory` (ย่อย ผูกกับแต่ละ `screens/{id}` โดยเฉพาะ)
 

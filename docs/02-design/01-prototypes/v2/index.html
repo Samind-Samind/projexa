@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Prototype v2 — Projexa</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <h4>Projexa Prototype</h4>
+      <a class="sidebar-item" href="index.html">หน้ารวม (Index)</a>
+    </div>
+    <div class="sidebar-group">
+      <h4>Screen Tracking (NoSQL)</h4>
+      <a class="sidebar-item" href="scr-009.html">SCR-009 ทะเบียนหน้าจอ</a>
+      <a class="sidebar-item" href="scr-010.html">SCR-010 รายละเอียดหน้าจอ</a>
+      <a class="sidebar-item" href="scr-013.html">SCR-013 มอบหมายผู้รับผิดชอบ</a>
+      <a class="sidebar-item" href="scr-016.html">SCR-016 บันทึกความก้าวหน้า</a>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="breadcrumb">Prototype<span class="sep">/</span>v2</div>
+    <div class="page-header">
+      <h1>Projexa Prototype — v2</h1>
+      <span class="pill pill-draft">Draft</span>
+    </div>
+    <p class="page-sub">วันที่สร้าง: 30/08/2026 · สโคปเวอร์ชันนี้: โมดูล Screen Tracking (ขอบเขต NoSQL — งานส่งหลักสูตร) 4 หน้าจอ · อ้างอิง Design System: <a href="../DESIGN.md">DESIGN.md</a> (โหมด: ใช้ของเดิม — DESIGN.md ถูกอัปเดตให้ตรงกับ <code>Projexa.html</code> ในรอบก่อนหน้านี้แล้ว ไม่ได้แก้ไขซ้ำในรอบนี้)</p>
+
+    <p class="proto-note">
+      เวอร์ชันนี้เป็นสโคป "งานส่งหลักสูตร NoSQL" ที่ตัดลดจากระบบ Projexa จริง (ดู
+      <code>docs/02-design/02-technical/screen-tracking-nosql-module.md</code> และ
+      <code>docs/SCOPE.md</code>) — ตัดตัวกรอง/การจัดกลุ่มตามโมดูล (module_id) ออกจาก SCR-009 โดยเจตนา,
+      ใช้ 3 สถานะ (Not Started/Analysis/Design) แทนวงจรสถานะเต็มรูปแบบใน SCR-016, และใช้ <code>assignees[]</code>
+      แบบ embedded แทนตาราง Assignment แยกใน SCR-013 — คนละสโคปกับ <a href="../v1/index.html">v1</a> (SCR-003 ข้อมูลโครงการ)
+      ซึ่งอ้างอิงระบบ Projexa จริงเต็มรูปแบบ ห้ามนำสองเวอร์ชันมาปนกัน
+    </p>
+
+    <div class="card">
+      <h2>Screen Tracking — โมดูล Screen Tracking (ขอบเขต NoSQL)</h2>
+      <ul>
+        <li><a href="scr-009.html">SCR-009 — ทะเบียนหน้าจอ</a> <span class="tag">Must Have</span></li>
+        <li><a href="scr-010.html">SCR-010 — รายละเอียดหน้าจอ</a> <span class="tag">Must Have</span></li>
+        <li><a href="scr-013.html">SCR-013 — มอบหมายผู้รับผิดชอบ</a> <span class="tag">Must Have</span></li>
+        <li><a href="scr-016.html">SCR-016 — บันทึกความก้าวหน้า</a> <span class="tag">Must Have</span></li>
+      </ul>
+      <p class="note">4 หน้าจอนี้ครอบคลุมทั้ง 4 flow ที่ตัดสโคปไว้ใน <code>screen-tracking-nosql-module-sequence.md</code> (list, สร้าง/แก้ไข+AI แนะนำประเภท, มอบหมายเป็นชุด, เปลี่ยนสถานะ+ประวัติ)</p>
+    </div>
+
+    <p class="note">เวอร์ชันนี้เป็น snapshot แบบ self-contained (มี style.css/script.js ของตัวเอง) — ห้ามอ้างอิงไฟล์ข้ามเวอร์ชัน ดูรายละเอียดสโคป/สถานะเพิ่มเติมที่ <a href="_meta.md">_meta.md</a></p>
+  </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

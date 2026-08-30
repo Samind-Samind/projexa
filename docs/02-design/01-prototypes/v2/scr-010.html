@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>SCR-010 รายละเอียดหน้าจอ — Projexa Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <h4>Projexa Prototype</h4>
+      <a class="sidebar-item" href="index.html">หน้ารวม (Index)</a>
+    </div>
+    <div class="sidebar-group">
+      <h4>Screen Tracking (NoSQL)</h4>
+      <a class="sidebar-item" href="scr-009.html">SCR-009 ทะเบียนหน้าจอ</a>
+      <a class="sidebar-item active" href="scr-010.html">SCR-010 รายละเอียดหน้าจอ</a>
+      <a class="sidebar-item" href="scr-013.html">SCR-013 มอบหมายผู้รับผิดชอบ</a>
+      <a class="sidebar-item" href="scr-016.html">SCR-016 บันทึกความก้าวหน้า</a>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="breadcrumb">
+      <a href="index.html">Prototype</a><span class="sep">/</span>Screen Tracking (NoSQL)<span class="sep">/</span>รายละเอียดหน้าจอ
+    </div>
+    <div class="page-header">
+      <h1 id="detail-mode-heading">สร้างหน้าจอใหม่</h1>
+      <span class="pill pill-draft">Draft</span>
+      <span class="tag">Must Have</span>
+    </div>
+    <p class="page-sub">SCR-010 · โมดูล Screen Tracking (ขอบเขต NoSQL — collection <code>screens</code>) · เข้าถึงหน้านี้จาก <a href="scr-009.html">ทะเบียนหน้าจอ</a> (แก้ไข) หรือปุ่ม "+ สร้างหน้าจอใหม่" (สร้างใหม่)</p>
+
+    <div class="trail">
+      <span class="tag">TOR Clause: ไม่มี (ยังไม่นำเข้า TOR ของโครงการนี้)</span>
+      <span class="arrow">→</span>
+      <span class="tag">Requirement: backlog #010 — MVP RAISE</span>
+      <span class="arrow">→</span>
+      <span class="tag">Screen: SCR-010</span>
+      <span class="arrow">→</span>
+      <span class="tag">Test Case: TC-088 – TC-092</span>
+    </div>
+
+    <div class="card">
+      <h2>ข้อมูลหน้าจอ</h2>
+      <div class="field">
+        <label for="screen-name-input">ชื่อหน้าจอ *</label>
+        <input type="text" id="screen-name-input" placeholder="เช่น หน้าจอค้นหาและแสดงรายการใบลา">
+        <p class="field-error">กรุณากรอกชื่อหน้าจอก่อนบันทึก (AC-NOSQL-010-4)</p>
+      </div>
+      <div class="field">
+        <label for="screen-desc-input">คำอธิบาย</label>
+        <textarea id="screen-desc-input" rows="3" placeholder="อธิบายหน้าที่การทำงานของหน้าจอนี้โดยย่อ — ระบบจะใช้ข้อความนี้ร่วมกับชื่อหน้าจอเป็น input ให้ AI ช่วยแนะนำประเภท"></textarea>
+      </div>
+
+      <div class="field">
+        <button type="button" class="btn btn-secondary" id="ai-suggest-btn">ให้ AI ช่วยแนะนำประเภท</button>
+        <a href="#" class="btn-link" id="ai-simulate-timeout" style="margin-left: var(--sp-3);">จำลอง AI ไม่ตอบสนอง</a>
+      </div>
+
+      <p id="ai-waiting" class="note" hidden>AI กำลังวิเคราะห์ชื่อและคำอธิบายหน้าจอ...</p>
+
+      <div id="ai-type-block" class="ai-block" data-suggested-value="INQUIRY" hidden>
+        <p style="margin:0 0 var(--sp-2);">AI วิเคราะห์แล้วแนะนำประเภท: <strong>Inquiry</strong> (ai_confidence: 82%)</p>
+        <p class="note" style="margin:0 0 var(--sp-3);">สกัดจากชื่อ + คำอธิบายหน้าจอโดยอัตโนมัติ — กรุณาตรวจสอบก่อนยืนยัน (is_suggested = true จนกว่าจะกดยืนยัน)</p>
+        <button type="button" class="btn btn-primary" data-ai-confirm>ยืนยันประเภทนี้</button>
+        <button type="button" class="btn btn-secondary" id="ai-dismiss-btn">เลือกประเภทเองแทน</button>
+      </div>
+
+      <p id="ai-timeout-msg" class="note" hidden>AI แนะนำไม่สำเร็จ (จำลอง timeout) — ไม่เป็นไร กรุณาเลือกประเภทได้จากรายการด้านล่างเองได้ทันที (AC-NOSQL-010-3)</p>
+
+      <div class="field">
+        <label for="screen-type-select">ประเภทหน้าจอ *</label>
+        <select id="screen-type-select">
+          <option value="">- เลือกประเภท -</option>
+          <option value="PROCESS">Process</option>
+          <option value="INQUIRY">Inquiry</option>
+          <option value="REPORTUI">Report UI</option>
+          <option value="SERVICE">Service</option>
+          <option value="REPORT">Report</option>
+        </select>
+        <p class="note">เลือกได้เองทันทีโดยไม่ต้องรอ AI — ประเภทที่บันทึกจริงจะถูก denormalize ติดไปกับเอกสาร <code>screens</code> (ทั้ง type_id และ label) ตาม AC-NOSQL-010-1</p>
+      </div>
+
+      <p class="proto-note">
+        ทดสอบ optimistic concurrency (AC-NOSQL-010-5) ได้ที่นี่:
+        <button type="button" id="simulate-conflict-btn" class="btn btn-secondary" style="margin: 0 6px;">จำลองผู้ใช้อื่นแก้ไขพร้อมกัน</button>
+        <button type="button" id="reload-latest-btn" class="btn btn-secondary">โหลดข้อมูลล่าสุด</button>
+        — หลังกด "จำลองผู้ใช้อื่นแก้ไขพร้อมกัน" แล้วลองกด "บันทึก" จะเห็น toast เตือนแทนการบันทึกทับเงียบๆ
+      </p>
+
+      <div class="form-actions" style="margin-top: var(--sp-4); display:flex; gap: var(--sp-3);">
+        <button type="button" class="btn btn-primary" id="save-screen-btn">บันทึก</button>
+        <a class="btn btn-secondary" id="link-to-assign" href="#" aria-disabled="true" style="pointer-events:none; opacity:.45;">ไปหน้ามอบหมายผู้รับผิดชอบ</a>
+        <a class="btn btn-secondary" id="link-to-progress" href="#" aria-disabled="true" style="pointer-events:none; opacity:.45;">ไปหน้าบันทึกความก้าวหน้า</a>
+      </div>
+      <p class="proto-note">ลิงก์ "ไปหน้ามอบหมายผู้รับผิดชอบ"/"ไปหน้าบันทึกความก้าวหน้า" จะกดได้เฉพาะตอนเปิดหน้านี้ในโหมดแก้ไข (มาจากลิงก์ "แก้ไข" ในทะเบียนหน้าจอ) เพราะต้องมีรหัสหน้าจอที่บันทึกแล้วก่อน</p>
+    </div>
+
+    <p class="proto-note">ข้อมูลในหน้านี้เป็นตัวอย่างเพื่อสาธิต UI เท่านั้น ไม่ใช่ข้อมูลจริง — อ้างอิงจาก <a href="../../../01-requirements/01-spec/20260824-010-scr-010-รายละเอียดหน้าจอ.md">spec SCR-010</a>, <a href="../../02-technical/screen-tracking-nosql-module-sequence.md">screen-tracking-nosql-module-sequence.md §2</a> และ <a href="../../../03-testing/01-test-plan/screen-tracking-nosql-module-acceptance-criteria.md">AC-NOSQL-010-x</a></p>
+  </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

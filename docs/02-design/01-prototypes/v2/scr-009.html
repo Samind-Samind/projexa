@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>SCR-009 ทะเบียนหน้าจอ — Projexa Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <h4>Projexa Prototype</h4>
+      <a class="sidebar-item" href="index.html">หน้ารวม (Index)</a>
+    </div>
+    <div class="sidebar-group">
+      <h4>Screen Tracking (NoSQL)</h4>
+      <a class="sidebar-item active" href="scr-009.html">SCR-009 ทะเบียนหน้าจอ</a>
+      <a class="sidebar-item" href="scr-010.html">SCR-010 รายละเอียดหน้าจอ</a>
+      <a class="sidebar-item" href="scr-013.html">SCR-013 มอบหมายผู้รับผิดชอบ</a>
+      <a class="sidebar-item" href="scr-016.html">SCR-016 บันทึกความก้าวหน้า</a>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="breadcrumb">
+      <a href="index.html">Prototype</a><span class="sep">/</span>Screen Tracking (NoSQL)<span class="sep">/</span>ทะเบียนหน้าจอ
+    </div>
+    <div class="page-header">
+      <h1>ทะเบียนหน้าจอ</h1>
+      <span class="pill pill-draft">Draft</span>
+      <span class="tag">Must Have</span>
+    </div>
+    <p class="page-sub">SCR-009 · โมดูล Screen Tracking (ขอบเขต NoSQL — collection <code>screens</code>)</p>
+
+    <div class="trail">
+      <span class="tag">TOR Clause: ไม่มี (ยังไม่นำเข้า TOR ของโครงการนี้)</span>
+      <span class="arrow">→</span>
+      <span class="tag">Requirement: backlog #009 — MVP RAISE</span>
+      <span class="arrow">→</span>
+      <span class="tag">Screen: SCR-009</span>
+      <span class="arrow">→</span>
+      <span class="tag">Test Case: TC-084 – TC-087</span>
+    </div>
+    <p class="proto-note" style="margin-top:-16px; margin-bottom:24px;">
+      หน้านี้เป็นส่วนหนึ่งของสโคป "งานส่งหลักสูตร NoSQL" ที่ตัดลดจากระบบ Projexa จริง
+      (ดู <code>docs/02-design/02-technical/screen-tracking-nosql-module.md</code>) — ตัดตัวกรอง/การจัดกลุ่มตามโมดูล (module) ออกจากสโคปนี้แล้วโดยเจตนา
+      คงเหลือเฉพาะการกรองตามประเภทและสถานะ (3 ค่า) ตาม AC-NOSQL-009-1 ถึง 009-4
+    </p>
+
+    <div class="card">
+      <div class="field-label-row" style="margin-bottom: var(--sp-3);">
+        <h2 style="margin-bottom:0;">รายการหน้าจอทั้งหมด</h2>
+        <div style="display:flex; gap: var(--sp-2);">
+          <a id="batch-assign-link" class="btn btn-secondary" href="#" aria-disabled="true" style="pointer-events:none; opacity:.45;">มอบหมายเป็นชุด</a>
+          <a class="btn btn-primary" href="scr-010.html">+ สร้างหน้าจอใหม่</a>
+        </div>
+      </div>
+
+      <div id="registry-body-wrap">
+        <div class="filter-bar">
+          <div class="field">
+            <label for="filter-type">ประเภท</label>
+            <select id="filter-type">
+              <option value="">ทั้งหมด</option>
+              <option value="PROCESS">Process</option>
+              <option value="INQUIRY">Inquiry</option>
+              <option value="REPORTUI">Report UI</option>
+              <option value="SERVICE">Service</option>
+              <option value="REPORT">Report</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="filter-status">สถานะ</label>
+            <select id="filter-status">
+              <option value="">ทั้งหมด</option>
+              <option value="NotStarted">Not Started</option>
+              <option value="Analysis">Analysis</option>
+              <option value="Design">Design</option>
+            </select>
+          </div>
+          <div class="filter-bar-actions">
+            <button type="button" class="btn btn-secondary clear-filter-btn">ล้าง filter</button>
+          </div>
+        </div>
+
+        <p class="selected-count">เลือกแล้ว <strong id="selected-count-value">0</strong> หน้าจอ (เลือกเพื่อ "มอบหมายเป็นชุด")</p>
+
+        <div id="registry-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="select-col"><input type="checkbox" id="select-all-screens" aria-label="เลือกทั้งหมด"></th>
+                <th>รหัส</th>
+                <th>ชื่อหน้าจอ</th>
+                <th>ประเภท</th>
+                <th>สถานะ</th>
+                <th>ผู้รับผิดชอบ</th>
+                <th>กำหนดส่ง</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="screen-registry-body">
+              <tr data-type="INQUIRY" data-status="Analysis">
+                <td><input type="checkbox" class="screen-row-check" value="SCR-101"></td>
+                <td style="font-family: var(--font-mono);">SCR-101</td>
+                <td>ค้นหาและแสดงรายการใบลา (ตัวอย่าง)</td>
+                <td><span class="tag">Inquiry</span></td>
+                <td><span class="status-chip is-current">Analysis</span></td>
+                <td><span class="avatar-row"><span class="avatar">สจ</span><span>สมชาย ใจดี (Dev)</span></span></td>
+                <td>10/09/2026</td>
+                <td><a class="btn-link" href="scr-010.html?screen=SCR-101">แก้ไข</a> · <a class="btn-link" href="scr-016.html?screen=SCR-101">บันทึกความก้าวหน้า</a></td>
+              </tr>
+              <tr data-type="PROCESS" data-status="Design">
+                <td><input type="checkbox" class="screen-row-check" value="SCR-102"></td>
+                <td style="font-family: var(--font-mono);">SCR-102</td>
+                <td>อนุมัติใบลา (ตัวอย่าง)</td>
+                <td><span class="tag">Process</span></td>
+                <td><span class="status-chip is-current">Design</span></td>
+                <td>
+                  <span class="avatar-row"><span class="avatar">สว</span><span>สมหญิง วิเคราะห์ (Dev)</span></span><br>
+                  <span class="avatar-row"><span class="avatar is-accent2">วต</span><span>วีระ ตรวจสอบ (Tester)</span></span>
+                </td>
+                <td>15/09/2026</td>
+                <td><a class="btn-link" href="scr-010.html?screen=SCR-102">แก้ไข</a> · <a class="btn-link" href="scr-016.html?screen=SCR-102">บันทึกความก้าวหน้า</a></td>
+              </tr>
+              <tr data-type="REPORT" data-status="NotStarted">
+                <td><input type="checkbox" class="screen-row-check" value="SCR-103"></td>
+                <td style="font-family: var(--font-mono);">SCR-103</td>
+                <td>รายงานสรุปวันลาสะสม (ตัวอย่าง)</td>
+                <td><span class="tag">Report</span></td>
+                <td><span class="status-chip is-neutral">Not Started</span></td>
+                <td><span class="avatar-row"><span class="avatar-empty">— ยังไม่มอบหมาย —</span></span></td>
+                <td>20/09/2026</td>
+                <td><a class="btn-link" href="scr-010.html?screen=SCR-103">แก้ไข</a> · <a class="btn-link" href="scr-016.html?screen=SCR-103">บันทึกความก้าวหน้า</a></td>
+              </tr>
+              <tr data-type="SERVICE" data-status="Analysis">
+                <td><input type="checkbox" class="screen-row-check" value="SCR-104"></td>
+                <td style="font-family: var(--font-mono);">SCR-104</td>
+                <td>บริการแจ้งเตือนวันลาใกล้หมดอายุ (ตัวอย่าง)</td>
+                <td><span class="tag">Service</span></td>
+                <td><span class="status-chip is-current">Analysis</span></td>
+                <td><span class="avatar-row"><span class="avatar">สจ</span><span>สมชาย ใจดี (Dev)</span></span></td>
+                <td>12/09/2026</td>
+                <td><a class="btn-link" href="scr-010.html?screen=SCR-104">แก้ไข</a> · <a class="btn-link" href="scr-016.html?screen=SCR-104">บันทึกความก้าวหน้า</a></td>
+              </tr>
+              <tr data-type="REPORTUI" data-status="Design">
+                <td><input type="checkbox" class="screen-row-check" value="SCR-105"></td>
+                <td style="font-family: var(--font-mono);">SCR-105</td>
+                <td>แดชบอร์ดสรุปการลาระดับทีม (ตัวอย่าง)</td>
+                <td><span class="tag">Report UI</span></td>
+                <td><span class="status-chip is-current">Design</span></td>
+                <td>
+                  <span class="avatar-row"><span class="avatar">ปม</span><span>ปรีชา มั่นคง (Dev)</span></span><br>
+                  <span class="avatar-row"><span class="avatar is-accent2">พด</span><span>พิมพ์ใจ ดีงาม (Tester)</span></span>
+                </td>
+                <td>18/09/2026</td>
+                <td><a class="btn-link" href="scr-010.html?screen=SCR-105">แก้ไข</a> · <a class="btn-link" href="scr-016.html?screen=SCR-105">บันทึกความก้าวหน้า</a></td>
+              </tr>
+              <tr data-type="PROCESS" data-status="NotStarted">
+                <td><input type="checkbox" class="screen-row-check" value="SCR-106"></td>
+                <td style="font-family: var(--font-mono);">SCR-106</td>
+                <td>นำเข้าข้อมูลพนักงานจากไฟล์ Excel (ตัวอย่าง)</td>
+                <td><span class="tag">Process</span></td>
+                <td><span class="status-chip is-neutral">Not Started</span></td>
+                <td><span class="avatar-row"><span class="avatar-empty">— ยังไม่มอบหมาย —</span></span></td>
+                <td>25/09/2026</td>
+                <td><a class="btn-link" href="scr-010.html?screen=SCR-106">แก้ไข</a> · <a class="btn-link" href="scr-016.html?screen=SCR-106">บันทึกความก้าวหน้า</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="no-result-state" class="empty-state" hidden>
+          <p>ไม่พบหน้าจอที่ตรงเงื่อนไข</p>
+          <button type="button" class="btn btn-secondary clear-filter-btn">ล้าง filter</button>
+        </div>
+      </div>
+
+      <div id="collection-empty-state" class="empty-state" hidden>
+        <p>ยังไม่มีหน้าจอในระบบ เริ่มต้นด้วยการสร้างหน้าจอแรกของโครงการ</p>
+        <a class="btn btn-primary" href="scr-010.html">สร้างหน้าจอใหม่</a>
+        <p class="proto-note">ปุ่มด้านล่างมีไว้สำหรับผู้รีวิว prototype เท่านั้น เพื่อสลับกลับไปดูข้อมูลตัวอย่าง — ไม่มีในแอปจริง</p>
+        <button type="button" id="reset-empty-collection" class="btn btn-secondary">กลับไปดูข้อมูลตัวอย่าง</button>
+      </div>
+
+      <p class="proto-note">
+        ทดสอบ AC-NOSQL-009-3 (collection ว่างเปล่า) ได้ที่ปุ่มนี้:
+        <button type="button" id="simulate-empty-collection" class="btn btn-secondary" style="margin-left:6px;">จำลอง: ยังไม่มีหน้าจอในระบบ</button>
+        — และทดสอบ AC-NOSQL-009-4 (ไม่พบผลลัพธ์) ได้โดยเลือกฟิลเตอร์ ประเภท = Report ร่วมกับ สถานะ = Design (ไม่มีข้อมูลตัวอย่างตรงเงื่อนไขนี้)
+      </p>
+    </div>
+
+    <p class="proto-note">ข้อมูลในหน้านี้เป็นตัวอย่างเพื่อสาธิต UI เท่านั้น ไม่ใช่ข้อมูลจริง — อ้างอิงจาก <a href="../../../01-requirements/01-spec/20260824-009-scr-009-ทะเบียนหน้าจอ.md">spec SCR-009</a>, <a href="../../02-technical/screen-tracking-nosql-module.md">screen-tracking-nosql-module.md</a> และ <a href="../../../03-testing/01-test-plan/screen-tracking-nosql-module-acceptance-criteria.md">AC-NOSQL-009-x</a></p>
+  </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

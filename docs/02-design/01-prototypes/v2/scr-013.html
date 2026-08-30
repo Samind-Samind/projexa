@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>SCR-013 มอบหมายผู้รับผิดชอบ — Projexa Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <h4>Projexa Prototype</h4>
+      <a class="sidebar-item" href="index.html">หน้ารวม (Index)</a>
+    </div>
+    <div class="sidebar-group">
+      <h4>Screen Tracking (NoSQL)</h4>
+      <a class="sidebar-item" href="scr-009.html">SCR-009 ทะเบียนหน้าจอ</a>
+      <a class="sidebar-item" href="scr-010.html">SCR-010 รายละเอียดหน้าจอ</a>
+      <a class="sidebar-item active" href="scr-013.html">SCR-013 มอบหมายผู้รับผิดชอบ</a>
+      <a class="sidebar-item" href="scr-016.html">SCR-016 บันทึกความก้าวหน้า</a>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="breadcrumb">
+      <a href="index.html">Prototype</a><span class="sep">/</span>Screen Tracking (NoSQL)<span class="sep">/</span>มอบหมายผู้รับผิดชอบ
+    </div>
+    <div class="page-header">
+      <h1>มอบหมายผู้รับผิดชอบ</h1>
+      <span class="pill pill-draft">Draft</span>
+      <span class="tag">Must Have</span>
+    </div>
+    <p class="page-sub">SCR-013 · โมดูล Screen Tracking (ขอบเขต NoSQL — เขียนเข้า field <code>assignees[]</code> แบบ embedded ในเอกสาร <code>screens/{id}</code> โดยตรง)</p>
+
+    <div class="trail">
+      <span class="tag">TOR Clause: ไม่มี (ยังไม่นำเข้า TOR ของโครงการนี้)</span>
+      <span class="arrow">→</span>
+      <span class="tag">Requirement: backlog #013 — MVP RAISE</span>
+      <span class="arrow">→</span>
+      <span class="tag">Screen: SCR-013</span>
+      <span class="arrow">→</span>
+      <span class="tag">Test Case: TC-093 – TC-096</span>
+    </div>
+    <p class="proto-note" style="margin-top:-16px; margin-bottom:24px;">
+      ถ้าเปิดหน้านี้ต่อจากการเลือกแถวและกด "มอบหมายเป็นชุด" ในทะเบียนหน้าจอ (SCR-009) ระบบจะติ๊กเลือกแถวที่ตรงกันไว้ล่วงหน้าให้อัตโนมัติ
+      (ส่งรหัสหน้าจอผ่าน query string ไม่ใช่การจำลอง backend จริง)
+    </p>
+
+    <form id="assign-form">
+      <div class="split-layout">
+        <div class="card">
+          <div class="field-label-row" style="margin-bottom: var(--sp-3);">
+            <h2 style="margin-bottom:0;">เลือกหน้าจอที่จะมอบหมาย</h2>
+          </div>
+          <p class="selected-count">เลือกแล้ว <strong id="assign-selected-count">0</strong> หน้าจอ</p>
+          <table>
+            <thead>
+              <tr>
+                <th class="select-col"></th>
+                <th>รหัส</th>
+                <th>ชื่อหน้าจอ</th>
+                <th>ผู้รับผิดชอบปัจจุบัน</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-code="SCR-101">
+                <td><input type="checkbox" class="assign-row-check" value="SCR-101"></td>
+                <td style="font-family: var(--font-mono);">SCR-101</td>
+                <td>ค้นหาและแสดงรายการใบลา (ตัวอย่าง)</td>
+                <td class="assignee-cell">
+                  <div class="avatar-row" data-role="Dev"><span class="avatar">สจ</span><span class="assignee-name">สมชาย ใจดี (Dev)</span></div>
+                </td>
+              </tr>
+              <tr data-code="SCR-102">
+                <td><input type="checkbox" class="assign-row-check" value="SCR-102"></td>
+                <td style="font-family: var(--font-mono);">SCR-102</td>
+                <td>อนุมัติใบลา (ตัวอย่าง)</td>
+                <td class="assignee-cell">
+                  <div class="avatar-row" data-role="Dev"><span class="avatar">สว</span><span class="assignee-name">สมหญิง วิเคราะห์ (Dev)</span></div>
+                  <div class="avatar-row" data-role="Tester"><span class="avatar is-accent2">วต</span><span class="assignee-name">วีระ ตรวจสอบ (Tester)</span></div>
+                </td>
+              </tr>
+              <tr data-code="SCR-103">
+                <td><input type="checkbox" class="assign-row-check" value="SCR-103"></td>
+                <td style="font-family: var(--font-mono);">SCR-103</td>
+                <td>รายงานสรุปวันลาสะสม (ตัวอย่าง)</td>
+                <td class="assignee-cell"><span class="avatar-empty">— ยังไม่มอบหมาย —</span></td>
+              </tr>
+              <tr data-code="SCR-104" class="is-deleted-sim">
+                <td><input type="checkbox" class="assign-row-check" value="SCR-104"></td>
+                <td style="font-family: var(--font-mono);">SCR-104</td>
+                <td>
+                  บริการแจ้งเตือนวันลาใกล้หมดอายุ (ตัวอย่าง)
+                  <p class="proto-note" style="margin-top:6px;">แถวนี้จำลองไว้ให้เป็น "หน้าจอที่ถูกลบไปแล้วระหว่างมอบหมายเป็นชุด" ตาม AC-NOSQL-013-4 — ลองติ๊กเลือกแถวนี้พร้อมแถวอื่นแล้วกด "มอบหมายและบันทึกประวัติ" จะเห็นผลลัพธ์แยกสำเร็จ/ไม่สำเร็จด้านล่าง</p>
+                </td>
+                <td class="assignee-cell">
+                  <div class="avatar-row" data-role="Dev"><span class="avatar">สจ</span><span class="assignee-name">สมชาย ใจดี (Dev)</span></div>
+                </td>
+              </tr>
+              <tr data-code="SCR-106">
+                <td><input type="checkbox" class="assign-row-check" value="SCR-106"></td>
+                <td style="font-family: var(--font-mono);">SCR-106</td>
+                <td>นำเข้าข้อมูลพนักงานจากไฟล์ Excel (ตัวอย่าง)</td>
+                <td class="assignee-cell"><span class="avatar-empty">— ยังไม่มอบหมาย —</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>มอบหมายผู้รับผิดชอบ</h2>
+          <div class="field">
+            <label for="assign-user-select">ผู้รับผิดชอบ</label>
+            <select id="assign-user-select">
+              <option data-initial="สจ" value="1">สมชาย ใจดี</option>
+              <option data-initial="สว" value="2">สมหญิง วิเคราะห์</option>
+              <option data-initial="วต" value="3">วีระ ตรวจสอบ</option>
+              <option data-initial="ปม" value="4">ปรีชา มั่นคง</option>
+              <option data-initial="พด" value="5">พิมพ์ใจ ดีงาม</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="assign-role-select">บทบาท</label>
+            <select id="assign-role-select">
+              <option value="SA">SA</option>
+              <option value="BA">BA</option>
+              <option value="Dev" selected>Dev</option>
+              <option value="Tester">Tester</option>
+            </select>
+            <p class="note">ถ้าหน้าจอที่เลือกมีผู้รับผิดชอบในบทบาทเดียวกันอยู่แล้ว ระบบจะแทนที่ entry เดิม ไม่สร้างซ้ำ (AC-NOSQL-013-3)</p>
+          </div>
+          <button type="submit" class="btn btn-primary">มอบหมายและบันทึกประวัติ</button>
+
+          <div id="assign-result-wrap">
+            <h3 style="margin-top: var(--sp-6);">ผลลัพธ์การมอบหมายล่าสุด</h3>
+            <ul id="assign-result-list" class="result-list"></ul>
+            <p class="note" id="assign-result-empty">ยังไม่มีการมอบหมายในรอบนี้</p>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <p class="proto-note">ข้อมูลในหน้านี้เป็นตัวอย่างเพื่อสาธิต UI เท่านั้น ไม่ใช่ข้อมูลจริง — อ้างอิงจาก <a href="../../../01-requirements/01-spec/20260824-013-scr-013-มอบหมายผู้รับผิดชอบ.md">spec SCR-013</a>, <a href="../../02-technical/screen-tracking-nosql-module-sequence.md">screen-tracking-nosql-module-sequence.md §3</a> และ <a href="../../../03-testing/01-test-plan/screen-tracking-nosql-module-acceptance-criteria.md">AC-NOSQL-013-x</a></p>
+  </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

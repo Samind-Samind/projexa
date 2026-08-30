@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>SCR-016 บันทึกความก้าวหน้า — Projexa Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <h4>Projexa Prototype</h4>
+      <a class="sidebar-item" href="index.html">หน้ารวม (Index)</a>
+    </div>
+    <div class="sidebar-group">
+      <h4>Screen Tracking (NoSQL)</h4>
+      <a class="sidebar-item" href="scr-009.html">SCR-009 ทะเบียนหน้าจอ</a>
+      <a class="sidebar-item" href="scr-010.html">SCR-010 รายละเอียดหน้าจอ</a>
+      <a class="sidebar-item" href="scr-013.html">SCR-013 มอบหมายผู้รับผิดชอบ</a>
+      <a class="sidebar-item active" href="scr-016.html">SCR-016 บันทึกความก้าวหน้า</a>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="breadcrumb">
+      <a href="index.html">Prototype</a><span class="sep">/</span>Screen Tracking (NoSQL)<span class="sep">/</span>บันทึกความก้าวหน้า
+    </div>
+    <div class="page-header">
+      <h1>บันทึกความก้าวหน้า</h1>
+      <span class="pill pill-draft">Draft</span>
+      <span class="tag">Must Have</span>
+    </div>
+    <p class="page-sub" id="progress-screen-label">SCR-104 — บริการแจ้งเตือนวันลาใกล้หมดอายุ (ตัวอย่าง)</p>
+    <p class="page-sub">SCR-016 · โมดูล Screen Tracking (ขอบเขต NoSQL — เขียน subcollection <code>screens/{id}/statusHistory</code> ทุกครั้งที่เปลี่ยนสถานะ)</p>
+
+    <div class="trail">
+      <span class="tag">TOR Clause: ไม่มี (ยังไม่นำเข้า TOR ของโครงการนี้)</span>
+      <span class="arrow">→</span>
+      <span class="tag">Requirement: backlog #016 — MVP RAISE</span>
+      <span class="arrow">→</span>
+      <span class="tag">Screen: SCR-016</span>
+      <span class="arrow">→</span>
+      <span class="tag">Test Case: TC-097 – TC-100</span>
+    </div>
+    <p class="proto-note" style="margin-top:-16px; margin-bottom:24px;">
+      สโคปนี้ใช้เฉพาะ 3 สถานะ (Not Started/Analysis/Design) แทนวงจรสถานะเต็มรูปแบบของระบบจริง (10 ค่า) ตาม
+      <code>screen-tracking-nosql-module.md</code> — และ "หมายเลข/รายละเอียดหน้าจอ" ด้านบนจะเปลี่ยนตามพารามิเตอร์ <code>?screen=</code>
+      ที่ส่งมาจากทะเบียนหน้าจอ แต่ข้อมูลสถานะ/ประวัติด้านล่างยังเป็นชุดตัวอย่างคงที่ (ไม่ได้ผูกกับหน้าจอที่เลือกจริง) เพื่อจำกัดขอบเขตการสาธิต
+    </p>
+
+    <div class="split-layout">
+      <div class="card">
+        <h2>เปลี่ยนสถานะความก้าวหน้า</h2>
+        <p class="page-sub" style="margin-bottom: var(--sp-3);">
+          สถานะปัจจุบัน:
+          <span id="current-status-value" class="status-chip is-current" data-status="Analysis">Analysis</span>
+          · อัปเดตล่าสุด: <span id="last-updated-value">25/08/2026 09:00</span>
+        </p>
+
+        <div class="status-btn-row">
+          <button type="button" class="status-select-btn" data-status="NotStarted">Not Started</button>
+          <button type="button" class="status-select-btn is-selected" data-status="Analysis">Analysis</button>
+          <button type="button" class="status-select-btn" data-status="Design">Design</button>
+        </div>
+
+        <div class="field" id="reason-field" hidden>
+          <label for="reason-input">เหตุผล (บังคับกรอกเมื่อถอยสถานะ) *</label>
+          <textarea id="reason-input" rows="3" placeholder="เช่น พบข้อผิดพลาดจาก Design ต้องกลับไปทบทวน Business Rule เพิ่มเติม"></textarea>
+          <p class="field-error">กรุณากรอกเหตุผลก่อนบันทึก เนื่องจากเป็นการถอยสถานะ (AC-NOSQL-016-2)</p>
+        </div>
+        <p class="note">การเดินหน้าสถานะตามปกติ (เช่น Not Started → Analysis → Design) ไม่บังคับกรอกเหตุผล — บังคับเฉพาะตอนเลือกสถานะที่ถอยหลังเท่านั้น</p>
+
+        <button type="button" class="btn btn-primary" id="save-progress-btn" style="margin-top: var(--sp-3);">บันทึกความก้าวหน้า</button>
+        <p class="proto-note">ลองกดปุ่ม "Design" แล้วกลับไปกด "Analysis" (ถอยสถานะ) เพื่อทดสอบว่าระบบบังคับกรอกเหตุผล เทียบกับกด "Design" ตรงๆ (เดินหน้าปกติ) ที่ไม่บังคับ</p>
+
+        <p class="proto-note" style="margin-top: var(--sp-3);">
+          ทดสอบกรณีหน้าจอถูกลบไปแล้วก่อนกดบันทึก (AC-NOSQL-016-4):
+          <button type="button" id="simulate-deleted-btn" class="btn btn-secondary" style="margin: 0 6px;">จำลองหน้าจอถูกลบไปแล้ว</button>
+          — หลังกดแล้วลองกด "บันทึกความก้าวหน้า" จะเห็นข้อความแจ้งเตือนว่าหน้าจอนี้ไม่มีอยู่แล้ว แล้วพากลับไปหน้าทะเบียนหน้าจอ แทนการบันทึกลง <code>statusHistory</code> ของเอกสารที่ไม่มีอยู่จริง
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>วงจรสถานะ (Workflow Stepper)</h3>
+        <div class="stepper">
+          <div class="stepper-step" data-status="NotStarted">
+            <span class="stepper-dot"></span>
+            <span class="stepper-label">Not Started</span>
+          </div>
+          <div class="stepper-step" data-status="Analysis">
+            <span class="stepper-dot"></span>
+            <span class="stepper-label">Analysis</span>
+          </div>
+          <div class="stepper-step" data-status="Design">
+            <span class="stepper-dot"></span>
+            <span class="stepper-label">Design</span>
+          </div>
+        </div>
+
+        <h3 style="margin-top: var(--sp-6);">ประวัติการเปลี่ยนสถานะ</h3>
+        <ul id="status-history-list" class="history-list">
+          <li class="history-item">
+            <div class="history-meta">25/08/2026 09:00 — ระบบบันทึกอัตโนมัติ (changed_by: สมชาย ใจดี)</div>
+            <div class="history-change">Not Started → Analysis</div>
+          </li>
+        </ul>
+        <p class="note">changed_by และ changed_at ถูกบันทึกโดยระบบอัตโนมัติทุกครั้ง ผู้ใช้ไม่ต้องกรอกเอง (AC-NOSQL-016-3)</p>
+      </div>
+    </div>
+
+    <p class="proto-note">ข้อมูลในหน้านี้เป็นตัวอย่างเพื่อสาธิต UI เท่านั้น ไม่ใช่ข้อมูลจริง — อ้างอิงจาก <a href="../../../01-requirements/01-spec/20260824-016-scr-016-บันทึกความก้าวหน้า.md">spec SCR-016</a>, <a href="../../02-technical/screen-tracking-nosql-module-sequence.md">screen-tracking-nosql-module-sequence.md §4</a> และ <a href="../../../03-testing/01-test-plan/screen-tracking-nosql-module-acceptance-criteria.md">AC-NOSQL-016-x</a></p>
+  </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

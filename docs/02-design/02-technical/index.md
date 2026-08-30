@@ -25,3 +25,6 @@
 - [[screen-tracking-nosql-module-sequence|screen-tracking-nosql-module-sequence]]
   — Sequence diagram ครบ 4 flow ของโมดูล Screen Tracking ในสโคปที่ตัดลดแล้ว
   (คนละไฟล์กับ `detailed-design/scr-009..016` ที่เป็นระบบจริง)
+- [[screen-tracking-nosql-module-tech|screen-tracking-nosql-module-tech]] —
+  บันทึกตัดสินใจเทคโนโลยีสั้นเฉพาะโมดูลนี้ (Firebase Firestore + Node.js)
+  สำหรับงานส่งหลักสูตร NoSQL โดยเฉพาะ — ไม่ใช่ tech-stack.md ของระบบจริง

@@ -13,3 +13,7 @@
 - [[test-plan|test-plan]] — กลยุทธ์การทดสอบภาพรวม 1 ไฟล์ต่อโปรเจกต์
 - [[acceptance-criteria|acceptance-criteria]] — Given-When-Then ต่อ backlog item
 - [[test-cases/index|test-cases]] — test case แบบ step-by-step รายฟีเจอร์
+- [[screen-tracking-nosql-module-acceptance-criteria|screen-tracking-nosql-module-acceptance-criteria]]
+  — Acceptance Criteria ของโมดูล Screen Tracking (SCR-009/010/013/016) ในสโคป
+  ที่ตัดลดแล้วสำหรับงานส่งหลักสูตร NoSQL โดยเฉพาะ — คนละแทร็กกับ
+  `acceptance-criteria.md` ด้านบน (ดูหมายเหตุในเอกสาร)
