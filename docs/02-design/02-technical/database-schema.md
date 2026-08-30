@@ -364,17 +364,17 @@ erDiagram
 - **คำอธิบาย:** สถานะปัจจุบัน + วันที่วางแผน/จริง
 - **ใช้งานโดยหน้าจอ:** SCR-015, SCR-016, SCR-017
 
-| ฟิลด์ | ชนิดข้อมูล (conceptual) | Key | Nullable | คำอธิบาย |
-|---|---|---|---|---|
-| id | Reference | PK | ไม่ | |
-| screen_id | Reference→Screen (1:1 unique) | FK | ไม่ | |
-| current_status | Enum(NotStarted/Analysis/Design/Development/UnitTest/SIT/UAT/Done/OnHold/Rework) | | ไม่ | §6 |
-| planned_start_date | DateTime | | ได้ | |
-| planned_end_date | DateTime | | ได้ | |
-| actual_start_date | DateTime | | ได้ | |
-| actual_end_date | DateTime | | ได้ | |
-| progress_percentage | Number | | ไม่ (default 0) | |
-| updated_at | DateTime | | ไม่ | |
+| ฟิลด์               | ชนิดข้อมูล (conceptual)                                                          | Key | Nullable        | คำอธิบาย |
+| ------------------- | -------------------------------------------------------------------------------- | --- | --------------- | -------- |
+| id                  | Reference                                                                        | PK  | ไม่             |          |
+| screen_id           | Reference→Screen (1:1 unique)                                                    | FK  | ไม่             |          |
+| current_status      | Enum(NotStarted/Analysis/Design/Development/UnitTest/SIT/UAT/Done/OnHold/Rework) |     | ไม่             | §6       |
+| planned_start_date  | DateTime                                                                         |     | ได้             |          |
+| planned_end_date    | DateTime                                                                         |     | ได้             |          |
+| actual_start_date   | DateTime                                                                         |     | ได้             |          |
+| actual_end_date     | DateTime                                                                         |     | ได้             |          |
+| progress_percentage | Number                                                                           |     | ไม่ (default 0) |          |
+| updated_at          | DateTime                                                                         |     | ไม่             |          |
 
 **ความสัมพันธ์:** belongs to `Screen` (1:1)
 
