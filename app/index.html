@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Screen Tracking — Projexa</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <h4>Projexa — Screen Tracking</h4>
+      <a class="sidebar-item active" href="index.html">หน้ารวม (Index)</a>
+    </div>
+    <div class="sidebar-group">
+      <h4>Screen Tracking (NoSQL)</h4>
+      <a class="sidebar-item" href="scr-009.html">SCR-009 ทะเบียนหน้าจอ</a>
+      <a class="sidebar-item" href="scr-010.html">SCR-010 รายละเอียดหน้าจอ</a>
+      <a class="sidebar-item" href="scr-013.html">SCR-013 มอบหมายผู้รับผิดชอบ</a>
+      <a class="sidebar-item" href="scr-016.html">SCR-016 บันทึกความก้าวหน้า</a>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="page-header"><h1>Screen Tracking — โมดูล Screen Tracking (ขอบเขต NoSQL)</h1></div>
+    <p class="page-sub">
+      โค้ดจริง (ไม่ใช่ prototype) ที่ต่อ Firestore project จริงตรงๆ จากเบราว์เซอร์ — ดูขอบเขตที่
+      <code>SCOPE.md</code> และโครงสร้างข้อมูลที่
+      <code>docs/02-design/02-technical/screen-tracking-nosql-module.md</code>
+    </p>
+
+    <div class="card">
+      <h2>เริ่มต้นใช้งานครั้งแรก</h2>
+      <ol>
+        <li>ใส่ <code>firebaseConfig</code> ของ project จริงใน <code>js/firebase-config.js</code> (ทำแล้ว)</li>
+        <li>เปิด Firestore Database ใน Firebase Console แล้ว publish <code>firestore.rules</code></li>
+        <li>เปิด <a href="seed.html">seed.html</a> กด "เริ่มใส่ข้อมูลตัวอย่าง" ครั้งเดียว</li>
+        <li>เปิด <a href="scr-009.html">ทะเบียนหน้าจอ</a> — ควรเห็นข้อมูลจริงจาก Firestore</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>หน้าจอในสโคปนี้</h2>
+      <ul>
+        <li><a href="scr-009.html">SCR-009 — ทะเบียนหน้าจอ</a></li>
+        <li><a href="scr-010.html">SCR-010 — รายละเอียดหน้าจอ (สร้าง/แก้ไข + AI แนะนำประเภท)</a></li>
+        <li><a href="scr-013.html">SCR-013 — มอบหมายผู้รับผิดชอบ</a></li>
+        <li><a href="scr-016.html">SCR-016 — บันทึกความก้าวหน้า</a></li>
+      </ul>
+      <p class="note">ยังไม่มีระบบล็อกอินในสโคปนี้ (ดู <code>SCOPE.md</code>) — <code>firestore.rules</code> เปิด read/write ให้ทุกคนไปก่อน</p>
+    </div>
+  </main>
+</div>
+</body>
+</html>

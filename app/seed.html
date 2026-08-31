@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ใส่ข้อมูลตัวอย่างลง Firestore — Screen Tracking</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/data.js" defer></script>
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <h4>Projexa — Screen Tracking</h4>
+      <a class="sidebar-item" href="index.html">หน้ารวม</a>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="page-header"><h1>ใส่ข้อมูลตัวอย่างลง Firestore</h1></div>
+    <p class="page-sub">
+      หน้านี้ใช้ครั้งเดียวตอนตั้งค่าโปรเจกต์ — กดปุ่มด้านล่างเพื่อคัดลอกข้อมูลตัวอย่างจาก
+      <code>js/data.js</code> ขึ้นไปเป็นข้อมูลตัวอย่างบน Firestore (users · screenTypes ·
+      screens · statusHistory)
+    </p>
+
+    <div class="card">
+      <div class="btn-row">
+        <button type="button" id="ปุ่มเริ่ม" class="btn btn-primary">เริ่มใส่ข้อมูลตัวอย่าง</button>
+      </div>
+      <div id="สถานะ" style="margin-top:16px; white-space:pre-line;"></div>
+    </div>
+
+    <a class="btn btn-secondary" href="index.html">← กลับหน้าแรก</a>
+  </main>
+</div>
+
+<script type="module" src="js/seed.js"></script>
+</body>
+</html>

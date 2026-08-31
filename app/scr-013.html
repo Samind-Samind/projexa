@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>SCR-013 มอบหมายผู้รับผิดชอบ — Projexa</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/common.js" defer></script>
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <h4>Projexa — Screen Tracking</h4>
+      <a class="sidebar-item" href="index.html">หน้ารวม (Index)</a>
+    </div>
+    <div class="sidebar-group">
+      <h4>Screen Tracking (NoSQL)</h4>
+      <a class="sidebar-item" href="scr-009.html">SCR-009 ทะเบียนหน้าจอ</a>
+      <a class="sidebar-item" href="scr-010.html">SCR-010 รายละเอียดหน้าจอ</a>
+      <a class="sidebar-item active" href="scr-013.html">SCR-013 มอบหมายผู้รับผิดชอบ</a>
+      <a class="sidebar-item" href="scr-016.html">SCR-016 บันทึกความก้าวหน้า</a>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="breadcrumb"><a href="index.html">Screen Tracking</a><span class="sep">/</span>มอบหมายผู้รับผิดชอบ</div>
+    <div class="page-header"><h1>มอบหมายผู้รับผิดชอบ</h1></div>
+    <p class="page-sub">SCR-013 · เขียนเข้า field <code>assignees[]</code> แบบ embedded ในเอกสาร <code>screens/{id}</code> โดยตรง</p>
+
+    <form id="assign-form">
+      <div class="split-layout">
+        <div class="card">
+          <div class="field-label-row" style="margin-bottom: var(--sp-3);">
+            <h2 style="margin-bottom:0;">เลือกหน้าจอที่จะมอบหมาย</h2>
+          </div>
+          <p class="selected-count">เลือกแล้ว <strong id="assign-selected-count">0</strong> หน้าจอ</p>
+          <table>
+            <thead>
+              <tr>
+                <th class="select-col"></th>
+                <th>รหัส</th>
+                <th>ชื่อหน้าจอ</th>
+                <th>ผู้รับผิดชอบปัจจุบัน</th>
+              </tr>
+            </thead>
+            <tbody id="assign-screen-body">
+              <tr><td colspan="4" class="loading-note">กำลังโหลดข้อมูลจาก Firestore…</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>มอบหมายผู้รับผิดชอบ</h2>
+          <div class="field">
+            <label for="assign-user-select">ผู้รับผิดชอบ</label>
+            <select id="assign-user-select"><option value="">กำลังโหลดผู้ใช้…</option></select>
+          </div>
+          <div class="field">
+            <label for="assign-role-select">บทบาท</label>
+            <select id="assign-role-select">
+              <option value="SA">SA</option>
+              <option value="BA">BA</option>
+              <option value="Dev" selected>Dev</option>
+              <option value="Tester">Tester</option>
+            </select>
+            <p class="note">ถ้าหน้าจอที่เลือกมีผู้รับผิดชอบในบทบาทเดียวกันอยู่แล้ว ระบบจะแทนที่ entry เดิม ไม่สร้างซ้ำ</p>
+          </div>
+          <button type="submit" class="btn btn-primary">มอบหมายและบันทึกประวัติ</button>
+
+          <div id="assign-result-wrap">
+            <h3 style="margin-top: var(--sp-6);">ผลลัพธ์การมอบหมายล่าสุด</h3>
+            <ul id="assign-result-list" class="result-list"></ul>
+            <p class="note" id="assign-result-empty">ยังไม่มีการมอบหมายในรอบนี้</p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </main>
+</div>
+<script type="module" src="js/screen-assign.js"></script>
+</body>
+</html>

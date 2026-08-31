@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>SCR-010 รายละเอียดหน้าจอ — Projexa</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/common.js" defer></script>
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <h4>Projexa — Screen Tracking</h4>
+      <a class="sidebar-item" href="index.html">หน้ารวม (Index)</a>
+    </div>
+    <div class="sidebar-group">
+      <h4>Screen Tracking (NoSQL)</h4>
+      <a class="sidebar-item" href="scr-009.html">SCR-009 ทะเบียนหน้าจอ</a>
+      <a class="sidebar-item active" href="scr-010.html">SCR-010 รายละเอียดหน้าจอ</a>
+      <a class="sidebar-item" href="scr-013.html">SCR-013 มอบหมายผู้รับผิดชอบ</a>
+      <a class="sidebar-item" href="scr-016.html">SCR-016 บันทึกความก้าวหน้า</a>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="breadcrumb"><a href="index.html">Screen Tracking</a><span class="sep">/</span>รายละเอียดหน้าจอ</div>
+    <div class="page-header"><h1 id="detail-mode-heading">สร้างหน้าจอใหม่</h1></div>
+    <p class="page-sub">SCR-010 · อ่าน/เขียนจริงบน collection <code>screens</code></p>
+
+    <div class="card">
+      <h2>ข้อมูลหน้าจอ</h2>
+      <div class="field" id="name-field">
+        <label for="screen-name-input">ชื่อหน้าจอ *</label>
+        <input type="text" id="screen-name-input" placeholder="เช่น หน้าจอค้นหาและแสดงรายการใบลา">
+        <p class="field-error">กรุณากรอกชื่อหน้าจอก่อนบันทึก</p>
+      </div>
+      <div class="field">
+        <label for="screen-desc-input">คำอธิบาย</label>
+        <textarea id="screen-desc-input" rows="3" placeholder="อธิบายหน้าที่การทำงานของหน้าจอนี้โดยย่อ — ระบบจะใช้ข้อความนี้ร่วมกับชื่อหน้าจอเป็น input ให้ AI ช่วยแนะนำประเภท"></textarea>
+      </div>
+
+      <div class="field">
+        <button type="button" class="btn btn-secondary" id="ai-suggest-btn">ให้ AI ช่วยแนะนำประเภท</button>
+        <a href="#" class="btn-link" id="ai-simulate-timeout" style="margin-left: var(--sp-3);">จำลอง AI ไม่ตอบสนอง</a>
+      </div>
+      <p class="note">โมดูลนี้ยังไม่ต่อ AI จริง (ดู SCOPE.md §6 — อยู่นอกสโคปรอบนี้) ปุ่มด้านบนจำลองผลลัพธ์ไว้ก่อน</p>
+
+      <p id="ai-waiting" class="note" hidden>AI กำลังวิเคราะห์ชื่อและคำอธิบายหน้าจอ...</p>
+
+      <div id="ai-type-block" class="ai-block" data-suggested-value="INQUIRY" data-suggested-confidence="0.82" hidden>
+        <p style="margin:0 0 var(--sp-2);">AI วิเคราะห์แล้วแนะนำประเภท: <strong id="ai-suggested-label">Inquiry</strong> (ai_confidence: <span id="ai-suggested-confidence-label">82%</span>)</p>
+        <p class="note" style="margin:0 0 var(--sp-3);">กรุณาตรวจสอบก่อนยืนยัน (is_suggested = true จนกว่าจะกดยืนยัน)</p>
+        <button type="button" class="btn btn-primary" id="ai-confirm-btn">ยืนยันประเภทนี้</button>
+        <button type="button" class="btn btn-secondary" id="ai-dismiss-btn">เลือกประเภทเองแทน</button>
+      </div>
+
+      <p id="ai-timeout-msg" class="note" hidden>AI แนะนำไม่สำเร็จ (จำลอง timeout) — ไม่เป็นไร กรุณาเลือกประเภทได้จากรายการด้านล่างเองได้ทันที</p>
+
+      <div class="field">
+        <label for="screen-type-select">ประเภทหน้าจอ *</label>
+        <select id="screen-type-select"><option value="">กำลังโหลดประเภท…</option></select>
+        <p class="note">ประเภทที่บันทึกจริงจะถูก denormalize ติดไปกับเอกสาร <code>screens</code> (ทั้ง type_id และ label)</p>
+      </div>
+
+      <p class="note" id="concurrency-note" hidden>
+        เอกสารนี้อาจถูกแก้ไขโดยผู้ใช้อื่นระหว่างที่คุณเปิดหน้านี้ค้างไว้ — กด
+        <button type="button" id="reload-latest-btn" class="btn-link">โหลดข้อมูลล่าสุด</button> ก่อนบันทึกซ้ำ
+      </p>
+
+      <div class="form-actions" style="margin-top: var(--sp-4); display:flex; gap: var(--sp-3);">
+        <button type="button" class="btn btn-primary" id="save-screen-btn">บันทึก</button>
+        <a class="btn btn-secondary" id="link-to-assign" href="#" style="pointer-events:none; opacity:.45;">ไปหน้ามอบหมายผู้รับผิดชอบ</a>
+        <a class="btn btn-secondary" id="link-to-progress" href="#" style="pointer-events:none; opacity:.45;">ไปหน้าบันทึกความก้าวหน้า</a>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="module" src="js/screen-detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+/*
+  Projexa — app/ — style.css
+  โค้ดจริง (ไม่ใช่ prototype) ของโมดูล Screen Tracking (ขอบเขต NoSQL — งานส่ง
+  หลักสูตร) — คัดลอก Design Tokens มาจาก docs/02-design/01-prototypes/DESIGN.md
+  ("Warm Terracotta Workspace": Sand & Cream + Terracotta & Sage, ฟอนต์
+  Mitr/Noto Sans Thai/Figtree, ปุ่ม/แท็ก/status pill ทรง pill เต็มขอบ 999px,
+  sidebar พื้นเขียวเข้ม accent2-900, การ์ด/panel แบบ flat ไม่มี shadow) — เหมือน
+  หน้าตา docs/02-design/01-prototypes/v2/ ทุกประการ แต่เป็นไฟล์แยกต่างหาก
+  (ไม่อ้างอิงข้าม ไม่แก้ v2/ ตามกฎ self-contained snapshot ของ prototype)
+*/
+
+:root {
+  /* พื้นหลัง (Neutral — Sand & Cream, DESIGN.md §2.1) */
+  --color-bg-page: #F5EAD8;        /* bg-page */
+  --color-bg-surface: #F9F4ED;     /* sand-100 */
+  --color-bg-surface-alt: #EBDDC5; /* surface-alt — input field */
+  --color-bg-hover: #EEE7DB;       /* sand-200 — hover state แถวตาราง */
+  --color-border: #DCD3C4;         /* sand-300 */
+  --color-border-strong: #C0B6A5;  /* sand-400 */
+  /* ข้อความ */
+  --color-text-muted: #A19786;     /* sand-500 */
+  --color-text-secondary: #645C50; /* sand-700 */
+  --color-text-tag: #474238;       /* ink-800 — ตัวอักษร tag/pill แบบ neutral */
+  --color-text-primary: #2E2B25;   /* ink-900 */
+  /* accent — Terracotta & Sage */
+  --color-accent-tint: #FFF2EB;    /* accent-100 */
+  --color-accent: #C67139;        /* accent-base */
+  --color-accent-hover: #B2622D;  /* accent-600 */
+  --color-accent-outline: #8C491A;/* accent-700 — ข้อความ/ขอบของ "สถานะถัดไป" แบบ outline */
+  --color-accent2-tint: #F0FAE1;  /* accent2-100 */
+  --color-accent2: #8FA073;       /* accent2-500 */
+  --color-sidebar-bg: #272E1B;    /* accent2-900 — พื้น sidebar เขียวเข้มเกือบดำ (ข้อยกเว้นพื้นเข้มจุดเดียว) */
+  /* semantic */
+  --color-success: #5B7A45; --color-success-bg: #F0FAE1;
+  --color-warning: #B3812E; --color-warning-bg: #FFF2EB;
+  --color-danger:  #B23A2D; --color-danger-bg:  #FBE4DE;
+  --color-info:    #6E63C8; --color-info-bg:    #EBE8FA;
+  /* typography (DESIGN.md §2.2) */
+  --font-th: "Noto Sans Thai", "Figtree", system-ui, sans-serif;   /* เนื้อหาไทยทั่วไป */
+  --font-heading: "Mitr", system-ui, sans-serif;                   /* หัวข้อ/แบรนด์/ปุ่ม (ไทย) */
+  --font-en: "Figtree", system-ui, sans-serif;                     /* label อังกฤษ/ตัวเลข/วันที่ */
+  --font-mono: "IBM Plex Mono", monospace;                         /* รหัสอ้างอิง เช่น SCR-xxx */
+  /* spacing (4px grid, DESIGN.md §2.3) */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+  /* radius / border / shadow (DESIGN.md §2.4) */
+  --radius-sm: 8px; --radius-md: 16px; --radius-lg: 28px; --radius-pill: 999px;
+  --shadow-sm: 0 1px 2px rgba(46, 43, 37, 0.14);
+  --shadow-md: 0 3px 10px rgba(46, 43, 37, 0.16);
+  --shadow-lg: 0 12px 32px rgba(46, 43, 37, 0.22);
+  --shadow-float: var(--shadow-sm);
+  --shadow-modal: var(--shadow-lg);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--color-bg-page); color: var(--color-text-primary);
+  font-family: var(--font-th); font-size: 14px; line-height: 22px;
+}
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 240px; flex: none; background: var(--color-sidebar-bg);
+  padding: var(--sp-6) var(--sp-4); color: var(--color-bg-page);
+}
+.sidebar-group { margin-bottom: var(--sp-6); }
+.sidebar-group h4 {
+  font-family: var(--font-heading); font-size: 12px; color: rgba(245, 234, 216, 0.6);
+  text-transform: uppercase; margin: 0 0 var(--sp-2) var(--sp-2); font-weight: 500;
+}
+.sidebar-item {
+  display: block; padding: var(--sp-2) var(--sp-3); border-radius: var(--radius-sm);
+  color: var(--color-bg-page); text-decoration: none; font-size: 13px;
+}
+.sidebar-item:hover { background: rgba(245, 234, 216, 0.08); }
+.sidebar-item.active { background: rgba(245, 234, 216, 0.14); box-shadow: var(--shadow-sm); font-weight: 500; }
+.content { flex: 1; padding: var(--sp-12) var(--sp-8); max-width: 1200px; }
+.breadcrumb { font-size: 13px; color: var(--color-text-secondary); margin-bottom: var(--sp-3); font-family: var(--font-en); }
+.breadcrumb a { color: var(--color-text-secondary); text-decoration: none; }
+.breadcrumb .sep { color: var(--color-border-strong); margin: 0 var(--sp-1); }
+.page-header { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-2); flex-wrap: wrap; }
+.page-header h1 { font-family: var(--font-heading); font-size: 28px; line-height: 36px; font-weight: 600; margin: 0; }
+.page-sub { color: var(--color-text-secondary); margin: 0 0 var(--sp-6); }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500;
+  padding: 4px var(--sp-3); border-radius: var(--radius-pill);
+}
+.pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pill-draft { color: var(--color-text-muted); background: var(--color-bg-surface); }
+.pill-review { color: var(--color-info); background: var(--color-info-bg); }
+.pill-confirmed { color: var(--color-accent2); background: var(--color-accent2-tint); }
+.pill-progress { color: var(--color-bg-surface); background: var(--color-accent); }
+.pill-blocked { color: var(--color-danger); background: var(--color-danger-bg); }
+.tag {
+  display: inline-block; font-size: 12px; padding: 4px var(--sp-3); border-radius: var(--radius-pill);
+  background: var(--color-accent2-tint); color: var(--color-accent2); font-weight: 500;
+}
+.tag-suggested { background: var(--color-warning-bg); color: var(--color-warning); }
+.card {
+  background: var(--color-bg-surface); border-radius: var(--radius-md);
+  padding: var(--sp-6); margin-bottom: var(--sp-6);
+}
+.card h2 { font-family: var(--font-heading); font-size: 20px; line-height: 28px; font-weight: 600; margin: 0 0 var(--sp-4); }
+.card h3 { font-size: 16px; line-height: 24px; font-weight: 500; margin: 0 0 var(--sp-3); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-size: 16px; font-weight: 500; background: var(--color-bg-surface); padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--color-border); }
+td { padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+tr:nth-child(even) td { background: var(--color-bg-page); }
+tbody tr:hover td { background: var(--color-bg-hover); }
+.btn {
+  display: inline-flex; align-items: center; gap: var(--sp-2); border-radius: var(--radius-pill);
+  padding: var(--sp-2) var(--sp-4); font-size: 14px; font-weight: 500; border: 1px solid transparent;
+  cursor: pointer; text-decoration: none; font-family: var(--font-heading); background: transparent;
+}
+.btn-primary { background: var(--color-accent); color: var(--color-bg-surface); }
+.btn-primary:hover { background: var(--color-accent-hover); }
+.btn-secondary { background: transparent; border-color: var(--color-border-strong); color: var(--color-text-primary); }
+.btn-secondary:hover { background: var(--color-bg-hover); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-link {
+  background: none; border: none; padding: 0; color: var(--color-accent-outline); font-family: var(--font-th);
+  font-size: 12px; text-decoration: underline; cursor: pointer;
+}
+.field { margin-bottom: var(--sp-4); }
+.field label { display: block; font-size: 13px; margin-bottom: var(--sp-1); color: var(--color-text-secondary); }
+.field input, .field select, .field textarea {
+  width: 100%; padding: var(--sp-2) var(--sp-3); border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm); background: var(--color-bg-surface-alt); font-family: inherit; font-size: 14px;
+  color: var(--color-text-primary);
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 2px var(--color-accent-tint);
+}
+.field.has-error input, .field.has-error textarea, .field.has-error select { border-color: var(--color-danger); }
+.field-error { display: none; font-size: 12px; color: var(--color-danger); margin-top: var(--sp-1); }
+.field.has-error .field-error { display: block; }
+.ai-block {
+  border: 1px dashed var(--color-warning); border-radius: var(--radius-md); padding: var(--sp-4);
+  position: relative; margin-bottom: var(--sp-4); background: var(--color-bg-page);
+}
+.ai-block::before {
+  content: "AI เสนอ"; position: absolute; top: -10px; left: var(--sp-3); background: var(--color-warning-bg);
+  color: var(--color-warning); font-size: 11px; padding: 2px 8px; border-radius: var(--radius-pill);
+}
+.ai-block.is-confirmed { border-style: solid; border-color: var(--color-border); }
+.ai-block.is-confirmed::before { content: "ยืนยันแล้ว"; background: var(--color-accent2-tint); color: var(--color-accent2); }
+.trail { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; margin-bottom: var(--sp-6); }
+.trail .tag { background: var(--color-bg-surface); color: var(--color-text-secondary); }
+.trail .arrow { color: var(--color-border-strong); }
+.empty-state { text-align: center; padding: var(--sp-12) var(--sp-6); color: var(--color-text-secondary); }
+.empty-state .btn-primary { margin-top: var(--sp-4); }
+.note { font-size: 12px; color: var(--color-text-muted); margin-top: var(--sp-2); }
+.field-label-row { position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); margin-bottom: var(--sp-1); }
+.field-label-row label { margin-bottom: 0; }
+
+.toast {
+  position: fixed; top: var(--sp-6); right: var(--sp-6); z-index: 100; max-width: 320px;
+  background: var(--color-bg-surface); border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg); padding: var(--sp-3) var(--sp-4); font-size: 13px;
+  opacity: 0; transform: translateY(-8px); transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+.toast.is-visible { opacity: 1; transform: translateY(0); }
+.toast-success { border-left: 3px solid var(--color-success); }
+.toast-danger { border-left: 3px solid var(--color-danger); }
+.toast-close { margin-left: var(--sp-3); background: none; border: none; cursor: pointer; color: var(--color-text-muted); font-size: 14px; }
+@media (prefers-reduced-motion: reduce) {
+  .toast { transition: none; }
+}
+
+/* ---------------------------------------------------------------------
+   ส่วนเสริมเฉพาะโมดูล Screen Tracking (Avatar, Status Chip, Workflow Stepper,
+   ประวัติ statusHistory, filter bar, 2-column assign layout, ผลลัพธ์ batch)
+--------------------------------------------------------------------- */
+.avatar {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 24px; height: 24px; border-radius: 50%; font-size: 11px; font-weight: 600;
+  background: var(--color-accent-tint); color: var(--color-text-primary); font-family: var(--font-en);
+}
+.avatar.is-accent2 { background: var(--color-accent2-tint); }
+.avatar-row { display: inline-flex; align-items: center; gap: var(--sp-2); }
+.avatar-row .avatar-empty { color: var(--color-text-muted); font-size: 12px; }
+
+.status-chip {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500;
+  padding: 4px var(--sp-3); border-radius: var(--radius-pill); border: 1px solid transparent; white-space: nowrap;
+}
+.status-chip.is-current { background: var(--color-accent); color: var(--color-bg-surface); }
+.status-chip.is-next { background: transparent; border-color: var(--color-accent-outline); color: var(--color-accent-outline); }
+.status-chip.is-neutral { background: var(--color-bg-page); color: var(--color-text-tag); border-color: var(--color-border); }
+
+.filter-bar { display: flex; gap: var(--sp-3); align-items: flex-end; margin-bottom: var(--sp-4); flex-wrap: wrap; }
+.filter-bar .field { margin-bottom: 0; min-width: 180px; }
+.filter-bar-actions { margin-left: auto; display: flex; gap: var(--sp-2); align-items: center; }
+.selected-count { font-size: 13px; color: var(--color-text-secondary); margin-bottom: var(--sp-3); }
+.selected-count strong { color: var(--color-accent); font-family: var(--font-en); }
+.select-col { width: 28px; }
+
+.split-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--sp-6); align-items: start; }
+@media (max-width: 900px) { .split-layout { grid-template-columns: 1fr; } }
+
+.result-list { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-2); font-size: 13px; }
+.result-item { display: flex; align-items: center; gap: var(--sp-2); }
+.result-item .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.result-item.is-success .dot { background: var(--color-success); }
+.result-item.is-failed .dot { background: var(--color-danger); }
+.result-item.is-failed { color: var(--color-text-secondary); }
+
+.stepper { display: flex; flex-direction: column; gap: 0; }
+.stepper-step { display: flex; align-items: flex-start; gap: var(--sp-3); position: relative; padding-bottom: var(--sp-6); }
+.stepper-step:last-child { padding-bottom: 0; }
+.stepper-step:not(:last-child)::after {
+  content: ""; position: absolute; left: 7px; top: 20px; bottom: 0; width: 2px; background: var(--color-border-strong);
+}
+.stepper-dot { width: 16px; height: 16px; border-radius: 50%; flex: none; margin-top: 2px; background: var(--color-border-strong); }
+.stepper-step.is-passed .stepper-dot { background: var(--color-accent2); }
+.stepper-step.is-current .stepper-dot { background: var(--color-accent); }
+.stepper-label { font-size: 13px; font-weight: 500; }
+.stepper-step.is-upcoming .stepper-label { color: var(--color-text-muted); font-weight: 400; }
+.stepper-step.is-current .stepper-label { color: var(--color-accent); }
+
+.history-list { list-style: none; margin: var(--sp-4) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-3); }
+.history-item { border-left: 2px solid var(--color-border); padding-left: var(--sp-3); }
+.history-item .history-meta { font-size: 12px; color: var(--color-text-muted); font-family: var(--font-en); }
+.history-item .history-change { font-size: 13px; margin: 2px 0; }
+.history-item .history-reason { font-size: 12px; color: var(--color-text-secondary); }
+
+.status-btn-row { display: flex; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-4); }
+.status-select-btn {
+  border-radius: var(--radius-pill); padding: var(--sp-2) var(--sp-6); font-family: var(--font-heading);
+  font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid var(--color-border-strong);
+  background: transparent; color: var(--color-text-primary);
+}
+.status-select-btn.is-selected { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-bg-surface); }
+
+.loading-note { font-size: 13px; color: var(--color-text-muted); }

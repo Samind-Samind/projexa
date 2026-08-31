@@ -20,7 +20,7 @@
 | หัวข้อ | ตัวเลือกที่เลือก |
 |---|---|
 | Document Database (NoSQL engine) | **Firebase Firestore** (Native mode) |
-| ภาษา/Library เขียน query ฝั่ง Application Service | **Node.js** + **`firebase-admin` SDK** |
+| ภาษา/Library เขียน query | **JavaScript (vanilla) ฝั่ง client** + **Firebase JS SDK (Web, modular v9+)** — `initializeApp`/`getFirestore` ต่อ Firestore project จริงตรงจากเบราว์เซอร์ (เดิมเคยเลือก Node.js + `firebase-admin` — ดูประวัติการตัดสินใจด้านล่าง) |
 
 ## เหตุผล
 
@@ -31,26 +31,42 @@
 - Firestore subcollection รองรับ `statusHistory` ที่ผูกกับแต่ละ `screens/{id}`
   โดยเฉพาะได้ตรงตัว และ embedded array (field `assignees[]`) ก็เป็นชนิดข้อมูล
   มาตรฐานของ Firestore อยู่แล้ว — ไม่ต้องออกแบบโครงสร้างเพิ่มเพื่อรองรับ engine
-- `firebase-admin` SDK เป็น library มาตรฐานสำหรับเขียน script/backend service
-  เข้าถึง Firestore โดยตรงจากฝั่ง server (เหมาะกับงานส่งหลักสูตรที่เน้นโค้ด
-  เข้าถึง NoSQL ไม่ใช่การสร้างระบบเว็บเต็มรูปแบบ)
+- Firebase JS SDK (client-side) ต่อจากหน้าเว็บ (`app/`) ตรงเข้า Firestore
+  project จริงโดยไม่มี backend คั่น — ตาม pattern เดียวกับตัวอย่าง `LeaveEasy`
+  ในคาบทุกประการ (`initializeApp`/`getFirestore`, ไม่มี server, ไม่มี auth ใน
+  สโคปนี้) ทำให้ตรวจสอบผลได้ง่ายด้วยการเปิดหน้าเว็บจริงคู่กับ Firebase Console
 
 ## Dev / Test Environment
 
 | หัวข้อ | ตัวเลือกที่เลือก |
 |---|---|
-| Environment สำหรับเขียน/รัน test จริง | **Firebase Local Emulator Suite** (Firestore emulator) |
+| Environment สำหรับรันจริง | **Firebase project จริง** (`projexa-b3a6a`) — ไม่ใช้ Local Emulator Suite แล้ว |
 
-- เขียนและรัน script/test ทั้งหมด (ตาม TC-084 ถึง TC-100 ใน
-  [screen-tracking-nosql-module.md ในโฟลเดอร์ test-cases](../../03-testing/01-test-plan/test-cases/screen-tracking-nosql-module.md))
-  ชี้ `firebase-admin` SDK ไปที่ Firestore emulator (`FIRESTORE_EMULATOR_HOST`)
-  แทนการต่อ Firebase project จริง — ไม่ต้องสมัคร/ผูก billing account จริง
-  เพื่อทำงานส่งหลักสูตรนี้
-- Seed ข้อมูลตัวอย่างของแต่ละ TC (เช่นเอกสาร `screens`/`screenTypes` ตั้งต้น)
-  ให้เขียนเป็น script รันใส่ emulator ก่อนแต่ละรอบทดสอบ ไม่ต้อง provision
-  ข้อมูลถาวรบน cloud
-- ถ้าจะ deploy ขึ้น Firebase project จริงในภายหลัง (นอกสโคปงานส่งนี้) ค่อย
-  จัดการ credential/service account แยกต่างหาก
+- ต่อ `app/js/firebase-config.js` เข้า Firestore project จริงตรงๆ, publish
+  `app/firestore.rules` (เปิด read/write แบบไม่ล็อกอิน — ยังไม่มี auth ในสโคป
+  นี้) ผ่าน Firebase Console, แล้ว seed ข้อมูลตัวอย่างผ่าน `app/seed.html`
+  ครั้งเดียว (ไม่ต้องใช้ script ฝั่ง server + emulator อีกต่อไป)
+- ตรวจสอบผลด้วยการแก้ไขข้อมูลใน Firebase Console แล้วรีเฟรชหน้าเว็บดู
+  (แบบเดียวกับที่ตรวจสอบ `LeaveEasy`)
+
+## ประวัติการตัดสินใจ
+
+- 2026-08-30: สร้างเอกสารครั้งแรก จากคำถามว่ายังขาดเอกสารอะไรก่อนเขียนโค้ดจริง
+  ตาม `SCOPE.md` — user ยืนยันให้ทำเป็นบันทึกสั้นเฉพาะโมดูลนี้ (ไม่ใช่
+  weighted-scoring เต็มรูปแบบของ skill `tech-stack`) และเลือก Firebase
+  Firestore + Node.js เพราะตรงกับศัพท์ collection/subcollection ที่เอกสาร
+  เดิมใช้อยู่แล้ว
+- 2026-08-30 (รอบตรวจซ้ำ): เพิ่มหัวข้อ Dev/Test Environment — user ยืนยันให้ใช้
+  Firebase Local Emulator Suite เป็น environment หลักสำหรับเขียน/รัน test
+  จริง (ไม่ต้องผูก Firebase project จริง) พบระหว่างตรวจทานว่าเอกสารเดิมตัดสินใจ
+  engine/ภาษาไว้แล้วแต่ยังไม่ระบุว่าจะรันจริงอย่างไร
+- 2026-08-31: **เปลี่ยนมติ** จาก Node.js + `firebase-admin` + Local Emulator
+  Suite เป็น **Client-side Firebase JS SDK ต่อ Firebase project จริง
+  (`projexa-b3a6a`)** — user ส่ง `firebaseConfig` ของ project จริงมาขอให้เชื่อม
+  เว็บ (`app/` — โค้ดจริงของโมดูลนี้ นอกเหนือจาก prototype `v2/` ที่ห้ามแก้)
+  เข้ากับ Firestore ตรงๆ แบบเดียวกับที่ทำกับตัวอย่าง `LeaveEasy` ในคาบ (ไม่ใช่
+  แบบ server-side ผ่าน emulator ตามมติเดิม) ยืนยันกับ user แล้วว่าให้เปลี่ยนมติ
+  นี้แทนที่จะคงของเดิมไว้
 
 ## ขอบเขตที่ไม่ตัดสินใจในเอกสารนี้ (ไม่จำเป็นสำหรับงานส่งรอบนี้)
 

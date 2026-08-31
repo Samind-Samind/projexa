@@ -4,7 +4,11 @@
 
 ## สถานะของ Repository
 
-ตอนนี้ repo นี้มีเฉพาะ **เอกสารวางแผนและออกแบบระบบเท่านั้น** — ยังไม่มีซอร์สโค้ด, package manifest, build system, linter หรือ test suite ใดๆ อย่าค้นหาหรือสมมติว่ามี `package.json`, ไฟล์ตั้งค่า CI หรือโฟลเดอร์ src อยู่ เพราะยังไม่มี เมื่อเริ่มลงมือพัฒนาโค้ดจริง ควรอัปเดตไฟล์นี้ให้มีคำสั่ง build/lint/test จริง และหมายเหตุเกี่ยวกับสถาปัตยกรรมของโค้ด
+เอกสารวางแผนและออกแบบระบบหลักของโปรเจกต์ Projexa (แผนระบบเต็มรูปแบบ) ยังอยู่ในสถานะ **เอกสารเท่านั้น** — ไม่มีซอร์สโค้ดของระบบ Projexa จริง อย่าค้นหาหรือสมมติว่ามี build system/CI/src หลักของระบบ เพราะยังไม่มี
+
+**ข้อยกเว้น:** โฟลเดอร์ [`app/`](app/) มีซอร์สโค้ดจริงชุดแรก — เว็บ HTML/CSS/JS ธรรมดา (ไม่มี build step) ของ **โมดูล Screen Tracking (ขอบเขต NoSQL — งานส่งหลักสูตร ดู [SCOPE.md](SCOPE.md))** ต่อ Firebase Firestore project จริงตรงจากเบราว์เซอร์ (client-side Web SDK ตามมติใน [screen-tracking-nosql-module-tech.md](docs/02-design/02-technical/screen-tracking-nosql-module-tech.md)) — **ไม่ใช่** โค้ดของระบบ Projexa จริงทั้งระบบ และแยกต่างหากจาก prototype แบบจำลอง interaction ที่ `docs/02-design/01-prototypes/v2/` (ห้ามแก้ไฟล์ฝั่ง prototype ตามกฎ self-contained snapshot)
+
+รันดูได้ด้วย `cd app && npx serve -l 3000 .` แล้วเปิด `http://localhost:3000` (ES module ต้องเสิร์ฟผ่าน http ไม่ใช่เปิดไฟล์ตรงๆ) ไม่มี lint/test suite สำหรับ `app/` ในตอนนี้
 
 ## โปรเจกต์นี้คืออะไร
 
