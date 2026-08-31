@@ -128,7 +128,7 @@
 |---|---|
 | Pre-condition | มีหน้าจอ 1 รายการที่ยังไม่มีผู้รับผิดชอบ role ที่จะมอบหมาย |
 | Test Steps | 1. PM เปิดหน้าจอที่จะมอบหมาย<br>2. เลือกผู้รับผิดชอบ + บทบาท (เช่น Dev)<br>3. กด "มอบหมาย" |
-| Expected Result | field `assignees[]` ของเอกสารนั้นมี entry ใหม่ `{user_id, role, assigned_by, assigned_at}` เพิ่มเข้ามา |
+| Expected Result | field `assignees[]` ของเอกสารนั้นมี entry ใหม่ `{user_id, user_name, role, assigned_by, assigned_at}` เพิ่มเข้ามา — `user_name` ต้องตรงกับชื่อผู้ใช้ที่เลือก (denormalized snapshot) |
 | Test Data | หน้าจอ 1 รายการ, ผู้ใช้ 1 คน, role = Dev |
 | อ้างอิง AC | AC-NOSQL-013-1 |
 | อ้างอิง Requirement | SCR-013 |

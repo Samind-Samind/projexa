@@ -53,7 +53,7 @@ erDiagram
 | name | Text | ชื่อหน้าจอ |
 | description | Text | คำอธิบาย — input ให้ AI ใช้แนะนำ `type` |
 | type | Denormalized {type_id, label} | อ้างจาก `screenTypes` แบบ snapshot ค่า label ติดมาด้วย (ตาม pattern `leaveTypes` — ไม่ query join ทุกครั้ง) |
-| assignees | Array of {user_id, role, assigned_by, assigned_at} | **embedded** แทนตาราง `Assignment` แยก เพื่อไม่ให้เกิน "โฟลเดอร์ย่อย 1 อัน" — จำนวนต่อ screen มีจำกัด ไม่โตไม่สิ้นสุดเหมือน `statusHistory` |
+| assignees | Array of {user_id, user_name, role, assigned_by, assigned_at} | **embedded** แทนตาราง `Assignment` แยก เพื่อไม่ให้เกิน "โฟลเดอร์ย่อย 1 อัน" — จำนวนต่อ screen มีจำกัด ไม่โตไม่สิ้นสุดเหมือน `statusHistory`. `user_name` เป็น **denormalized snapshot** ของชื่อ user ณ ตอนมอบหมาย (ตาม pattern เดียวกับ `type.label`) เพื่อให้ list/detail แสดงชื่อผู้รับผิดชอบได้โดยไม่ query join กลับ `users` — ตรงกับ requesterName ของ LeaveEasy ที่จดชื่อซ้ำไว้ใน leaveRequests |
 | origin_label | Enum(AIGenerated/HumanConfirmed/ManualEntry) | ใครเป็นคนสร้าง (AI หรือ SA/BA/PM) |
 | ai_confidence | Number (nullable) | confidence ตอน AI แนะนำ `type` |
 | is_suggested | Boolean | รอยืนยันจาก SA หรือยัง |
@@ -143,3 +143,14 @@ AI อ่าน `name` + `description` ที่พิมพ์ใน SCR-010 �
   ประกอบตัวที่ 3 เกินเงื่อนไข "โฟลเดอร์ประกอบ 2 อัน" ใน `SCOPE.md` (และไม่เคย
   ปรากฏใน ER diagram §2 หรือถูกใช้กรองใน AC/Test Case ที่เขียนไว้แล้วเลย)
   user ยืนยันให้ตัดออกจากสโคปนี้ทั้งหมด
+- 2026-08-31: เพิ่ม field `user_name` (denormalized snapshot) เข้า
+  `assignees[]` ของ `screens` — พบว่ายังไม่มี field ไหนใน `screens` ที่ตรงกับ
+  ตัวอย่าง `requesterName` ของ LeaveEasy (จดชื่อ user ซ้ำไว้เพื่อไม่ต้อง join
+  กลับ `users`) ทั้งที่ `screen-tracking-nosql-module-sequence.md` §1 และ
+  `screen-tracking-nosql-module-acceptance-criteria.md` (AC-NOSQL-009-1) เขียน
+  ไว้แล้วว่าหน้าทะเบียนหน้าจอแสดง "ผู้รับผิดชอบจาก assignees[]" แบบ denormalize
+  โดยไม่ query join เพิ่ม — ถ้า `assignees[]` มีแค่ `user_id` ข้อความนั้นจะไม่
+  จริง จึงต้องเพิ่ม `user_name` เข้าไปเพื่อให้สอดคล้องกับ AC/Sequence ที่เขียน
+  ไว้แล้ว (ยังไม่ได้ sync field shape `{user_id, role, assigned_by,
+  assigned_at}` ในไฟล์ sequence/AC/test-case/prototype v2 ที่เหลือ — รอ user
+  ยืนยันว่าจะแก้ไฟล์เหล่านั้นด้วยหรือไม่)

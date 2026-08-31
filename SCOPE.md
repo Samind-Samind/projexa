@@ -25,7 +25,7 @@
 | โฟลเดอร์หลัก | `leaveRequests` | `screens` |
 | โฟลเดอร์ประเภท | `leaveTypes` | `screenTypes` |
 | โฟลเดอร์ย่อย | `approvals` | `statusHistory` |
-| ช่องบอกว่าเป็นของใคร | `requesterId` · `requesterName` | `assignees[].user_id` (embedded array ใน document `screen`) |
+| ช่องบอกว่าเป็นของใคร | `requesterId` · `requesterName` | `assignees[].user_id` · `assignees[].user_name` (denormalized snapshot — embedded array ใน document `screen`) |
 | สถานะทั้งหมด | รอพิจารณา · อนุมัติ · ไม่อนุมัติ | Not Started · Analysis · Design |
 | คนที่สร้างรายการ | พนักงาน | AI (Design Analyzer) หรือ SA/BA/PM |
 | คนที่เปลี่ยนสถานะ | หัวหน้า | ผู้รับผิดชอบ (Dev/Tester ที่ถูกมอบหมาย) |

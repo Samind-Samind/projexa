@@ -116,10 +116,10 @@ sequenceDiagram
 
     PM->>UI: เปิดหน้าจอที่จะมอบหมาย (เลือกได้มากกว่า 1 หน้าจอ)
     PM->>UI: เลือกผู้รับผิดชอบ + บทบาท แล้วกด "มอบหมาย"
-    UI->>Svc: PATCH screens/{id} { assignees: upsert {user_id, role, assigned_by, assigned_at} }
+    UI->>Svc: PATCH screens/{id} { assignees: upsert {user_id, user_name, role, assigned_by, assigned_at} }
 
     loop ต่อแต่ละหน้าจอที่เลือก (ถ้าเลือกหลายรายการ)
-        Svc->>DB: อัปเดต array assignees[] ของเอกสารนั้น (แทนที่ entry เดิมที่ role ตรงกัน หรือ push ใหม่)
+        Svc->>DB: อัปเดต array assignees[] ของเอกสารนั้น (denormalize user_name ติดไปด้วย, แทนที่ entry เดิมที่ role ตรงกัน หรือ push ใหม่)
         DB-->>Svc: อัปเดตสำเร็จ
     end
 
@@ -186,3 +186,8 @@ sequenceDiagram
   detail+AI suggest, assign แบบ embedded, บันทึกความก้าวหน้า) ตามโครงสร้างที่
   ตัดสโคปไว้ใน `screen-tracking-nosql-module.md` แยกจาก
   `detailed-design/scr-009..016.md` ของระบบจริงโดยเจตนา
+- 2026-08-31: เพิ่ม `user_name` เข้า payload PATCH ของ flow ที่ 3
+  (มอบหมายผู้รับผิดชอบ) ให้ตรงกับ field `assignees[].user_name` ที่เพิ่มใน
+  `screen-tracking-nosql-module.md` — เดิม §1 เขียนไว้แล้วว่า list แสดง
+  "ผู้รับผิดชอบจาก assignees[]" แบบ denormalize โดยไม่ query join แต่ payload
+  ของ flow ที่ 3 มีแค่ `user_id` ทำให้ไม่มีชื่อให้ denormalize จริง

@@ -98,8 +98,9 @@
 - **Given** PM เลือกหน้าจอที่จะมอบหมาย 1 รายการ และเลือกผู้รับผิดชอบ + บทบาท
 - **When** PM กด "มอบหมาย"
 - **Then** ระบบ PATCH เอกสาร `screens/{id}` โดย push entry
-  `{user_id, role, assigned_by, assigned_at}` เข้า field `assignees[]`
-  โดยตรง (ไม่มีการสร้างตารางหรือ subcollection แยกสำหรับ assignment)
+  `{user_id, user_name, role, assigned_by, assigned_at}` เข้า field
+  `assignees[]` โดยตรง (`user_name` เป็น denormalized snapshot ของชื่อผู้ใช้
+  ณ ตอนมอบหมาย — ไม่มีการสร้างตารางหรือ subcollection แยกสำหรับ assignment)
 
 ### AC-NOSQL-013-2 มอบหมายหลายหน้าจอพร้อมกันเป็นชุดได้
 
