@@ -8,7 +8,28 @@
 
 **ข้อยกเว้น:** โฟลเดอร์ [`app/`](app/) มีซอร์สโค้ดจริงชุดแรก — เว็บ HTML/CSS/JS ธรรมดา (ไม่มี build step) ของ **โมดูล Screen Tracking (ขอบเขต NoSQL — งานส่งหลักสูตร ดู [SCOPE.md](SCOPE.md))** ต่อ Firebase Firestore project จริงตรงจากเบราว์เซอร์ (client-side Web SDK ตามมติใน [screen-tracking-nosql-module-tech.md](docs/02-design/02-technical/screen-tracking-nosql-module-tech.md)) — **ไม่ใช่** โค้ดของระบบ Projexa จริงทั้งระบบ และแยกต่างหากจาก prototype แบบจำลอง interaction ที่ `docs/02-design/01-prototypes/v2/` (ห้ามแก้ไฟล์ฝั่ง prototype ตามกฎ self-contained snapshot)
 
-รันดูได้ด้วย `cd app && npx serve -l 3000 .` แล้วเปิด `http://localhost:3000` (ES module ต้องเสิร์ฟผ่าน http ไม่ใช่เปิดไฟล์ตรงๆ) ไม่มี lint/test suite สำหรับ `app/` ในตอนนี้
+ก่อนรันครั้งแรก ให้คัดลอก `app/js/firebase-config.example.js` เป็น `app/js/firebase-config.js` แล้วใส่ค่าจริงจาก Firebase Console ของโปรเจกต์ (ไฟล์ `firebase-config.js` ถูก `.gitignore` ไว้แล้ว จะไม่ถูก commit/push — ดูหัวข้อ "ข้อห้ามเรื่อง credential" ด้านล่าง) จากนั้นรันดูได้ด้วย `cd app && npx serve -l 3000 .` แล้วเปิด `http://localhost:3000` (ES module ต้องเสิร์ฟผ่าน http ไม่ใช่เปิดไฟล์ตรงๆ) ไม่มี lint/test suite สำหรับ `app/` ในตอนนี้ การใส่ข้อมูลตัวอย่างขึ้น Firestore ครั้งแรก (จาก `app/js/data.js`) ให้เปิด `app/seed.html` แล้วกดปุ่มบนหน้านั้น (`app/js/seed.js` รันครั้งเดียวตอนตั้งค่าโปรเจกต์ ไม่ได้ใช้ในหน้าจอปกติ) — `app/firestore.rules` ตอนนี้เปิด read/write แบบไม่ต้องยืนยันตัวตน (`allow read, write: if true`) โดยตั้งใจ เพราะยังไม่มีระบบล็อกอินตามขอบเขตใน SCOPE.md อย่าแก้ให้รัดกุมขึ้นเองโดยไม่ถาม user ก่อน
+
+**โครงสร้าง Firestore collection (top-level ทั้งหมด):**
+- `screens` — เอกสารหลักของหน้าจอแต่ละหน้า (document id = รหัสหน้าจอ เช่น `SCR-009`), มี `assignees[]` เป็น embedded array และมี `current_status`
+  - `screens/{code}/statusHistory` — subcollection ประวัติการเปลี่ยนสถานะของหน้าจอนั้น
+- `users` — ผู้ใช้งาน (SA / ผู้รับผิดชอบ Dev-Tester / PM)
+- `screenTypes` — master data ประเภทหน้าจอ
+
+**สถานะของหน้าจอ (`current_status`, มี 3 ค่าตามขอบเขตงานส่งนี้เท่านั้น — ดู [SCOPE.md](SCOPE.md) สำหรับสถานะที่เหลือของวงจรพัฒนาเต็มที่ถูกตัดออกจากสโคป):**
+1. `NotStarted` (แสดงผล "Not Started")
+2. `Analysis`
+3. `Design`
+
+**ข้อห้ามเรื่อง credential:** ห้ามใส่คีย์ลับ (เช่น service account key, API key ของบริการอื่นที่ไม่ใช่ Firebase client config, token, password) ลงไฟล์ใดๆ ที่จะ commit/push เข้า repo นี้เด็ดขาด — ถ้าต้องใช้ค่าลับ ให้เก็บไว้นอก git (เช่นไฟล์ที่อยู่ใน `.gitignore`) แล้วให้ user เป็นผู้ตั้งค่าเอง อย่าเดาหรือสร้างค่าแทน
+
+`app/js/firebase-config.js` (มีค่า Firebase config จริงของโปรเจกต์) ถูกใส่ไว้ใน `.gitignore` แล้วและถูก `git rm --cached` ออกจาก index (ยังอยู่บน disk เพื่อให้รันแอปได้ตามปกติ แต่จะไม่ถูก commit/push อีกต่อไป) — ไฟล์ที่ track ใน git แทนคือ `app/js/firebase-config.example.js` (ค่าเป็น placeholder ทั้งหมด) ห้ามใส่ค่าจริงกลับลงไปใน `.example.js` หรือย้าย `firebase-config.js` ออกจาก `.gitignore` โดยไม่ถาม user ก่อน
+
+**หมายเหตุ:** ค่า `apiKey` ของ Firebase Web SDK เดิมเคยถูก commit/push ขึ้น GitHub ไปแล้วก่อนหน้านี้ (อยู่ใน git history/remote) — การย้ายออกจาก working tree รอบนี้ป้องกันการรั่วไหลเพิ่มเติมเท่านั้น ไม่ได้ลบออกจากประวัติเก่า ถ้า user ต้องการปิดความเสี่ยงนี้ให้สมบูรณ์ต้องไป rotate/regenerate ค่า `apiKey` ที่ Firebase Console เอง (เป็นการตัดสินใจ/ขั้นตอนภายนอก repo ที่ agent ทำแทนไม่ได้) — ทั้งนี้ Firebase เองถือว่า Web API key เป็น client identifier ที่เปิดเผยต่อสาธารณะได้ตามปกติ ความปลอดภัยจริงของข้อมูลอยู่ที่ `firestore.rules` ไม่ใช่ที่ apiKey ดังนั้นไม่ใช่คีย์ลับระดับเดียวกับ service account key
+
+## หมายเหตุเรื่องไฟล์ `Projexa.html` ที่ root
+
+`Projexa.html` (~700KB) ที่ root ของ repo **ไม่ใช่ซอร์สโค้ดหรือเอกสารวางแผน** — เป็นไฟล์ตัวอย่างหน้าตาแอปที่ user จัดทำไว้ภายนอกโปรเจกต์ ใช้เป็น**ต้นทางอ้างอิงสีจริง/ฟอนต์/รูปทรง**ของ Design System โทน "Warm Terracotta Workspace" ที่ถูกดึงมาเขียนไว้ใน [`docs/02-design/01-prototypes/DESIGN.md`](docs/02-design/01-prototypes/DESIGN.md) แล้ว — ไม่ต้องเปิดอ่าน/แก้ไฟล์นี้ตรงๆ เว้นแต่ user จะขอให้ sync ค่าดีไซน์ใหม่จากไฟล์นี้อีกครั้ง (อ้างอิงค่าที่ดึงมาแล้วใน `DESIGN.md` เป็นหลักแทน)
 
 ## โปรเจกต์นี้คืออะไร
 
