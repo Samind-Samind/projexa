@@ -20,17 +20,17 @@
 > จริง** (ใช้เป็นพิมพ์เขียวขยายงานในอนาคต ไม่ใช่สิ่งที่ต้องพัฒนาตามสำหรับงาน
 > ส่งครั้งนี้) — ถ้าจะลงมือเขียนโค้ดส่งงาน ให้ยึดตารางในไฟล์นี้เท่านั้น
 
-| | LeaveEasy (ตัวอย่างในคาบ) | ของฉัน |
-|---|---|---|
-| โฟลเดอร์หลัก | `leaveRequests` | `screens` |
-| โฟลเดอร์ประเภท | `leaveTypes` | `screenTypes` |
-| โฟลเดอร์ย่อย | `approvals` | `statusHistory` |
-| ช่องบอกว่าเป็นของใคร | `requesterId` · `requesterName` | `assignees[].user_id` · `assignees[].user_name` (denormalized snapshot — embedded array ใน document `screen`) |
-| สถานะทั้งหมด | รอพิจารณา · อนุมัติ · ไม่อนุมัติ | Not Started · Analysis · Design |
-| คนที่สร้างรายการ | พนักงาน | AI (Design Analyzer) หรือ SA/BA/PM |
-| คนที่เปลี่ยนสถานะ | หัวหน้า | ผู้รับผิดชอบ (Dev/Tester ที่ถูกมอบหมาย) |
-| ช่องข้อความยาวที่ AI จะอ่าน | `reason` | `note`/`reason` ใน `statusHistory` (บังคับกรอกตอนถอยสถานะ) |
-| งานที่ AI ช่วย (สัปดาห์ที่ 8) | จัดประเภทการลาให้อัตโนมัติ | แนะนำ `screenType` (Process/Inquiry/Report UI/Service/Report) จากคำอธิบายหน้าจอที่พิมพ์ พร้อม confidence ให้ user ยืนยัน |
+|                               | LeaveEasy (ตัวอย่างในคาบ)        | ของฉัน                                                                                                                   |
+| ----------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| โฟลเดอร์หลัก                  | `leaveRequests`                  | `screens`                                                                                                                |
+| โฟลเดอร์ประเภท                | `leaveTypes`                     | `screenTypes`                                                                                                            |
+| โฟลเดอร์ย่อย                  | `approvals`                      | `statusHistory`                                                                                                          |
+| ช่องบอกว่าเป็นของใคร          | `requesterId` · `requesterName`  | `assignees[].user_id` · `assignees[].user_name` (denormalized snapshot — embedded array ใน document `screen`)            |
+| สถานะทั้งหมด                  | รอพิจารณา · อนุมัติ · ไม่อนุมัติ | Not Started · Analysis · Design                                                                                          |
+| คนที่สร้างรายการ              | พนักงาน                          | AI (Design Analyzer) หรือ SA/BA/PM                                                                                       |
+| คนที่เปลี่ยนสถานะ             | หัวหน้า                          | ผู้รับผิดชอบ (Dev/Tester ที่ถูกมอบหมาย)                                                                                  |
+| ช่องข้อความยาวที่ AI จะอ่าน   | `reason`                         | `note`/`reason` ใน `statusHistory` (บังคับกรอกตอนถอยสถานะ)                                                               |
+| งานที่ AI ช่วย (สัปดาห์ที่ 8) | จัดประเภทการลาให้อัตโนมัติ       | แนะนำ `screenType` (Process/Inquiry/Report UI/Service/Report) จากคำอธิบายหน้าจอที่พิมพ์ พร้อม confidence ให้ user ยืนยัน |
 
 ## หน้าจอในสโคป (4 หน้า)
 

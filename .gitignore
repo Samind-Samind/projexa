@@ -1,2 +1,15 @@
 .obsidian/
+
+# ไฟล์ตั้งค่าที่มีคีย์/ค่าลับจริง — ห้าม commit/push เด็ดขาด
+# (ไฟล์ตัวอย่าง/แม่แบบที่เป็น placeholder เช่น *.example.js ยังคง track ปกติ)
 app/js/firebase-config.js
+.env
+.env.*
+!.env.example
+*.local.js
+*.local.json
+serviceAccountKey*.json
+*firebase-adminsdk*.json
+*.pem
+*.key
+secrets/
