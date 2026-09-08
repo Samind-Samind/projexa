@@ -11,7 +11,7 @@
 ก่อนรันครั้งแรก ให้คัดลอก `app/js/firebase-config.example.js` เป็น `app/js/firebase-config.js` แล้วใส่ค่าจริงจาก Firebase Console ของโปรเจกต์ (ไฟล์ `firebase-config.js` ถูก `.gitignore` ไว้แล้ว จะไม่ถูก commit/push — ดูหัวข้อ "ข้อห้ามเรื่อง credential" ด้านล่าง) จากนั้นรันดูได้ด้วย `cd app && npx serve -l 3000 .` แล้วเปิด `http://localhost:3000` (ES module ต้องเสิร์ฟผ่าน http ไม่ใช่เปิดไฟล์ตรงๆ) ไม่มี lint/test suite สำหรับ `app/` ในตอนนี้ การใส่ข้อมูลตัวอย่างขึ้น Firestore ครั้งแรก (จาก `app/js/data.js`) ให้เปิด `app/seed.html` แล้วกดปุ่มบนหน้านั้น (`app/js/seed.js` รันครั้งเดียวตอนตั้งค่าโปรเจกต์ ไม่ได้ใช้ในหน้าจอปกติ) — `app/firestore.rules` ตอนนี้เปิด read/write แบบไม่ต้องยืนยันตัวตน (`allow read, write: if true`) โดยตั้งใจ เพราะยังไม่มีระบบล็อกอินตามขอบเขตใน SCOPE.md อย่าแก้ให้รัดกุมขึ้นเองโดยไม่ถาม user ก่อน
 
 **โครงสร้าง Firestore collection (top-level ทั้งหมด):**
-- `screens` — เอกสารหลักของหน้าจอแต่ละหน้า (document id = รหัสหน้าจอ เช่น `SCR-009`), มี `assignees[]` เป็น embedded array และมี `current_status`
+- `screens` — เอกสารหลักของหน้าจอแต่ละหน้า (document id = ฟิลด์ `screens_id` แบบ Firestore auto-generated ID ที่ไม่มีความหมาย ใช้เป็น PK/FK อ้างอิงข้ามหน้าจอ — `code` เช่น `SCR-009` เป็นฟิลด์ label แยกต่างหากที่แก้ไขได้อิสระแม้จะมอบหมายงาน/บันทึกความก้าวหน้าไปแล้วก็ตาม เพราะไม่ผูกกับ document id อีกต่อไป), มี `assignees[]` เป็น embedded array และมี `current_status`
   - `screens/{code}/statusHistory` — subcollection ประวัติการเปลี่ยนสถานะของหน้าจอนั้น
 - `users` — ผู้ใช้งาน (SA / ผู้รับผิดชอบ Dev-Tester / PM)
 - `screenTypes` — master data ประเภทหน้าจอ

@@ -9,13 +9,16 @@ import {
   getDocs,
   doc,
   getDoc,
-  setDoc
+  setDoc,
+  query,
+  where
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const params = new URLSearchParams(window.location.search);
-let currentCode = params.get("screen");
+let currentId = params.get("screen");
 
 const typeSelect = document.getElementById("screen-type-select");
+const codeInput = document.getElementById("screen-code-input");
 const nameInput = document.getElementById("screen-name-input");
 const descInput = document.getElementById("screen-desc-input");
 const detailHeading = document.getElementById("detail-mode-heading");
@@ -50,14 +53,16 @@ function enableLink(link, href) {
 }
 
 async function loadExisting() {
-  const snap = await getDoc(doc(db, "screens", currentCode));
+  const snap = await getDoc(doc(db, "screens", currentId));
   if (!snap.exists()) {
-    window.showToast("ไม่พบหน้าจอรหัส " + currentCode + " — อาจถูกลบไปแล้ว", "danger");
+    window.showToast("ไม่พบหน้าจอนี้ — อาจถูกลบไปแล้ว", "danger");
     detailHeading.textContent = "สร้างหน้าจอใหม่";
+    currentId = null;
     return;
   }
   const data = snap.data();
-  detailHeading.textContent = "แก้ไขหน้าจอ: " + currentCode;
+  detailHeading.textContent = "แก้ไขหน้าจอ: " + (data.code || currentId);
+  codeInput.value = data.code || "";
   nameInput.value = data.name || "";
   descInput.value = data.description || "";
   typeSelect.value = (data.type && data.type.type_id) || "";
@@ -66,12 +71,12 @@ async function loadExisting() {
   isSuggested = !!data.is_suggested;
   currentStatus = data.current_status || "NotStarted";
   loadedUpdatedAt = data.updated_at || null;
-  enableLink(linkAssign, "scr-013.html?ids=" + encodeURIComponent(currentCode));
-  enableLink(linkProgress, "scr-016.html?screen=" + encodeURIComponent(currentCode));
+  enableLink(linkAssign, "scr-013.html?ids=" + encodeURIComponent(currentId));
+  enableLink(linkProgress, "scr-016.html?screen=" + encodeURIComponent(currentId));
 }
 
 async function reloadLatest() {
-  const snap = await getDoc(doc(db, "screens", currentCode));
+  const snap = await getDoc(doc(db, "screens", currentId));
   if (!snap.exists()) {
     window.showToast("หน้าจอนี้ถูกลบไปแล้ว กำลังพากลับไปหน้าทะเบียนหน้าจอ...", "danger");
     setTimeout(function () { window.location.href = "scr-009.html"; }, 1500);
@@ -82,18 +87,18 @@ async function reloadLatest() {
   window.showToast("โหลดข้อมูลล่าสุดแล้ว");
 }
 
-function nextScreenCode(existingCodes) {
-  let max = 100;
-  existingCodes.forEach(function (code) {
-    const m = /^SCR-1(\d\d)$/.exec(code);
-    if (m) max = Math.max(max, parseInt(m[1], 10) + 100);
+async function isCodeTaken(codeValue, excludeId) {
+  const snapshot = await getDocs(query(collection(db, "screens"), where("code", "==", codeValue)));
+  let taken = false;
+  snapshot.forEach(function (docSnap) {
+    if (docSnap.id !== excludeId) taken = true;
   });
-  return "SCR-" + (max + 1);
+  return taken;
 }
 
 (async function init() {
   await loadScreenTypes();
-  if (currentCode) {
+  if (currentId) {
     await loadExisting();
   }
 
@@ -145,6 +150,15 @@ function nextScreenCode(existingCodes) {
   document.getElementById("reload-latest-btn").addEventListener("click", reloadLatest);
 
   document.getElementById("save-screen-btn").addEventListener("click", async function () {
+    const codeFieldWrap = document.getElementById("code-field");
+    const enteredCode = codeInput.value.trim();
+    if (!enteredCode) {
+      codeFieldWrap.classList.add("has-error");
+      codeInput.focus();
+      return;
+    }
+    codeFieldWrap.classList.remove("has-error");
+
     const nameFieldWrap = document.getElementById("name-field");
     if (!nameInput.value.trim()) {
       nameFieldWrap.classList.add("has-error");
@@ -157,12 +171,13 @@ function nextScreenCode(existingCodes) {
       return;
     }
 
-    const wasEditing = !!currentCode;
-    let code = currentCode;
+    const wasEditing = !!currentId;
     let existingSnapshot = null;
+    let docRef;
 
-    if (code) {
-      existingSnapshot = await getDoc(doc(db, "screens", code));
+    if (wasEditing) {
+      docRef = doc(db, "screens", currentId);
+      existingSnapshot = await getDoc(docRef);
       if (!existingSnapshot.exists()) {
         window.showToast("บันทึกไม่สำเร็จ: หน้าจอนี้ถูกลบไปแล้ว กำลังพากลับไปหน้าทะเบียนหน้าจอ...", "danger");
         setTimeout(function () { window.location.href = "scr-009.html"; }, 1500);
@@ -175,14 +190,19 @@ function nextScreenCode(existingCodes) {
         return;
       }
     } else {
-      const snapshot = await getDocs(collection(db, "screens"));
-      const codes = [];
-      snapshot.forEach(function (d) { codes.push(d.id); });
-      code = nextScreenCode(codes);
+      docRef = doc(collection(db, "screens"));
+    }
+
+    if (await isCodeTaken(enteredCode, wasEditing ? currentId : null)) {
+      codeFieldWrap.classList.add("has-error");
+      window.showToast("บันทึกไม่สำเร็จ: มีรหัสหน้าจอ " + enteredCode + " อยู่ในระบบแล้ว กรุณาใช้รหัสอื่น", "danger");
+      codeInput.focus();
+      return;
     }
 
     const docData = {
-      code: code,
+      screens_id: docRef.id,
+      code: enteredCode,
       name: nameInput.value.trim(),
       description: descInput.value.trim(),
       type: { type_id: typeSelect.value, label: typeLabels[typeSelect.value] || "" },
@@ -195,16 +215,16 @@ function nextScreenCode(existingCodes) {
     };
     docData.assignees = wasEditing ? (existingSnapshot.data().assignees || []) : [];
 
-    await setDoc(doc(db, "screens", code), docData);
-    currentCode = code;
+    await setDoc(docRef, docData);
+    currentId = docRef.id;
     loadedUpdatedAt = docData.updated_at;
     concurrencyNote.hidden = true;
-    enableLink(linkAssign, "scr-013.html?ids=" + encodeURIComponent(code));
-    enableLink(linkProgress, "scr-016.html?screen=" + encodeURIComponent(code));
+    enableLink(linkAssign, "scr-013.html?ids=" + encodeURIComponent(currentId));
+    enableLink(linkProgress, "scr-016.html?screen=" + encodeURIComponent(currentId));
     if (!wasEditing) {
-      window.history.replaceState(null, "", "scr-010.html?screen=" + encodeURIComponent(code));
-      detailHeading.textContent = "แก้ไขหน้าจอ: " + code;
+      window.history.replaceState(null, "", "scr-010.html?screen=" + encodeURIComponent(currentId));
     }
-    window.showToast("บันทึกข้อมูลหน้าจอสำเร็จ (" + code + ")");
+    detailHeading.textContent = "แก้ไขหน้าจอ: " + enteredCode;
+    window.showToast("บันทึกข้อมูลหน้าจอสำเร็จ (" + enteredCode + ")");
   });
 })();

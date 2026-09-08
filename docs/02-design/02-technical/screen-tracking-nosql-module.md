@@ -48,8 +48,8 @@ erDiagram
 
 | ฟิลด์ | ชนิดข้อมูล | คำอธิบาย |
 |---|---|---|
-| id | Reference | PK |
-| code | Text | SCR-xxx (ตาม `Screen.code` เดิม) |
+| screens_id | Reference | PK — Firestore auto-generated id ไม่มีความหมาย ใช้อ้างอิงข้าม document/URL แทน `code` |
+| code | Text | SCR-xxx (ตาม `Screen.code` เดิม) — label ที่แก้ไขได้อิสระแม้มอบหมายงาน/บันทึกความก้าวหน้าไปแล้ว เพราะไม่ผูกกับ document id อีกต่อไป |
 | name | Text | ชื่อหน้าจอ |
 | description | Text | คำอธิบาย — input ให้ AI ใช้แนะนำ `type` |
 | type | Denormalized {type_id, label} | อ้างจาก `screenTypes` แบบ snapshot ค่า label ติดมาด้วย (ตาม pattern `leaveTypes` — ไม่ query join ทุกครั้ง) |
@@ -154,3 +154,13 @@ AI อ่าน `name` + `description` ที่พิมพ์ใน SCR-010 �
   ไว้แล้ว (ยังไม่ได้ sync field shape `{user_id, role, assigned_by,
   assigned_at}` ในไฟล์ sequence/AC/test-case/prototype v2 ที่เหลือ — รอ user
   ยืนยันว่าจะแก้ไฟล์เหล่านั้นด้วยหรือไม่)
+- 2026-09-08: แก้โค้ด `app/js/screen-detail.js` (SCR-010) ให้ตรงกับตาราง
+  `screens` ในเอกสารนี้จริงๆ — ก่อนหน้านี้โค้ดใช้ `code` เป็น Firestore document
+  id ตรงๆ ทำให้แก้รหัสหน้าจอหลังมอบหมายงาน/บันทึกความก้าวหน้าไปแล้วไม่ได้
+  (ต้องย้าย document + subcollection `statusHistory`) ตอนนี้เปลี่ยนให้ document
+  id เป็น Firestore auto-generated id เก็บซ้ำไว้ในฟิลด์ `screens_id` (เดิมตั้งชื่อ
+  `id` ตามตารางเดิม แล้วเปลี่ยนเป็น `screens_id` ตามที่ user ขอ) ส่วน `code` เป็น
+  label ที่แก้ไขได้อิสระ (มีตรวจรหัสซ้ำด้วย query `where("code","==",...)` แทน)
+  — เพิ่มเครื่องมือ one-time `app/migrate.html`/`app/js/migrate.js` ให้ user
+  รันเองเพื่อย้ายเอกสารเก่าที่ยังเป็นสคีมาเดิม (ไม่รันอัตโนมัติ เพราะเป็นการ
+  ลบ/เขียนทับข้อมูลจริงบน Firestore project ของ user)

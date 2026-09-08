@@ -75,7 +75,7 @@ function renderAssignees(assignees) {
       const statusKey = s.current_status || "NotStarted";
       return '<tr data-type="' + esc((s.type && s.type.type_id) || "") + '" data-status="' + esc(statusKey) + '">' +
         '<td><input type="checkbox" class="screen-row-check" value="' + esc(s.id) + '"></td>' +
-        '<td style="font-family: var(--font-mono);">' + esc(s.id) + "</td>" +
+        '<td style="font-family: var(--font-mono);">' + esc(s.code || s.id) + "</td>" +
         "<td>" + esc(s.name) + "</td>" +
         '<td><span class="tag">' + esc((s.type && s.type.label) || "-") + "</span></td>" +
         '<td><span class="status-chip ' + STATUS_CLASS[statusKey] + '">' + esc(STATUS_LABEL[statusKey] || statusKey) + "</span></td>" +

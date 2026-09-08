@@ -48,11 +48,14 @@ function renderAssigneesCell(assignees) {
     return;
   }
 
+  const screenById = {};
+  screens.forEach(function (s) { screenById[s.id] = s; });
+
   body.innerHTML = screens.map(function (s) {
     const checked = preselected.indexOf(s.id) !== -1 ? " checked" : "";
-    return '<tr data-code="' + esc(s.id) + '">' +
+    return '<tr data-id="' + esc(s.id) + '">' +
       '<td><input type="checkbox" class="assign-row-check" value="' + esc(s.id) + '"' + checked + "></td>" +
-      '<td style="font-family: var(--font-mono);">' + esc(s.id) + "</td>" +
+      '<td style="font-family: var(--font-mono);">' + esc(s.code || s.id) + "</td>" +
       "<td>" + esc(s.name) + "</td>" +
       '<td class="assignee-cell">' + renderAssigneesCell(s.assignees) + "</td>" +
       "</tr>";
@@ -98,11 +101,12 @@ function renderAssigneesCell(assignees) {
     let successCount = 0;
     const results = [];
     for (const box of checkedBoxes) {
-      const code = box.value;
-      const ref = doc(db, "screens", code);
+      const id = box.value;
+      const codeLabel = (screenById[id] && screenById[id].code) || id;
+      const ref = doc(db, "screens", id);
       const snap = await getDoc(ref);
       if (!snap.exists() || snap.data().is_deleted) {
-        results.push({ code: code, ok: false, note: "หน้าจอนี้ถูกลบไปแล้วก่อนบันทึกเสร็จ — ข้ามรายการนี้" });
+        results.push({ code: codeLabel, ok: false, note: "หน้าจอนี้ถูกลบไปแล้วก่อนบันทึกเสร็จ — ข้ามรายการนี้" });
         continue;
       }
       const currentAssignees = snap.data().assignees || [];
@@ -112,9 +116,9 @@ function renderAssigneesCell(assignees) {
       else currentAssignees.push(entry);
       await updateDoc(ref, { assignees: currentAssignees, updated_at: now });
       successCount++;
-      results.push({ code: code, ok: true, note: "มอบหมาย " + userLabel + " เป็น " + role + " สำเร็จ" });
+      results.push({ code: codeLabel, ok: true, note: "มอบหมาย " + userLabel + " เป็น " + role + " สำเร็จ" });
 
-      const row = document.querySelector('tr[data-code="' + CSS.escape(code) + '"] .assignee-cell');
+      const row = document.querySelector('tr[data-id="' + CSS.escape(id) + '"] .assignee-cell');
       if (row) row.innerHTML = renderAssigneesCell(currentAssignees);
     }
 

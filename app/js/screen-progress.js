@@ -18,7 +18,7 @@ const statusLabel = { NotStarted: "Not Started", Analysis: "Analysis", Design: "
 const statusClass = { NotStarted: "is-neutral", Analysis: "is-current", Design: "is-current" };
 
 const params = new URLSearchParams(window.location.search);
-const code = params.get("screen");
+const id = params.get("screen");
 
 const progressScreenLabel = document.getElementById("progress-screen-label");
 const currentStatusHolder = document.getElementById("current-status-value");
@@ -62,7 +62,7 @@ function selectStatus(newStatus) {
 }
 
 async function loadHistory() {
-  const snapshot = await getDocs(collection(db, "screens", code, "statusHistory"));
+  const snapshot = await getDocs(collection(db, "screens", id, "statusHistory"));
   const items = [];
   snapshot.forEach(function (docSnap) { items.push(docSnap.data()); });
   items.sort(function (a, b) { return toMillis(b.changed_at) - toMillis(a.changed_at); });
@@ -80,14 +80,14 @@ async function loadHistory() {
 }
 
 async function loadScreen() {
-  const snap = await getDoc(doc(db, "screens", code));
+  const snap = await getDoc(doc(db, "screens", id));
   if (!snap.exists() || snap.data().is_deleted) {
     window.showToast("ไม่พบหน้าจอนี้ — อาจถูกลบไปแล้ว กำลังพากลับไปหน้าทะเบียนหน้าจอ...", "danger");
     setTimeout(function () { window.location.href = "scr-009.html"; }, 1500);
     return;
   }
   const data = snap.data();
-  progressScreenLabel.textContent = code + " — " + data.name;
+  progressScreenLabel.textContent = (data.code || id) + " — " + data.name;
   currentStatusHolder.setAttribute("data-status", data.current_status || "NotStarted");
   currentStatusHolder.textContent = statusLabel[data.current_status] || data.current_status;
   currentStatusHolder.className = "status-chip " + (statusClass[data.current_status] || "is-neutral");
@@ -97,8 +97,8 @@ async function loadScreen() {
 }
 
 (async function init() {
-  if (!code) {
-    window.showToast("ไม่พบรหัสหน้าจอที่จะบันทึกความก้าวหน้า", "danger");
+  if (!id) {
+    window.showToast("ไม่พบหน้าจอที่จะบันทึกความก้าวหน้า", "danger");
     setTimeout(function () { window.location.href = "scr-009.html"; }, 1200);
     return;
   }
@@ -113,7 +113,7 @@ async function loadScreen() {
       window.showToast("กรุณาเลือกสถานะที่จะเปลี่ยนก่อน", "danger");
       return;
     }
-    const ref = doc(db, "screens", code);
+    const ref = doc(db, "screens", id);
     const snap = await getDoc(ref);
     if (!snap.exists() || snap.data().is_deleted) {
       window.showToast("บันทึกไม่สำเร็จ: ไม่พบหน้าจอนี้แล้ว (ถูกลบไปก่อนหน้านี้) กำลังพากลับไปหน้าทะเบียนหน้าจอ...", "danger");
@@ -134,7 +134,7 @@ async function loadScreen() {
     }
 
     const now = new Date().toISOString();
-    await addDoc(collection(db, "screens", code, "statusHistory"), {
+    await addDoc(collection(db, "screens", id, "statusHistory"), {
       changed_by: window.CURRENT_USER.id,
       changed_by_name: window.CURRENT_USER.name,
       changed_at: now,

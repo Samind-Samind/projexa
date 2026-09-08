@@ -33,10 +33,12 @@ async function เริ่มใส่ข้อมูล() {
     var จำนวนประวัติรวม = 0;
     for (var s of window.SEED_DATA.screens) {
       var { statusHistory, ...screenDoc } = s;
+      var newRef = doc(collection(db, "screens"));
+      screenDoc.screens_id = newRef.id;
       screenDoc.updated_at = new Date().toISOString();
-      await setDoc(doc(db, "screens", s.code), screenDoc);
+      await setDoc(newRef, screenDoc);
       for (var h of statusHistory) {
-        await addDoc(collection(db, "screens", s.code, "statusHistory"), h);
+        await addDoc(collection(db, "screens", newRef.id, "statusHistory"), h);
         จำนวนประวัติรวม++;
       }
     }

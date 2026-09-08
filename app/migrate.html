@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ย้ายรหัสหน้าจอ → id แยกต่างหาก — Screen Tracking</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <h4>Projexa — Screen Tracking</h4>
+      <a class="sidebar-item" href="index.html">หน้ารวม</a>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="page-header"><h1>ย้ายเอกสาร screens ไปใช้ id แยกจาก code</h1></div>
+    <p class="page-sub">
+      เครื่องมือใช้ครั้งเดียว (one-time) — เดิม document id ของ <code>screens</code> คือรหัสหน้าจอ
+      (<code>code</code>) ตรงๆ ตอนนี้เปลี่ยนให้ document id เป็น Firestore auto-generated id
+      (ฟิลด์ <code>screens_id</code>) แทน ส่วน <code>code</code> เป็นฟิลด์ label แยกที่แก้ไขได้อิสระ —
+      กดปุ่มด้านล่างเพื่อย้ายเอกสารเก่าที่ยังเป็นสคีมาเดิมทั้งหมด
+    </p>
+
+    <div class="card" style="border-color: var(--color-danger, #c0392b);">
+      <h2>คำเตือนก่อนกด</h2>
+      <ul>
+        <li>เป็นการแก้ไขข้อมูลจริงบน Firestore project ที่ตั้งค่าไว้ใน <code>js/firebase-config.js</code> โดยตรง</li>
+        <li>เอกสารเดิม (doc id = code) จะถูกคัดลอกไปเป็นเอกสารใหม่แล้ว<strong>ลบเอกสาร/ประวัติเดิมทิ้ง</strong> — ควร export ข้อมูลสำรองจาก Firebase Console ไว้ก่อนถ้ากังวล</li>
+        <li>กดซ้ำได้อย่างปลอดภัย — เอกสารที่ย้ายแล้ว (มีฟิลด์ <code>screens_id</code> ตรงกับ doc id อยู่แล้ว) จะถูกข้าม ไม่ย้ายซ้ำ</li>
+        <li>รันครั้งนี้ครั้งเดียวหลังอัปเดตโค้ดแอป ไม่ต้องรันซ้ำในการใช้งานปกติ</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="btn-row">
+        <button type="button" id="ปุ่มเริ่ม" class="btn btn-primary">เริ่มย้ายข้อมูล</button>
+      </div>
+      <div id="สถานะ" style="margin-top:16px; white-space:pre-line;"></div>
+    </div>
+
+    <a class="btn btn-secondary" href="index.html">← กลับหน้าแรก</a>
+  </main>
+</div>
+
+<script type="module" src="js/migrate.js"></script>
+</body>
+</html>
