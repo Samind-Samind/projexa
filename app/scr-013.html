@@ -64,7 +64,10 @@
             </select>
             <p class="note">ถ้าหน้าจอที่เลือกมีผู้รับผิดชอบในบทบาทเดียวกันอยู่แล้ว ระบบจะแทนที่ entry เดิม ไม่สร้างซ้ำ</p>
           </div>
-          <button type="submit" class="btn btn-primary">มอบหมายและบันทึกประวัติ</button>
+          <div style="display:flex; gap: var(--sp-3);">
+            <button type="submit" class="btn btn-primary">มอบหมายและบันทึกประวัติ</button>
+            <button type="button" class="btn btn-danger" id="unassign-btn">ยกเลิกมอบหมาย (บทบาทที่เลือก)</button>
+          </div>
 
           <div id="assign-result-wrap">
             <h3 style="margin-top: var(--sp-6);">ผลลัพธ์การมอบหมายล่าสุด</h3>
@@ -76,6 +79,18 @@
     </form>
   </main>
 </div>
+
+<div class="modal-overlay" id="unassign-modal-overlay" hidden>
+  <div class="modal">
+    <h3>ยืนยันการยกเลิกมอบหมาย</h3>
+    <p id="unassign-modal-message" class="note"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" id="unassign-cancel-btn">ยกเลิก</button>
+      <button type="button" class="btn btn-danger" id="unassign-confirm-btn">ยืนยันยกเลิกมอบหมาย</button>
+    </div>
+  </div>
+</div>
+
 <script type="module" src="js/screen-assign.js"></script>
 </body>
 </html>

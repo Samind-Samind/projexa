@@ -129,4 +129,68 @@ function renderAssigneesCell(assignees) {
     resultEmptyNote.hidden = results.length > 0;
     window.showToast("มอบหมายแล้ว " + successCount + " หน้าจอ (จากทั้งหมด " + checkedBoxes.length + " รายการที่เลือก)");
   });
+
+  const unassignModalOverlay = document.getElementById("unassign-modal-overlay");
+  const unassignModalMessage = document.getElementById("unassign-modal-message");
+
+  function closeUnassignModal() {
+    unassignModalOverlay.hidden = true;
+  }
+  document.getElementById("unassign-cancel-btn").addEventListener("click", closeUnassignModal);
+  unassignModalOverlay.addEventListener("click", function (e) {
+    if (e.target === unassignModalOverlay) closeUnassignModal();
+  });
+
+  document.getElementById("unassign-btn").addEventListener("click", function () {
+    const checkedBoxes = Array.from(document.querySelectorAll(".assign-row-check:checked"));
+    if (!checkedBoxes.length) {
+      window.showToast("กรุณาเลือกอย่างน้อย 1 หน้าจอ", "danger");
+      return;
+    }
+    const role = document.getElementById("assign-role-select").value;
+    unassignModalMessage.textContent = "ต้องการยกเลิกมอบหมายบทบาท " + role + " ออกจาก " + checkedBoxes.length + " หน้าจอที่เลือกใช่หรือไม่?";
+    unassignModalOverlay.hidden = false;
+  });
+
+  document.getElementById("unassign-confirm-btn").addEventListener("click", async function () {
+    const checkedBoxes = Array.from(document.querySelectorAll(".assign-row-check:checked"));
+    const role = document.getElementById("assign-role-select").value;
+    const resultList = document.getElementById("assign-result-list");
+    const resultEmptyNote = document.getElementById("assign-result-empty");
+    const now = new Date().toISOString();
+
+    closeUnassignModal();
+
+    let successCount = 0;
+    const results = [];
+    for (const box of checkedBoxes) {
+      const id = box.value;
+      const codeLabel = (screenById[id] && screenById[id].code) || id;
+      const ref = doc(db, "screens", id);
+      const snap = await getDoc(ref);
+      if (!snap.exists() || snap.data().is_deleted) {
+        results.push({ status: "is-failed", code: codeLabel, note: "หน้าจอนี้ถูกลบไปแล้ว — ข้ามรายการนี้" });
+        continue;
+      }
+      const currentAssignees = snap.data().assignees || [];
+      const remaining = currentAssignees.filter(function (a) { return a.role !== role; });
+      if (remaining.length === currentAssignees.length) {
+        results.push({ status: "is-neutral", code: codeLabel, note: "ไม่มีผู้รับผิดชอบบทบาท " + role + " อยู่ก่อนแล้ว" });
+        continue;
+      }
+      await updateDoc(ref, { assignees: remaining, updated_at: now });
+      successCount++;
+      results.push({ status: "is-success", code: codeLabel, note: "ยกเลิกมอบหมายบทบาท " + role + " สำเร็จ" });
+
+      const row = document.querySelector('tr[data-id="' + CSS.escape(id) + '"] .assignee-cell');
+      if (row) row.innerHTML = renderAssigneesCell(remaining);
+    }
+
+    resultList.innerHTML = results.map(function (r) {
+      return '<li class="result-item ' + r.status + '"><span class="dot"></span><span>' +
+        esc(r.code) + " — " + esc(r.note) + "</span></li>";
+    }).join("");
+    resultEmptyNote.hidden = results.length > 0;
+    window.showToast("ยกเลิกมอบหมายสำเร็จ " + successCount + " หน้าจอ (จากทั้งหมด " + checkedBoxes.length + " รายการที่เลือก)");
+  });
 })();

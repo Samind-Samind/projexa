@@ -23,14 +23,30 @@ const id = params.get("screen");
 const progressScreenLabel = document.getElementById("progress-screen-label");
 const currentStatusHolder = document.getElementById("current-status-value");
 const updatedAtEl = document.getElementById("last-updated-value");
+const assigneesEl = document.getElementById("assignees-value");
 const historyList = document.getElementById("status-history-list");
 const statusButtons = document.querySelectorAll(".status-select-btn");
 const stepperSteps = document.querySelectorAll(".stepper-step");
 const reasonField = document.getElementById("reason-field");
 const reasonInput = document.getElementById("reason-input");
+const noteInput = document.getElementById("note-input");
 const saveBtn = document.getElementById("save-progress-btn");
 
 let pendingStatus = null;
+
+function avatarInitial(name) {
+  return (name || "").trim().slice(0, 2) || "?";
+}
+
+function renderAssignees(assignees) {
+  if (!assignees || !assignees.length) {
+    return '<span class="avatar-empty">— ยังไม่มอบหมาย —</span>';
+  }
+  return assignees.map(function (a) {
+    return '<span class="avatar">' + esc(avatarInitial(a.user_name)) +
+      '</span><span class="assignee-name">' + esc(a.user_name) + " (" + esc(a.role) + ")</span>";
+  }).join(" ");
+}
 
 function toMillis(value) {
   if (!value) return 0;
@@ -71,11 +87,12 @@ async function loadHistory() {
     return;
   }
   historyList.innerHTML = items.map(function (h) {
+    const noteHtml = h.note ? '<div class="history-reason">ผลความก้าวหน้า: ' + esc(h.note) + "</div>" : "";
     const reasonHtml = h.reason ? '<div class="history-reason">เหตุผล: ' + esc(h.reason) + "</div>" : "";
     return '<li class="history-item"><div class="history-meta">' + esc(window.formatDateTime(h.changed_at)) +
       " — ระบบบันทึกอัตโนมัติ (changed_by: " + esc(h.changed_by_name) + ')</div><div class="history-change">' +
       esc(statusLabel[h.old_status] || h.old_status) + " → " + esc(statusLabel[h.new_status] || h.new_status) +
-      "</div>" + reasonHtml + "</li>";
+      "</div>" + noteHtml + reasonHtml + "</li>";
   }).join("");
 }
 
@@ -92,6 +109,7 @@ async function loadScreen() {
   currentStatusHolder.textContent = statusLabel[data.current_status] || data.current_status;
   currentStatusHolder.className = "status-chip " + (statusClass[data.current_status] || "is-neutral");
   updatedAtEl.textContent = window.formatDateTime(data.updated_at);
+  assigneesEl.innerHTML = renderAssignees(data.assignees);
   refreshStepper(data.current_status || "NotStarted");
   await loadHistory();
 }
@@ -141,11 +159,12 @@ async function loadScreen() {
       old_status: currentStatus,
       new_status: pendingStatus,
       reason: isRegression ? reasonInput.value.trim() : null,
-      note: null
+      note: noteInput.value.trim() || null
     });
     await updateDoc(ref, { current_status: pendingStatus, updated_at: now });
 
     window.showToast("บันทึกความก้าวหน้าสำเร็จ: เปลี่ยนสถานะเป็น " + statusLabel[pendingStatus]);
+    noteInput.value = "";
     reasonInput.value = "";
     reasonField.hidden = true;
     reasonField.classList.remove("has-error");

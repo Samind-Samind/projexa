@@ -80,8 +80,8 @@ function renderAssignees(assignees) {
         '<td><span class="tag">' + esc((s.type && s.type.label) || "-") + "</span></td>" +
         '<td><span class="status-chip ' + STATUS_CLASS[statusKey] + '">' + esc(STATUS_LABEL[statusKey] || statusKey) + "</span></td>" +
         "<td>" + renderAssignees(s.assignees) + "</td>" +
-        '<td><a class="btn-link" href="scr-010.html?screen=' + encodeURIComponent(s.id) + '">แก้ไข</a> · ' +
-        '<a class="btn-link" href="scr-016.html?screen=' + encodeURIComponent(s.id) + '">บันทึกความก้าวหน้า</a></td>' +
+        '<td><a class="btn-link" href="scr-010?screen=' + encodeURIComponent(s.id) + '">แก้ไข</a> · ' +
+        '<a class="btn-link" href="scr-016?screen=' + encodeURIComponent(s.id) + '">บันทึกความก้าวหน้า</a></td>' +
         "</tr>";
     }).join("");
 
@@ -103,7 +103,7 @@ function renderAssignees(assignees) {
       batchAssignLink.style.opacity = ".45";
     } else {
       const ids = checked.map(function (c) { return c.value; }).join(",");
-      batchAssignLink.href = "scr-013.html?ids=" + encodeURIComponent(ids);
+      batchAssignLink.href = "scr-013?ids=" + encodeURIComponent(ids);
       batchAssignLink.style.pointerEvents = "";
       batchAssignLink.style.opacity = "";
     }

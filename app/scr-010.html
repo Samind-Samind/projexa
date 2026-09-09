@@ -76,10 +76,23 @@
         <button type="button" class="btn btn-primary" id="save-screen-btn">บันทึก</button>
         <a class="btn btn-secondary" id="link-to-assign" href="#" style="pointer-events:none; opacity:.45;">ไปหน้ามอบหมายผู้รับผิดชอบ</a>
         <a class="btn btn-secondary" id="link-to-progress" href="#" style="pointer-events:none; opacity:.45;">ไปหน้าบันทึกความก้าวหน้า</a>
+        <button type="button" class="btn btn-danger" id="delete-screen-btn" style="margin-left:auto;" hidden>ลบหน้าจอ</button>
       </div>
     </div>
   </main>
 </div>
+
+<div class="modal-overlay" id="delete-modal-overlay" hidden>
+  <div class="modal">
+    <h3>ยืนยันการลบหน้าจอ</h3>
+    <p id="delete-modal-message" class="note"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" id="delete-cancel-btn">ยกเลิก</button>
+      <button type="button" class="btn btn-danger" id="delete-confirm-btn">ยืนยันลบ</button>
+    </div>
+  </div>
+</div>
+
 <script type="module" src="js/screen-detail.js"></script>
 </body>
 </html>

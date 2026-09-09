@@ -53,6 +53,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body {
   margin: 0; background: var(--color-bg-page); color: var(--color-text-primary);
   font-family: var(--font-th); font-size: 14px; line-height: 22px;
@@ -203,6 +204,8 @@ tbody tr:hover td { background: var(--color-bg-hover); }
 .result-item.is-success .dot { background: var(--color-success); }
 .result-item.is-failed .dot { background: var(--color-danger); }
 .result-item.is-failed { color: var(--color-text-secondary); }
+.result-item.is-neutral .dot { background: var(--color-text-muted); }
+.result-item.is-neutral { color: var(--color-text-secondary); }
 
 .stepper { display: flex; flex-direction: column; gap: 0; }
 .stepper-step { display: flex; align-items: flex-start; gap: var(--sp-3); position: relative; padding-bottom: var(--sp-6); }
@@ -232,3 +235,17 @@ tbody tr:hover td { background: var(--color-bg-hover); }
 .status-select-btn.is-selected { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-bg-surface); }
 
 .loading-note { font-size: 13px; color: var(--color-text-muted); }
+
+.btn-danger { background: var(--color-danger); color: var(--color-bg-surface); }
+.btn-danger:hover { background: #96301F; }
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(46, 43, 37, 0.5); z-index: 200;
+}
+.modal-overlay:not([hidden]) { display: flex; align-items: center; justify-content: center; }
+.modal {
+  background: var(--color-bg-surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-modal); padding: var(--sp-6); max-width: 420px; width: 90%;
+}
+.modal h3 { font-family: var(--font-heading); font-size: 18px; font-weight: 600; margin: 0 0 var(--sp-3); }
+.modal-actions { display: flex; justify-content: flex-end; gap: var(--sp-3); margin-top: var(--sp-4); }

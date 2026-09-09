@@ -35,11 +35,19 @@
           <span id="current-status-value" class="status-chip is-neutral" data-status="NotStarted">-</span>
           · อัปเดตล่าสุด: <span id="last-updated-value">-</span>
         </p>
+        <p class="page-sub" style="margin-bottom: var(--sp-3);">
+          ผู้รับผิดชอบ: <span id="assignees-value" class="avatar-row">-</span>
+        </p>
 
         <div class="status-btn-row">
           <button type="button" class="status-select-btn" data-status="NotStarted">Not Started</button>
           <button type="button" class="status-select-btn" data-status="Analysis">Analysis</button>
           <button type="button" class="status-select-btn" data-status="Design">Design</button>
+        </div>
+
+        <div class="field" id="note-field">
+          <label for="note-input">ผลความก้าวหน้า</label>
+          <textarea id="note-input" rows="3" placeholder="เช่น ออกแบบหน้าจอเสร็จแล้ว รอ Dev Lead ตรวจทานก่อนเริ่มพัฒนา"></textarea>
         </div>
 
         <div class="field" id="reason-field" hidden>

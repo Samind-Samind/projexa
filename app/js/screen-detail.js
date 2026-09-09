@@ -10,6 +10,7 @@ import {
   doc,
   getDoc,
   setDoc,
+  updateDoc,
   query,
   where
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
@@ -25,6 +26,9 @@ const detailHeading = document.getElementById("detail-mode-heading");
 const linkAssign = document.getElementById("link-to-assign");
 const linkProgress = document.getElementById("link-to-progress");
 const concurrencyNote = document.getElementById("concurrency-note");
+const deleteBtn = document.getElementById("delete-screen-btn");
+const deleteModalOverlay = document.getElementById("delete-modal-overlay");
+const deleteModalMessage = document.getElementById("delete-modal-message");
 
 let typeLabels = {};
 let originLabel = "ManualEntry";
@@ -33,6 +37,7 @@ let isSuggested = false;
 let loadedUpdatedAt = null;
 let ignoreNextTypeChange = false;
 let currentStatus = "NotStarted";
+let currentAssignees = [];
 
 async function loadScreenTypes() {
   const snapshot = await getDocs(collection(db, "screenTypes"));
@@ -70,9 +75,11 @@ async function loadExisting() {
   aiConfidence = data.ai_confidence != null ? data.ai_confidence : null;
   isSuggested = !!data.is_suggested;
   currentStatus = data.current_status || "NotStarted";
+  currentAssignees = data.assignees || [];
   loadedUpdatedAt = data.updated_at || null;
-  enableLink(linkAssign, "scr-013.html?ids=" + encodeURIComponent(currentId));
-  enableLink(linkProgress, "scr-016.html?screen=" + encodeURIComponent(currentId));
+  enableLink(linkAssign, "scr-013?ids=" + encodeURIComponent(currentId));
+  enableLink(linkProgress, "scr-016?screen=" + encodeURIComponent(currentId));
+  deleteBtn.hidden = false;
 }
 
 async function reloadLatest() {
@@ -149,6 +156,45 @@ async function isCodeTaken(codeValue, excludeId) {
 
   document.getElementById("reload-latest-btn").addEventListener("click", reloadLatest);
 
+  deleteBtn.addEventListener("click", function () {
+    if (currentAssignees.length > 0) {
+      window.showToast("ไม่สามารถลบหน้าจอนี้ได้ เนื่องจากมีผู้รับผิดชอบมอบหมายอยู่แล้ว (" + currentAssignees.length + " คน) กรุณายกเลิกการมอบหมายก่อน", "danger");
+      return;
+    }
+    deleteModalMessage.textContent = "ต้องการลบหน้าจอ " + (codeInput.value.trim() || currentId) + " — " + nameInput.value.trim() + " ใช่หรือไม่? การลบนี้จะซ่อนหน้าจอนี้ออกจากทะเบียน";
+    deleteModalOverlay.hidden = false;
+  });
+
+  function closeDeleteModal() {
+    deleteModalOverlay.hidden = true;
+  }
+  document.getElementById("delete-cancel-btn").addEventListener("click", closeDeleteModal);
+  deleteModalOverlay.addEventListener("click", function (e) {
+    if (e.target === deleteModalOverlay) closeDeleteModal();
+  });
+
+  document.getElementById("delete-confirm-btn").addEventListener("click", async function () {
+    const docRef = doc(db, "screens", currentId);
+    const snap = await getDoc(docRef);
+    if (!snap.exists()) {
+      closeDeleteModal();
+      window.showToast("หน้าจอนี้ถูกลบไปแล้ว กำลังพากลับไปหน้าทะเบียนหน้าจอ...", "danger");
+      setTimeout(function () { window.location.href = "scr-009.html"; }, 1500);
+      return;
+    }
+    const latestAssignees = snap.data().assignees || [];
+    if (latestAssignees.length > 0) {
+      currentAssignees = latestAssignees;
+      closeDeleteModal();
+      window.showToast("ลบไม่สำเร็จ: หน้าจอนี้ถูกมอบหมายผู้รับผิดชอบไปแล้ว (" + latestAssignees.length + " คน) กรุณายกเลิกการมอบหมายก่อน", "danger");
+      return;
+    }
+    await updateDoc(docRef, { is_deleted: true, updated_at: new Date().toISOString() });
+    closeDeleteModal();
+    window.showToast("ลบหน้าจอสำเร็จ");
+    setTimeout(function () { window.location.href = "scr-009.html"; }, 1200);
+  });
+
   document.getElementById("save-screen-btn").addEventListener("click", async function () {
     const codeFieldWrap = document.getElementById("code-field");
     const enteredCode = codeInput.value.trim();
@@ -219,12 +265,13 @@ async function isCodeTaken(codeValue, excludeId) {
     currentId = docRef.id;
     loadedUpdatedAt = docData.updated_at;
     concurrencyNote.hidden = true;
-    enableLink(linkAssign, "scr-013.html?ids=" + encodeURIComponent(currentId));
-    enableLink(linkProgress, "scr-016.html?screen=" + encodeURIComponent(currentId));
+    enableLink(linkAssign, "scr-013?ids=" + encodeURIComponent(currentId));
+    enableLink(linkProgress, "scr-016?screen=" + encodeURIComponent(currentId));
     if (!wasEditing) {
-      window.history.replaceState(null, "", "scr-010.html?screen=" + encodeURIComponent(currentId));
+      window.history.replaceState(null, "", "scr-010?screen=" + encodeURIComponent(currentId));
     }
     detailHeading.textContent = "แก้ไขหน้าจอ: " + enteredCode;
     window.showToast("บันทึกข้อมูลหน้าจอสำเร็จ (" + enteredCode + ")");
+    setTimeout(function () { window.location.href = "scr-009.html"; }, 1200);
   });
 })();
