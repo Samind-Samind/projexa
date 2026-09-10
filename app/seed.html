@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>ใส่ข้อมูลตัวอย่างลง Firestore — Screen Tracking</title>
 <link rel="stylesheet" href="css/style.css">
+<script type="module" src="js/common.js"></script>
 <script src="js/data.js" defer></script>
 </head>
 <body>
@@ -13,14 +14,22 @@
       <h4>Projexa — Screen Tracking</h4>
       <a class="sidebar-item" href="index.html">หน้ารวม</a>
     </div>
+    <div id="current-user-bar" class="sidebar-user-group"></div>
   </nav>
   <main class="content">
     <div class="page-header"><h1>ใส่ข้อมูลตัวอย่างลง Firestore</h1></div>
     <p class="page-sub">
-      หน้านี้ใช้ครั้งเดียวตอนตั้งค่าโปรเจกต์ — กดปุ่มด้านล่างเพื่อคัดลอกข้อมูลตัวอย่างจาก
-      <code>js/data.js</code> ขึ้นไปเป็นข้อมูลตัวอย่างบน Firestore (users · screenTypes ·
-      screens · statusHistory)
+      หน้านี้ใช้ครั้งเดียวตอนตั้งค่าโปรเจกต์ (ต้องล็อกอินแล้วเพราะ <code>firestore.rules</code>
+      บังคับ <code>request.auth != null</code>) — กดปุ่มด้านล่างเพื่อคัดลอกข้อมูลตัวอย่างจาก
+      <code>js/data.js</code> ขึ้นไปเป็นข้อมูลตัวอย่างบน Firestore (screenTypes · screens ·
+      statusHistory)
     </p>
+    <div class="card">
+      <h2>ก่อนกดปุ่มด้านล่าง</h2>
+      <p>สมัครสมาชิกให้ครบก่อนผ่าน <a href="signup.html">หน้าสมัครสมาชิก</a> (ผู้ใช้ตัวอย่างในสโคปนี้):</p>
+      <ul id="seed-user-reference"></ul>
+      <p class="note">ผู้รับผิดชอบใน SCR-101–106 จะถูกผูกด้วยชื่อที่ตรงกับรายชื่อนี้ — ถ้ายังไม่สมัครสมาชิกคนไหน รายการนั้นจะถูกข้ามการมอบหมาย (แก้เพิ่มทีหลังได้ที่หน้า "มอบหมายผู้รับผิดชอบ")</p>
+    </div>
 
     <div class="card">
       <div class="btn-row">

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>เข้าสู่ระบบ — Projexa</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="auth-shell">
+  <div class="auth-card card">
+    <h1 class="auth-title">Projexa — Screen Tracking</h1>
+    <p class="page-sub">เข้าสู่ระบบด้วยอีเมลและรหัสผ่าน</p>
+
+    <div id="account-not-linked-note" class="note" hidden>บัญชีนี้ล็อกอินสำเร็จ แต่ยังไม่ผูกกับผู้ใช้ในระบบ กรุณาติดต่อผู้ดูแลระบบ</div>
+
+    <form id="login-form">
+      <div class="field" id="email-field">
+        <label for="email-input">อีเมล</label>
+        <input type="email" id="email-input" autocomplete="username" required>
+        <div class="field-error">กรุณากรอกอีเมล</div>
+      </div>
+      <div class="field" id="password-field">
+        <label for="password-input">รหัสผ่าน</label>
+        <input type="password" id="password-input" autocomplete="current-password" required>
+        <div class="field-error">กรุณากรอกรหัสผ่าน</div>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" id="login-submit-btn" class="btn btn-primary" style="width:100%; justify-content:center;">เข้าสู่ระบบ</button>
+      </div>
+    </form>
+
+    <p class="auth-links">ยังไม่มีบัญชี? <a href="signup.html">สมัครสมาชิก</a></p>
+  </div>
+</div>
+
+<script type="module" src="js/login.js"></script>
+</body>
+</html>

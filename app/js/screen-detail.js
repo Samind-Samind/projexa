@@ -104,6 +104,7 @@ async function isCodeTaken(codeValue, excludeId) {
 }
 
 (async function init() {
+  await window.AUTH_READY;
   await loadScreenTypes();
   if (currentId) {
     await loadExisting();

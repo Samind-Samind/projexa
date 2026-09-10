@@ -120,6 +120,7 @@ async function loadScreen() {
     setTimeout(function () { window.location.href = "scr-009.html"; }, 1200);
     return;
   }
+  await window.AUTH_READY;
   await loadScreen();
 
   statusButtons.forEach(function (btn) {

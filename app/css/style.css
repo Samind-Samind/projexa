@@ -249,3 +249,28 @@ tbody tr:hover td { background: var(--color-bg-hover); }
 }
 .modal h3 { font-family: var(--font-heading); font-size: 18px; font-weight: 600; margin: 0 0 var(--sp-3); }
 .modal-actions { display: flex; justify-content: flex-end; gap: var(--sp-3); margin-top: var(--sp-4); }
+
+/* ---------------------------------------------------------------------
+   หน้าเข้าสู่ระบบ / สมัครสมาชิก (login.html, signup.html — ไม่มี sidebar)
+--------------------------------------------------------------------- */
+.auth-shell {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: var(--sp-6); background: var(--color-bg-page);
+}
+.auth-card { width: 100%; max-width: 380px; margin-bottom: 0; }
+.auth-title { font-family: var(--font-heading); font-size: 22px; font-weight: 600; margin: 0 0 var(--sp-1); }
+.auth-links { text-align: center; font-size: 13px; color: var(--color-text-secondary); margin: var(--sp-4) 0 0; }
+.auth-links a { color: var(--color-accent-outline); }
+
+/* ผู้ใช้ปัจจุบัน + ออกจากระบบ ท้าย sidebar ของทุกหน้าที่ล็อกอินแล้ว */
+.sidebar-user-group {
+  border-top: 1px solid rgba(245, 234, 216, 0.14); padding-top: var(--sp-4);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2);
+  font-size: 13px;
+}
+.sidebar-user-name { color: var(--color-bg-page); }
+.sidebar-user-logout {
+  background: none; border: none; cursor: pointer; padding: 0;
+  color: rgba(245, 234, 216, 0.7); font-size: 12px; text-decoration: underline; font-family: inherit;
+}
+.sidebar-user-logout:hover { color: var(--color-bg-page); }

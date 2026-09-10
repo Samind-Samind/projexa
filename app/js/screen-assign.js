@@ -35,6 +35,8 @@ function renderAssigneesCell(assignees) {
   const selectedCountEl = document.getElementById("assign-selected-count");
   const userSelect = document.getElementById("assign-user-select");
 
+  await window.AUTH_READY;
+
   let screens = [];
   try {
     const snapshot = await getDocs(collection(db, "screens"));

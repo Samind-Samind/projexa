@@ -35,6 +35,8 @@ function renderAssignees(assignees) {
   const typeFilter = document.getElementById("filter-type");
   const statusFilter = document.getElementById("filter-status");
 
+  await window.AUTH_READY;
+
   let screens = [];
   try {
     const snapshot = await getDocs(collection(db, "screens"));

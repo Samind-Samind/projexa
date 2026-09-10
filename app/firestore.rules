@@ -1,9 +1,10 @@
 // ─────────────────────────────────────────────────────────────
 // firestore.rules — กฎเฝ้าข้อมูลสำหรับโมดูล Screen Tracking (สโคปงานส่งหลักสูตร NoSQL)
 //
-// ⚠️ ยังไม่มีล็อกอินในระบบ (ตามขอบเขตใน SCOPE.md — 3 บทบาท SA/ผู้รับผิดชอบ/PM
-// แต่ยังไม่มี auth) จึงเปิดอ่าน/เขียนแบบไม่ต้องยืนยันตัวตนไปก่อน ต้องเปลี่ยนเป็น
-// กฎที่รัดกุมขึ้นเมื่อระบบมีการล็อกอินและแยกสิทธิ์ตามบทบาทแล้ว
+// ต้องล็อกอินด้วย Firebase Authentication (Email/Password) ก่อนถึงจะอ่าน/เขียน
+// ได้ (ดู app/login.html, app/signup.html, app/js/auth.js) — ยังไม่ได้แยกสิทธิ์
+// ตามบทบาท SA/ผู้รับผิดชอบ/PM (role เป็นแค่แนวคิดในสโคปนี้ ดู CLAUDE.md/SCOPE.md)
+// แค่บังคับว่าต้องเป็นผู้ใช้ที่ล็อกอินอยู่เท่านั้น
 //
 // วิธีใช้: คัดลอกเนื้อหาไฟล์นี้ไปวางที่ Firebase Console →
 // Firestore Database → กฎ (Rules) → Publish
@@ -14,7 +15,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
-      allow read, write: if true;
+      allow read, write: if request.auth != null;
     }
   }
 }

@@ -1,10 +1,10 @@
 // ─────────────────────────────────────────────────────────────
 // js/common.js — utility ที่ใช้ร่วมกันทุกหน้าจอ (โหลดก่อน script ของแต่ละหน้า)
+// เป็น ES module (type="module") เพราะต้องเรียก js/auth.js เพื่อตรวจสอบ
+// ล็อกอินก่อนแสดงเนื้อหาของทุกหน้า ยกเว้น login.html/signup.html
 // ─────────────────────────────────────────────────────────────
 
-// ยังไม่มีระบบล็อกอินในสโคปนี้ (ดู SCOPE.md) — ใช้ placeholder ผู้ใช้ปัจจุบันไป
-// ก่อนสำหรับ changed_by/assigned_by จนกว่าจะเพิ่ม auth จริงในอนาคต
-window.CURRENT_USER = { id: "u-current", name: "ผู้ใช้ปัจจุบัน" };
+import { guardPage, logout } from "./auth.js";
 
 window.showToast = function (message, type) {
   type = type || "success";
@@ -46,3 +46,28 @@ window.esc = function (value) {
   div.textContent = value == null ? "" : String(value);
   return div.innerHTML;
 };
+
+// ซ่อนเนื้อหาหน้าไว้ก่อนจนกว่าจะตรวจสอบล็อกอินเสร็จ กันไม่ให้เห็นข้อมูลวาบขึ้นมา
+// ก่อน redirect ไป login.html (กรณียังไม่ได้ล็อกอิน)
+document.documentElement.style.visibility = "hidden";
+
+function renderUserBar(user) {
+  var bar = document.getElementById("current-user-bar");
+  if (!bar) return;
+  bar.innerHTML =
+    '<span class="sidebar-user-name">' + esc(user.name) + "</span>" +
+    '<button type="button" id="logout-btn" class="sidebar-user-logout">ออกจากระบบ</button>';
+  document.getElementById("logout-btn").addEventListener("click", function () {
+    logout();
+  });
+}
+
+// window.AUTH_READY: ให้ script ของแต่ละหน้า (screen-registry.js ฯลฯ) await
+// ก่อนเรียก Firestore ทุกครั้ง เพราะ firestore.rules ต้องการ request.auth != null
+// — ถ้า query ก่อน onAuthStateChanged ยืนยันตัวตนเสร็จจะโดนปฏิเสธสิทธิ์
+window.AUTH_READY = guardPage().then(function (user) {
+  window.CURRENT_USER = user;
+  document.documentElement.style.visibility = "";
+  renderUserBar(user);
+  return user;
+});

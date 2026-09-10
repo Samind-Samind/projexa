@@ -5,17 +5,26 @@
 // docs/02-design/02-technical/screen-tracking-nosql-module.md เป๊ะ:
 //   collection screens (โฟลเดอร์หลัก) — โฟลเดอร์ประกอบ screenTypes/users —
 //   subcollection screens/{id}/statusHistory — embedded array assignees[]
+//
+// หมายเหตุ (หลังเพิ่มระบบล็อกอิน): users ไม่ได้ถูก seed ตรงๆ อีกต่อไป —
+// ผู้ใช้ต้องสมัครสมาชิกเองผ่าน signup.html (ดูรายชื่อ/อีเมลอ้างอิงด้านล่าง
+// ที่ใช้แสดงบน seed.html) เพราะ document id ของ users ตอนนี้เป็น Firestore
+// auto-generated id (ผูก uid ไม่ได้ล่วงหน้า) — ส่วน assignees[]/statusHistory
+// ในข้อมูลตัวอย่างด้านล่างจึงอ้างอิงคนด้วย "ชื่อ" (user_name/changed_by_name/
+// assigned_by_name) แทน user_id ตรงๆ แล้วให้ js/seed.js ค้นหา user_id จริง
+// จาก Firestore collection users (ที่มาจากการสมัครสมาชิก) มาแทนที่ตอน seed
 // ─────────────────────────────────────────────────────────────
 
 window.SEED_DATA = {
 
-  // 📁 users — โฟลเดอร์ประกอบ (มีอยู่แล้วในระบบจริง — ที่นี่ seed ชุดตัวอย่าง)
+  // 📁 users — รายชื่อ/อีเมลอ้างอิงสำหรับสมัครสมาชิกผ่าน signup.html เอง
+  // (ไม่ได้ถูกเขียนลง Firestore ตรงๆ จากที่นี่อีกต่อไป)
   users: [
-    { id: "u001", name: "สมชาย ใจดี", email: "somchai@example.com", is_active: true },
-    { id: "u002", name: "สมหญิง วิเคราะห์", email: "somying@example.com", is_active: true },
-    { id: "u003", name: "วีระ ตรวจสอบ", email: "weera@example.com", is_active: true },
-    { id: "u004", name: "ปรีชา มั่นคง", email: "preecha@example.com", is_active: true },
-    { id: "u005", name: "พิมพ์ใจ ดีงาม", email: "pimjai@example.com", is_active: true }
+    { name: "สมชาย ใจดี", email: "somchai@example.com" },
+    { name: "สมหญิง วิเคราะห์", email: "somying@example.com" },
+    { name: "วีระ ตรวจสอบ", email: "weera@example.com" },
+    { name: "ปรีชา มั่นคง", email: "preecha@example.com" },
+    { name: "พิมพ์ใจ ดีงาม", email: "pimjai@example.com" }
   ],
 
   // 📁 screenTypes — โฟลเดอร์ประกอบ
@@ -36,7 +45,7 @@ window.SEED_DATA = {
       description: "หน้าจอสำหรับพนักงานค้นหาและดูรายการใบลาของตนเอง",
       type: { type_id: "INQUIRY", label: "Inquiry" },
       assignees: [
-        { user_id: "u001", user_name: "สมชาย ใจดี", role: "Dev", assigned_by: "u004", assigned_at: "2026-08-20T09:00:00" }
+        { user_name: "สมชาย ใจดี", role: "Dev", assigned_by_name: "ปรีชา มั่นคง", assigned_at: "2026-08-20T09:00:00" }
       ],
       origin_label: "ManualEntry",
       ai_confidence: null,
@@ -44,7 +53,7 @@ window.SEED_DATA = {
       current_status: "Analysis",
       is_deleted: false,
       statusHistory: [
-        { changed_by: "u001", changed_by_name: "สมชาย ใจดี", changed_at: "2026-08-21T09:00:00", old_status: "NotStarted", new_status: "Analysis", reason: null, note: null }
+        { changed_by_name: "สมชาย ใจดี", changed_at: "2026-08-21T09:00:00", old_status: "NotStarted", new_status: "Analysis", reason: null, note: null }
       ]
     },
     {
@@ -53,8 +62,8 @@ window.SEED_DATA = {
       description: "หน้าจอสำหรับหัวหน้างานอนุมัติ/ไม่อนุมัติใบลาที่พนักงานยื่น",
       type: { type_id: "PROCESS", label: "Process" },
       assignees: [
-        { user_id: "u002", user_name: "สมหญิง วิเคราะห์", role: "Dev", assigned_by: "u004", assigned_at: "2026-08-18T10:00:00" },
-        { user_id: "u003", user_name: "วีระ ตรวจสอบ", role: "Tester", assigned_by: "u004", assigned_at: "2026-08-18T10:00:00" }
+        { user_name: "สมหญิง วิเคราะห์", role: "Dev", assigned_by_name: "ปรีชา มั่นคง", assigned_at: "2026-08-18T10:00:00" },
+        { user_name: "วีระ ตรวจสอบ", role: "Tester", assigned_by_name: "ปรีชา มั่นคง", assigned_at: "2026-08-18T10:00:00" }
       ],
       origin_label: "HumanConfirmed",
       ai_confidence: 0.91,
@@ -62,8 +71,8 @@ window.SEED_DATA = {
       current_status: "Design",
       is_deleted: false,
       statusHistory: [
-        { changed_by: "u002", changed_by_name: "สมหญิง วิเคราะห์", changed_at: "2026-08-19T09:00:00", old_status: "NotStarted", new_status: "Analysis", reason: null, note: null },
-        { changed_by: "u002", changed_by_name: "สมหญิง วิเคราะห์", changed_at: "2026-08-24T09:00:00", old_status: "Analysis", new_status: "Design", reason: null, note: null }
+        { changed_by_name: "สมหญิง วิเคราะห์", changed_at: "2026-08-19T09:00:00", old_status: "NotStarted", new_status: "Analysis", reason: null, note: null },
+        { changed_by_name: "สมหญิง วิเคราะห์", changed_at: "2026-08-24T09:00:00", old_status: "Analysis", new_status: "Design", reason: null, note: null }
       ]
     },
     {
@@ -85,7 +94,7 @@ window.SEED_DATA = {
       description: "บริการเบื้องหลังที่ส่งการแจ้งเตือนอัตโนมัติเมื่อวันลาใกล้หมดอายุ",
       type: { type_id: "SERVICE", label: "Service" },
       assignees: [
-        { user_id: "u001", user_name: "สมชาย ใจดี", role: "Dev", assigned_by: "u004", assigned_at: "2026-08-22T09:00:00" }
+        { user_name: "สมชาย ใจดี", role: "Dev", assigned_by_name: "ปรีชา มั่นคง", assigned_at: "2026-08-22T09:00:00" }
       ],
       origin_label: "AIGenerated",
       ai_confidence: 0.78,
@@ -93,7 +102,7 @@ window.SEED_DATA = {
       current_status: "Analysis",
       is_deleted: false,
       statusHistory: [
-        { changed_by: "u001", changed_by_name: "สมชาย ใจดี", changed_at: "2026-08-23T09:00:00", old_status: "NotStarted", new_status: "Analysis", reason: null, note: null }
+        { changed_by_name: "สมชาย ใจดี", changed_at: "2026-08-23T09:00:00", old_status: "NotStarted", new_status: "Analysis", reason: null, note: null }
       ]
     },
     {
@@ -102,8 +111,8 @@ window.SEED_DATA = {
       description: "หน้าจอสรุปภาพรวมการลาของทีมสำหรับหัวหน้างาน",
       type: { type_id: "REPORTUI", label: "Report UI" },
       assignees: [
-        { user_id: "u004", user_name: "ปรีชา มั่นคง", role: "Dev", assigned_by: "u004", assigned_at: "2026-08-15T09:00:00" },
-        { user_id: "u005", user_name: "พิมพ์ใจ ดีงาม", role: "Tester", assigned_by: "u004", assigned_at: "2026-08-15T09:00:00" }
+        { user_name: "ปรีชา มั่นคง", role: "Dev", assigned_by_name: "ปรีชา มั่นคง", assigned_at: "2026-08-15T09:00:00" },
+        { user_name: "พิมพ์ใจ ดีงาม", role: "Tester", assigned_by_name: "ปรีชา มั่นคง", assigned_at: "2026-08-15T09:00:00" }
       ],
       origin_label: "HumanConfirmed",
       ai_confidence: 0.85,
@@ -111,8 +120,8 @@ window.SEED_DATA = {
       current_status: "Design",
       is_deleted: false,
       statusHistory: [
-        { changed_by: "u004", changed_by_name: "ปรีชา มั่นคง", changed_at: "2026-08-16T09:00:00", old_status: "NotStarted", new_status: "Analysis", reason: null, note: null },
-        { changed_by: "u004", changed_by_name: "ปรีชา มั่นคง", changed_at: "2026-08-20T09:00:00", old_status: "Analysis", new_status: "Design", reason: null, note: null }
+        { changed_by_name: "ปรีชา มั่นคง", changed_at: "2026-08-16T09:00:00", old_status: "NotStarted", new_status: "Analysis", reason: null, note: null },
+        { changed_by_name: "ปรีชา มั่นคง", changed_at: "2026-08-20T09:00:00", old_status: "Analysis", new_status: "Design", reason: null, note: null }
       ]
     },
     {

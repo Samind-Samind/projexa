@@ -21,7 +21,9 @@ async function เริ่มย้ายข้อมูล() {
   var ปุ่ม = document.getElementById("ปุ่มเริ่ม");
   var กล่องสถานะ = document.getElementById("สถานะ");
   ปุ่ม.disabled = true;
-  กล่องสถานะ.textContent = "กำลังตรวจสอบเอกสารใน screens...\n";
+  กล่องสถานะ.textContent = "รอตรวจสอบการล็อกอิน…\n";
+  await window.AUTH_READY;
+  กล่องสถานะ.textContent += "กำลังตรวจสอบเอกสารใน screens...\n";
 
   try {
     const snapshot = await getDocs(collection(db, "screens"));
