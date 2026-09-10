@@ -48,7 +48,7 @@ form.addEventListener("submit", async function (e) {
   submitBtn.disabled = true;
   try {
     await signup(name, email, password);
-    window.location.href = "index.html";
+    window.location.href = "scr-009.html";
   } catch (err) {
     showFormError(mapAuthError(err));
   } finally {
