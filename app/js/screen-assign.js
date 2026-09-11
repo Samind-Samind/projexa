@@ -62,6 +62,15 @@ function renderAssigneesCell(assignees) {
   // ถูกมอบหมายอยู่แล้ว — ACL.md หมายเหตุ 2)
   screens = filterScreensForRole(screens, role, userId);
 
+  // เรียงหน้าจอที่บันทึกสร้างล่าสุดไว้เป็นรายการแรกเสมอ (หน้าจอเก่าที่ยังไม่มี
+  // created_at จะถูกจัดไว้ท้ายรายการ) — เหมือนกับ SCR-009
+  screens.sort(function (a, b) {
+    const ad = a.created_at || "";
+    const bd = b.created_at || "";
+    if (ad === bd) return 0;
+    return ad < bd ? 1 : -1;
+  });
+
   const screenById = {};
   screens.forEach(function (s) { screenById[s.id] = s; });
 

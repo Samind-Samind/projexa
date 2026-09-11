@@ -23,7 +23,6 @@
   <main class="content">
     <div class="breadcrumb"><a href="scr-009.html">Screen Tracking</a><span class="sep">/</span>รายละเอียดหน้าจอ</div>
     <div class="page-header"><h1 id="detail-mode-heading">สร้างหน้าจอใหม่</h1></div>
-    <p class="page-sub">SCR-010 · อ่าน/เขียนจริงบน collection <code>screens</code></p>
 
     <div class="card">
       <h2>ข้อมูลหน้าจอ</h2>
@@ -31,7 +30,6 @@
         <label for="screen-code-input">รหัสหน้าจอ *</label>
         <input type="text" id="screen-code-input" placeholder="เช่น SCR-010">
         <p class="field-error">กรุณากรอกรหัสหน้าจอก่อนบันทึก</p>
-        <p class="note">แก้ไขรหัสนี้ได้ตลอดแม้จะมอบหมายผู้รับผิดชอบหรือบันทึกความก้าวหน้าไปแล้ว — ระบบอ้างอิงหน้าจอภายในด้วย ID อีกค่าหนึ่งที่ไม่ผูกกับรหัสนี้ ลิงก์และประวัติต่างๆ จึงไม่ขาดแม้เปลี่ยนรหัส</p>
       </div>
       <div class="field" id="name-field">
         <label for="screen-name-input">ชื่อหน้าจอ *</label>
@@ -47,7 +45,6 @@
         <button type="button" class="btn btn-secondary" id="ai-suggest-btn">ให้ AI ช่วยแนะนำประเภท</button>
         <a href="#" class="btn-link" id="ai-simulate-timeout" style="margin-left: var(--sp-3);">จำลอง AI ไม่ตอบสนอง</a>
       </div>
-      <p class="note">โมดูลนี้ยังไม่ต่อ AI จริง (ดู SCOPE.md §6 — อยู่นอกสโคปรอบนี้) ปุ่มด้านบนจำลองผลลัพธ์ไว้ก่อน</p>
 
       <p id="ai-waiting" class="note" hidden>AI กำลังวิเคราะห์ชื่อและคำอธิบายหน้าจอ...</p>
 
@@ -63,7 +60,6 @@
       <div class="field">
         <label for="screen-type-select">ประเภทหน้าจอ *</label>
         <select id="screen-type-select"><option value="">กำลังโหลดประเภท…</option></select>
-        <p class="note">ประเภทที่บันทึกจริงจะถูก denormalize ติดไปกับเอกสาร <code>screens</code> (ทั้ง type_id และ label)</p>
       </div>
 
       <p class="note" id="concurrency-note" hidden>

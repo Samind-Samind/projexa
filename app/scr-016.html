@@ -24,7 +24,6 @@
     <div class="breadcrumb"><a href="scr-009.html">Screen Tracking</a><span class="sep">/</span>บันทึกความก้าวหน้า</div>
     <div class="page-header"><h1>บันทึกความก้าวหน้า</h1></div>
     <p class="page-sub" id="progress-screen-label">กำลังโหลด…</p>
-    <p class="page-sub">SCR-016 · เขียน subcollection <code>screens/{id}/statusHistory</code> ทุกครั้งที่เปลี่ยนสถานะ</p>
 
     <div class="split-layout">
       <div class="card">
@@ -54,7 +53,6 @@
           <textarea id="reason-input" rows="3" placeholder="เช่น พบข้อผิดพลาดจาก Design ต้องกลับไปทบทวน Business Rule เพิ่มเติม"></textarea>
           <p class="field-error">กรุณากรอกเหตุผลก่อนบันทึก เนื่องจากเป็นการถอยสถานะ</p>
         </div>
-        <p class="note">การเดินหน้าสถานะตามปกติไม่บังคับกรอกเหตุผล — บังคับเฉพาะตอนเลือกสถานะที่ถอยหลังเท่านั้น</p>
 
         <button type="button" class="btn btn-primary" id="save-progress-btn" style="margin-top: var(--sp-3);">บันทึกความก้าวหน้า</button>
       </div>
@@ -80,7 +78,6 @@
         <ul id="status-history-list" class="history-list">
           <li class="history-item">กำลังโหลด…</li>
         </ul>
-        <p class="note">changed_by และ changed_at ถูกบันทึกโดยระบบอัตโนมัติทุกครั้ง ผู้ใช้ไม่ต้องกรอกเอง</p>
       </div>
     </div>
   </main>
