@@ -8,6 +8,7 @@ import {
   collection,
   getDocs
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { canManageRegistry, canAssign, canRecordProgressFor, filterScreensForRole } from "./acl.js";
 
 const STATUS_LABEL = { NotStarted: "Not Started", Analysis: "Analysis", Design: "Design" };
 const STATUS_CLASS = { NotStarted: "is-neutral", Analysis: "is-current", Design: "is-current" };
@@ -36,6 +37,15 @@ function renderAssignees(assignees) {
   const statusFilter = document.getElementById("filter-status");
 
   await window.AUTH_READY;
+  const role = window.CURRENT_USER.role;
+  const userId = window.CURRENT_USER.id;
+
+  const createLink = document.getElementById("create-screen-link");
+  const createLinkEmpty = document.getElementById("create-screen-link-empty");
+  if (!canManageRegistry(role)) {
+    createLink.hidden = true;
+    createLinkEmpty.hidden = true;
+  }
 
   let screens = [];
   try {
@@ -56,6 +66,19 @@ function renderAssignees(assignees) {
     return;
   }
 
+  // จำกัดขอบเขตการมองเห็นตาม role (DEV/IMP เห็นเฉพาะหน้าจอที่ตนถูกมอบหมาย —
+  // ดู ACL.md หมายเหตุ 1 / app/js/acl.js)
+  screens = filterScreensForRole(screens, role, userId);
+
+  // เรียงหน้าจอที่บันทึกสร้างล่าสุดไว้เป็นรายการแรกเสมอ (หน้าจอเก่าที่ยังไม่มี
+  // created_at จะถูกจัดไว้ท้ายรายการ)
+  screens.sort(function (a, b) {
+    const ad = a.created_at || "";
+    const bd = b.created_at || "";
+    if (ad === bd) return 0;
+    return ad < bd ? 1 : -1;
+  });
+
   function renderRows() {
     const typeVal = typeFilter.value;
     const statusVal = statusFilter.value;
@@ -75,15 +98,18 @@ function renderAssignees(assignees) {
 
     body.innerHTML = filtered.map(function (s) {
       const statusKey = s.current_status || "NotStarted";
+      const checkboxCell = canAssign(role) ? '<td><input type="checkbox" class="screen-row-check" value="' + esc(s.id) + '"></td>' : "";
+      const editLink = canManageRegistry(role) ? '<a class="btn-link" href="scr-010?screen=' + encodeURIComponent(s.id) + '">แก้ไข</a>' : "";
+      const progressLink = canRecordProgressFor(role, s, userId) ? '<a class="btn-link" href="scr-016?screen=' + encodeURIComponent(s.id) + '">บันทึกความก้าวหน้า</a>' : "";
+      const actionsCell = [editLink, progressLink].filter(Boolean).join(" · ") || "—";
       return '<tr data-type="' + esc((s.type && s.type.type_id) || "") + '" data-status="' + esc(statusKey) + '">' +
-        '<td><input type="checkbox" class="screen-row-check" value="' + esc(s.id) + '"></td>' +
+        checkboxCell +
         '<td style="font-family: var(--font-mono);">' + esc(s.code || s.id) + "</td>" +
         "<td>" + esc(s.name) + "</td>" +
         '<td><span class="tag">' + esc((s.type && s.type.label) || "-") + "</span></td>" +
         '<td><span class="status-chip ' + STATUS_CLASS[statusKey] + '">' + esc(STATUS_LABEL[statusKey] || statusKey) + "</span></td>" +
         "<td>" + renderAssignees(s.assignees) + "</td>" +
-        '<td><a class="btn-link" href="scr-010?screen=' + encodeURIComponent(s.id) + '">แก้ไข</a> · ' +
-        '<a class="btn-link" href="scr-016?screen=' + encodeURIComponent(s.id) + '">บันทึกความก้าวหน้า</a></td>' +
+        "<td>" + actionsCell + "</td>" +
         "</tr>";
     }).join("");
 
@@ -96,6 +122,12 @@ function renderAssignees(assignees) {
   const selectAllBox = document.getElementById("select-all-screens");
   const selectedCountEl = document.getElementById("selected-count-value");
   const batchAssignLink = document.getElementById("batch-assign-link");
+
+  if (!canAssign(role)) {
+    document.querySelector("th.select-col").hidden = true;
+    document.querySelector(".selected-count").hidden = true;
+    batchAssignLink.hidden = true;
+  }
 
   function updateSelection() {
     const checked = Array.from(document.querySelectorAll(".screen-row-check")).filter(function (c) { return c.checked; });

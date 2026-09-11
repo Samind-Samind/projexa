@@ -11,6 +11,7 @@ import {
   getDoc,
   updateDoc
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { canAssign, filterScreensForRole, denyAccessAndRedirect } from "./acl.js";
 
 const params = new URLSearchParams(window.location.search);
 const idsParam = params.get("ids");
@@ -36,6 +37,13 @@ function renderAssigneesCell(assignees) {
   const userSelect = document.getElementById("assign-user-select");
 
   await window.AUTH_READY;
+  const role = window.CURRENT_USER.role;
+  const userId = window.CURRENT_USER.id;
+
+  if (!canAssign(role)) {
+    denyAccessAndRedirect();
+    return;
+  }
 
   let screens = [];
   try {
@@ -49,6 +57,10 @@ function renderAssigneesCell(assignees) {
     body.innerHTML = '<tr><td colspan="4" class="loading-note">อ่านข้อมูลจาก Firestore ไม่สำเร็จ: ' + esc(err.message) + "</td></tr>";
     return;
   }
+
+  // ขอบเขตการมองเห็น/มอบหมายตาม role (DEV เห็น/เลือกได้เฉพาะหน้าจอที่ตนเอง
+  // ถูกมอบหมายอยู่แล้ว — ACL.md หมายเหตุ 2)
+  screens = filterScreensForRole(screens, role, userId);
 
   const screenById = {};
   screens.forEach(function (s) { screenById[s.id] = s; });

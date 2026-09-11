@@ -40,13 +40,14 @@ export async function login(email, password) {
 }
 
 // สมัครสมาชิก: สร้างบัญชี Firebase Auth แล้วสร้างเอกสารผู้ใช้ใน Firestore
-// collection "users" ผูกกันด้วย email ทันที (ดูมติใน CLAUDE.md/SCOPE.md —
-// users doc ยังไม่มีฟิลด์ role เพราะ role SA/Dev-Tester/PM เป็นแค่แนวคิด
-// ไม่ได้บังคับสิทธิ์ในแอปรอบนี้)
-export async function signup(name, email, password) {
+// collection "users" ผูกกันด้วย email ทันที — role (PM/BA/SA/DEV/IMP ตาม
+// ACL.md) เลือกตอนสมัครและเก็บไว้ในเอกสารนี้ แต่ยังเป็นแค่ label ข้อมูล
+// ไม่ได้ใช้บังคับสิทธิ์จริงใน firestore.rules หรือ UI (role-based access
+// control ยังตัดออกจากสโคปตาม SCOPE.md)
+export async function signup(name, email, password, role) {
   const cred = await createUserWithEmailAndPassword(auth, email, password);
   const userRef = doc(collection(db, "users"));
-  await setDoc(userRef, { name: name, email: email, is_active: true });
+  await setDoc(userRef, { name: name, email: email, role: role, is_active: true });
   return cred.user;
 }
 
@@ -56,8 +57,8 @@ export async function logout() {
 }
 
 // เรียกจากหน้าที่ต้องล็อกอินก่อนใช้งาน (ทุกหน้ายกเว้น login.html/signup.html)
-// คืนค่า Promise<{id, name, email}> ของผู้ใช้ที่ล็อกอินอยู่ — ถ้ายังไม่ล็อกอิน
-// จะ redirect ไป login.html ทันที (Promise นี้จะไม่ resolve ในกรณีนั้น)
+// คืนค่า Promise<{id, name, email, role}> ของผู้ใช้ที่ล็อกอินอยู่ — ถ้ายังไม่
+// ล็อกอิน จะ redirect ไป login.html ทันที (Promise นี้จะไม่ resolve ในกรณีนั้น)
 export function guardPage() {
   return new Promise(function (resolve) {
     onAuthStateChanged(auth, async function (firebaseUser) {
@@ -73,7 +74,7 @@ export function guardPage() {
         return;
       }
       const userDoc = snap.docs[0];
-      resolve({ id: userDoc.id, name: userDoc.data().name, email: userDoc.data().email });
+      resolve({ id: userDoc.id, name: userDoc.data().name, email: userDoc.data().email, role: userDoc.data().role || null });
     });
   });
 }

@@ -68,6 +68,7 @@ body {
   font-family: var(--font-heading); font-size: 12px; color: rgba(245, 234, 216, 0.6);
   text-transform: uppercase; margin: 0 0 var(--sp-2) var(--sp-2); font-weight: 500;
 }
+.sidebar-logo { display: block; width: 100%; height: auto; margin: 0 0 var(--sp-2); }
 .sidebar-item {
   display: block; padding: var(--sp-2) var(--sp-3); border-radius: var(--radius-sm);
   color: var(--color-bg-page); text-decoration: none; font-size: 13px;
@@ -259,6 +260,7 @@ tbody tr:hover td { background: var(--color-bg-hover); }
 }
 .auth-card { width: 100%; max-width: 380px; margin-bottom: 0; }
 .auth-title { font-family: var(--font-heading); font-size: 22px; font-weight: 600; margin: 0 0 var(--sp-1); }
+.auth-logo { display: block; width: 100%; max-width: 220px; height: auto; margin: 0 auto var(--sp-3); }
 .auth-links { text-align: center; font-size: 13px; color: var(--color-text-secondary); margin: var(--sp-4) 0 0; }
 .auth-links a { color: var(--color-accent-outline); }
 

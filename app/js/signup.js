@@ -14,6 +14,8 @@ const passwordField = document.getElementById("password-field");
 const passwordInput = document.getElementById("password-input");
 const confirmField = document.getElementById("confirm-password-field");
 const confirmInput = document.getElementById("confirm-password-input");
+const roleField = document.getElementById("role-field");
+const roleSelect = document.getElementById("role-select");
 const submitBtn = document.getElementById("signup-submit-btn");
 
 function setFieldError(fieldEl, hasError) {
@@ -38,16 +40,18 @@ form.addEventListener("submit", async function (e) {
   const email = emailInput.value.trim();
   const password = passwordInput.value;
   const confirm = confirmInput.value;
+  const role = roleSelect.value;
 
   setFieldError(nameField, !name);
   setFieldError(emailField, !email);
   setFieldError(passwordField, password.length < 6);
   setFieldError(confirmField, password !== confirm);
-  if (!name || !email || password.length < 6 || password !== confirm) return;
+  setFieldError(roleField, !role);
+  if (!name || !email || password.length < 6 || password !== confirm || !role) return;
 
   submitBtn.disabled = true;
   try {
-    await signup(name, email, password);
+    await signup(name, email, password, role);
     window.location.href = "scr-009.html";
   } catch (err) {
     showFormError(mapAuthError(err));

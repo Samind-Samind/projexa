@@ -12,6 +12,7 @@ import {
   getDocs,
   addDoc
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { canRecordProgressFor, denyAccessAndRedirect } from "./acl.js";
 
 const statusOrder = ["NotStarted", "Analysis", "Design"];
 const statusLabel = { NotStarted: "Not Started", Analysis: "Analysis", Design: "Design" };
@@ -121,6 +122,20 @@ async function loadScreen() {
     return;
   }
   await window.AUTH_READY;
+  const role = window.CURRENT_USER.role;
+  const userId = window.CURRENT_USER.id;
+
+  const accessSnap = await getDoc(doc(db, "screens", id));
+  if (!accessSnap.exists() || accessSnap.data().is_deleted) {
+    window.showToast("ไม่พบหน้าจอนี้ — อาจถูกลบไปแล้ว กำลังพากลับไปหน้าทะเบียนหน้าจอ...", "danger");
+    setTimeout(function () { window.location.href = "scr-009.html"; }, 1500);
+    return;
+  }
+  if (!canRecordProgressFor(role, accessSnap.data(), userId)) {
+    denyAccessAndRedirect();
+    return;
+  }
+
   await loadScreen();
 
   statusButtons.forEach(function (btn) {

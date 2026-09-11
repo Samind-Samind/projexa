@@ -14,6 +14,7 @@ import {
   query,
   where
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { canManageRegistry, canAssign, canRecordProgressFor, isRegistryScoped, isAssignee, denyAccessAndRedirect } from "./acl.js";
 
 const params = new URLSearchParams(window.location.search);
 let currentId = params.get("screen");
@@ -63,7 +64,7 @@ async function loadExisting() {
     window.showToast("ไม่พบหน้าจอนี้ — อาจถูกลบไปแล้ว", "danger");
     detailHeading.textContent = "สร้างหน้าจอใหม่";
     currentId = null;
-    return;
+    return null;
   }
   const data = snap.data();
   detailHeading.textContent = "แก้ไขหน้าจอ: " + (data.code || currentId);
@@ -80,6 +81,7 @@ async function loadExisting() {
   enableLink(linkAssign, "scr-013?ids=" + encodeURIComponent(currentId));
   enableLink(linkProgress, "scr-016?screen=" + encodeURIComponent(currentId));
   deleteBtn.hidden = false;
+  return data;
 }
 
 async function reloadLatest() {
@@ -105,9 +107,37 @@ async function isCodeTaken(codeValue, excludeId) {
 
 (async function init() {
   await window.AUTH_READY;
+  const role = window.CURRENT_USER.role;
+  const userId = window.CURRENT_USER.id;
+
+  if (!currentId && !canManageRegistry(role)) {
+    denyAccessAndRedirect();
+    return;
+  }
+
   await loadScreenTypes();
+  let existingData = null;
   if (currentId) {
-    await loadExisting();
+    existingData = await loadExisting();
+    if (existingData && isRegistryScoped(role) && !isAssignee(existingData, userId)) {
+      denyAccessAndRedirect();
+      return;
+    }
+  }
+
+  if (!canManageRegistry(role)) {
+    document.getElementById("save-screen-btn").hidden = true;
+    deleteBtn.hidden = true;
+    document.getElementById("ai-suggest-btn").hidden = true;
+    document.getElementById("ai-simulate-timeout").hidden = true;
+    typeSelect.disabled = true;
+    codeInput.disabled = true;
+    nameInput.disabled = true;
+    descInput.disabled = true;
+  }
+  if (existingData) {
+    if (!canAssign(role)) linkAssign.hidden = true;
+    if (!canRecordProgressFor(role, existingData, userId)) linkProgress.hidden = true;
   }
 
   const aiSuggestBtn = document.getElementById("ai-suggest-btn");
@@ -261,6 +291,16 @@ async function isCodeTaken(codeValue, excludeId) {
       updated_at: new Date().toISOString()
     };
     docData.assignees = wasEditing ? (existingSnapshot.data().assignees || []) : [];
+    if (wasEditing) {
+      const existingData = existingSnapshot.data();
+      docData.created_by = existingData.created_by || null;
+      docData.created_by_name = existingData.created_by_name || null;
+      docData.created_at = existingData.created_at || docData.updated_at;
+    } else {
+      docData.created_by = window.CURRENT_USER.id;
+      docData.created_by_name = window.CURRENT_USER.name;
+      docData.created_at = docData.updated_at;
+    }
 
     await setDoc(docRef, docData);
     currentId = docRef.id;

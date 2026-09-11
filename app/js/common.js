@@ -5,6 +5,7 @@
 // ─────────────────────────────────────────────────────────────
 
 import { guardPage, logout } from "./auth.js";
+import { canAccessPage } from "./acl.js";
 
 window.showToast = function (message, type) {
   type = type || "success";
@@ -51,11 +52,20 @@ window.esc = function (value) {
 // ก่อน redirect ไป login.html (กรณียังไม่ได้ล็อกอิน)
 document.documentElement.style.visibility = "hidden";
 
+// ซ่อนลิงก์เมนูด้านข้างที่ไปหน้าที่บทบาทของผู้ใช้ไม่มีสิทธิ์ใช้งานอะไรเลย
+// (ไม่ใช่แค่ disable — เอาออกจากเมนูไปเลยตามที่ user ยืนยัน)
+function applyNavAccess(role) {
+  document.querySelectorAll(".sidebar-item[data-acl-page]").forEach(function (link) {
+    var page = link.getAttribute("data-acl-page");
+    if (!canAccessPage(role, page)) link.hidden = true;
+  });
+}
+
 function renderUserBar(user) {
   var bar = document.getElementById("current-user-bar");
   if (!bar) return;
   bar.innerHTML =
-    '<span class="sidebar-user-name">' + esc(user.name) + "</span>" +
+    '<span class="sidebar-user-name">' + esc(user.name) + (user.role ? " (" + esc(user.role) + ")" : "") + "</span>" +
     '<button type="button" id="logout-btn" class="sidebar-user-logout">ออกจากระบบ</button>';
   document.getElementById("logout-btn").addEventListener("click", function () {
     logout();
@@ -69,5 +79,6 @@ window.AUTH_READY = guardPage().then(function (user) {
   window.CURRENT_USER = user;
   document.documentElement.style.visibility = "";
   renderUserBar(user);
+  applyNavAccess(user.role);
   return user;
 });

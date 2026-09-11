@@ -8,7 +8,7 @@
 <body>
 <div class="auth-shell">
   <div class="auth-card card">
-    <h1 class="auth-title">Projexa</h1>
+    <img src="assets/logo-full-new.png" alt="Projexa" class="auth-logo">
     <p class="page-sub">สมัครสมาชิกใหม่ด้วยอีเมลและรหัสผ่าน</p>
 
     <form id="signup-form">
@@ -31,6 +31,18 @@
         <label for="confirm-password-input">ยืนยันรหัสผ่าน</label>
         <input type="password" id="confirm-password-input" autocomplete="new-password" required>
         <div class="field-error">รหัสผ่านไม่ตรงกัน</div>
+      </div>
+      <div class="field" id="role-field">
+        <label for="role-select">บทบาท</label>
+        <select id="role-select" required>
+          <option value="">- เลือกบทบาท -</option>
+          <option value="PM">PM — Project Manager</option>
+          <option value="BA">BA — Business Analyst</option>
+          <option value="SA">SA — System Analyst</option>
+          <option value="DEV">DEV — Developer</option>
+          <option value="IMP">IMP — Implementer</option>
+        </select>
+        <div class="field-error">กรุณาเลือกบทบาท</div>
       </div>
 
       <div class="btn-row">
