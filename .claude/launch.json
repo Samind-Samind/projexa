@@ -6,6 +6,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "-l", "3000", "app"],
       "port": 3000
+    },
+    {
+      "name": "openrouter-test",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3001", "openrouter-test"],
+      "port": 3001
     }
   ]
 }

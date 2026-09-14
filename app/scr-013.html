@@ -48,6 +48,23 @@
 
         <div class="card">
           <h2>มอบหมายผู้รับผิดชอบ</h2>
+
+          <div class="field">
+            <button type="button" class="btn btn-secondary" id="ai-suggest-assignee-btn">ให้ AI ช่วยแนะนำผู้รับผิดชอบ</button>
+            <p class="note" style="margin:var(--sp-2) 0 0;">ใช้ได้เมื่อเลือกหน้าจอทางซ้ายไว้พอดี 1 หน้าจอ — AI จะดูประวัติงานเก่า/ความก้าวหน้าที่แต่ละคนเคยบันทึกเพื่อช่วยแนะนำ</p>
+          </div>
+
+          <p id="ai-assignee-waiting" class="note" hidden>AI กำลังวิเคราะห์ประวัติของผู้ใช้ทุกคน...</p>
+
+          <div id="ai-assignee-block" class="ai-block" hidden>
+            <p style="margin:0 0 var(--sp-2);">AI แนะนำ: <strong id="ai-assignee-suggested-name"></strong> เป็น <strong id="ai-assignee-suggested-role"></strong> (ai_confidence: <span id="ai-assignee-suggested-confidence"></span>)</p>
+            <p class="note" style="margin:0 0 var(--sp-3);" id="ai-assignee-suggested-reason"></p>
+            <button type="button" class="btn btn-primary" id="ai-assignee-apply-btn">ใช้คำแนะนำนี้</button>
+            <button type="button" class="btn btn-secondary" id="ai-assignee-dismiss-btn">เลือกเองแทน</button>
+          </div>
+
+          <p id="ai-assignee-timeout-msg" class="note" hidden>AI แนะนำไม่สำเร็จ — ไม่เป็นไร กรุณาเลือกผู้รับผิดชอบได้จากรายการด้านล่างเองได้ทันที</p>
+
           <div class="field">
             <label for="assign-user-select">ผู้รับผิดชอบ</label>
             <select id="assign-user-select"><option value="">กำลังโหลดผู้ใช้…</option></select>

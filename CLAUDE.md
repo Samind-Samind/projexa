@@ -27,6 +27,8 @@
 
 `app/js/firebase-config.js` (มีค่า Firebase config จริงของโปรเจกต์) ถูกใส่ไว้ใน `.gitignore` แล้วและถูก `git rm --cached` ออกจาก index (ยังอยู่บน disk เพื่อให้รันแอปได้ตามปกติ แต่จะไม่ถูก commit/push อีกต่อไป) — ไฟล์ที่ track ใน git แทนคือ `app/js/firebase-config.example.js` (ค่าเป็น placeholder ทั้งหมด) ห้ามใส่ค่าจริงกลับลงไปใน `.example.js` หรือย้าย `firebase-config.js` ออกจาก `.gitignore` โดยไม่ถาม user ก่อน
 
+`app/js/openrouter-config.js` (มีคีย์ OpenRouter จริง ใช้กับปุ่ม "ให้ AI ช่วยแนะนำประเภท" ใน SCR-010) ถูก `.gitignore` ไว้เช่นกัน (ไฟล์ track ใน git คือ `app/js/openrouter-config.example.js` ซึ่งเป็น placeholder) — **ต่างจาก Firebase Web API key** คีย์นี้เป็นคีย์ผูกเครดิต/บิลจริง จึงถูกเพิ่มเข้า `firebase.json` → `hosting.ignore` ด้วย เพื่อไม่ให้ถูก deploy ขึ้น Firebase Hosting แม้จะยังอยู่บน disk (ฟีเจอร์นี้ตั้งใจให้ใช้ได้เฉพาะตอนรันบนเครื่อง/local dev เท่านั้น — `screen-detail.js` จะ import ไฟล์นี้แบบ dynamic import และ fallback เป็น toast แจ้งผู้ใช้แบบ graceful ถ้าโหลดไม่เจอ ไม่ error แตก) ห้ามใส่ค่าจริงกลับลงไปใน `.example.js` หรือเอาออกจาก `.gitignore`/`hosting.ignore` โดยไม่ถาม user ก่อน
+
 **หมายเหตุ:** ค่า `apiKey` ของ Firebase Web SDK เดิมเคยถูก commit/push ขึ้น GitHub ไปแล้วก่อนหน้านี้ (อยู่ใน git history/remote) — การย้ายออกจาก working tree รอบนี้ป้องกันการรั่วไหลเพิ่มเติมเท่านั้น ไม่ได้ลบออกจากประวัติเก่า ถ้า user ต้องการปิดความเสี่ยงนี้ให้สมบูรณ์ต้องไป rotate/regenerate ค่า `apiKey` ที่ Firebase Console เอง (เป็นการตัดสินใจ/ขั้นตอนภายนอก repo ที่ agent ทำแทนไม่ได้) — ทั้งนี้ Firebase เองถือว่า Web API key เป็น client identifier ที่เปิดเผยต่อสาธารณะได้ตามปกติ ความปลอดภัยจริงของข้อมูลอยู่ที่ `firestore.rules` ไม่ใช่ที่ apiKey ดังนั้นไม่ใช่คีย์ลับระดับเดียวกับ service account key
 
 ## หมายเหตุเรื่องไฟล์ `Projexa.html` ที่ root

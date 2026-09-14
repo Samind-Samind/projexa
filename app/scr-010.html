@@ -43,19 +43,18 @@
 
       <div class="field">
         <button type="button" class="btn btn-secondary" id="ai-suggest-btn">ให้ AI ช่วยแนะนำประเภท</button>
-        <a href="#" class="btn-link" id="ai-simulate-timeout" style="margin-left: var(--sp-3);">จำลอง AI ไม่ตอบสนอง</a>
       </div>
 
       <p id="ai-waiting" class="note" hidden>AI กำลังวิเคราะห์ชื่อและคำอธิบายหน้าจอ...</p>
 
-      <div id="ai-type-block" class="ai-block" data-suggested-value="INQUIRY" data-suggested-confidence="0.82" hidden>
+      <div id="ai-type-block" class="ai-block" hidden>
         <p style="margin:0 0 var(--sp-2);">AI วิเคราะห์แล้วแนะนำประเภท: <strong id="ai-suggested-label">Inquiry</strong> (ai_confidence: <span id="ai-suggested-confidence-label">82%</span>)</p>
         <p class="note" style="margin:0 0 var(--sp-3);">กรุณาตรวจสอบก่อนยืนยัน (is_suggested = true จนกว่าจะกดยืนยัน)</p>
         <button type="button" class="btn btn-primary" id="ai-confirm-btn">ยืนยันประเภทนี้</button>
         <button type="button" class="btn btn-secondary" id="ai-dismiss-btn">เลือกประเภทเองแทน</button>
       </div>
 
-      <p id="ai-timeout-msg" class="note" hidden>AI แนะนำไม่สำเร็จ (จำลอง timeout) — ไม่เป็นไร กรุณาเลือกประเภทได้จากรายการด้านล่างเองได้ทันที</p>
+      <p id="ai-timeout-msg" class="note" hidden>AI แนะนำไม่สำเร็จ — ไม่เป็นไร กรุณาเลือกประเภทได้จากรายการด้านล่างเองได้ทันที</p>
 
       <div class="field">
         <label for="screen-type-select">ประเภทหน้าจอ *</label>

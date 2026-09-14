@@ -11,6 +11,7 @@ import {
   getDoc,
   setDoc,
   updateDoc,
+  addDoc,
   query,
   where
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
@@ -32,6 +33,100 @@ const deleteModalOverlay = document.getElementById("delete-modal-overlay");
 const deleteModalMessage = document.getElementById("delete-modal-message");
 
 let typeLabels = {};
+let openRouterConfig = null;
+
+async function loadOpenRouterConfig() {
+  try {
+    const mod = await import("./openrouter-config.js");
+    if (mod.OPENROUTER_CONFIG && mod.OPENROUTER_CONFIG.apiKey && mod.OPENROUTER_CONFIG.apiKey !== "YOUR_OPENROUTER_API_KEY") {
+      openRouterConfig = mod.OPENROUTER_CONFIG;
+    }
+  } catch (e) {
+    openRouterConfig = null;
+  }
+}
+
+function buildTypePrompt(name, description) {
+  const typeList = Object.keys(typeLabels).map(function (id) { return { id: id, label: typeLabels[id] }; });
+  const systemPrompt =
+    "คุณเป็นผู้ช่วยจัดประเภทหน้าจอซอฟต์แวร์ ตอบกลับเป็น JSON เท่านั้น รูปแบบ " +
+    '{"type_id": "...", "confidence": 0.0} โดย type_id ต้องเป็นค่าใดค่าหนึ่งจากรายการที่ให้มาเท่านั้น ' +
+    "ห้ามสร้างค่าขึ้นมาเอง ห้ามมีข้อความอื่นนอกเหนือจาก JSON";
+  const userPrompt =
+    "ชื่อหน้าจอ: " + name + "\n" +
+    "คำอธิบาย: " + (description || "-") + "\n" +
+    "รายการประเภทหน้าจอที่มีอยู่จริง (เลือกได้เฉพาะ id เหล่านี้):\n" +
+    typeList.map(function (t) { return "- " + t.id + ": " + t.label; }).join("\n");
+  return { systemPrompt: systemPrompt, userPrompt: userPrompt };
+}
+
+async function callOpenRouterChat(systemPrompt, userPrompt) {
+  const controller = new AbortController();
+  const timer = setTimeout(function () { controller.abort(); }, 15000);
+  let res;
+  try {
+    res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + openRouterConfig.apiKey,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: openRouterConfig.model,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt }
+        ]
+      }),
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (!res.ok) throw new Error("OpenRouter request failed: " + res.status);
+  const data = await res.json();
+  const content = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+  if (!content) throw new Error("Empty AI response");
+  return content;
+}
+
+function parseJSONLoose(content) {
+  try {
+    return JSON.parse(content.trim());
+  } catch (e) {
+    // non-greedy: จับ JSON object แรกที่ปิดสมบูรณ์เท่านั้น กัน AI พ่นข้อความ
+    // ต่อท้าย JSON แล้ว regex แบบ greedy เผลอกิน { } ที่ไม่เกี่ยวข้องเข้ามาด้วย
+    const match = content.match(/\{[\s\S]*?\}/);
+    if (!match) throw new Error("AI response is not valid JSON");
+    return JSON.parse(match[0]);
+  }
+}
+
+async function fetchAISuggestion(prompt) {
+  const raw = await callOpenRouterChat(prompt.systemPrompt, prompt.userPrompt);
+  try {
+    const parsed = parseJSONLoose(raw);
+
+    if (!parsed || !typeLabels.hasOwnProperty(parsed.type_id)) throw new Error("AI suggested an unknown type_id");
+    let confidence = parseFloat(parsed.confidence);
+    if (isNaN(confidence)) confidence = 0;
+    confidence = Math.max(0, Math.min(1, confidence));
+
+    return { typeId: parsed.type_id, confidence: confidence, raw: raw, parsed: parsed };
+  } catch (e) {
+    e.raw = raw;
+    throw e;
+  }
+}
+
+async function logAICall(screenId, entry) {
+  if (!screenId) return;
+  try {
+    await addDoc(collection(db, "screens", screenId, "aiLog"), entry);
+  } catch (e) { /* ไม่ critical — ไม่บล็อก UX ถ้าบันทึก log ไม่สำเร็จ */ }
+}
+
 let originLabel = "ManualEntry";
 let aiConfidence = null;
 let isSuggested = false;
@@ -129,7 +224,6 @@ async function isCodeTaken(codeValue, excludeId) {
     document.getElementById("save-screen-btn").hidden = true;
     deleteBtn.hidden = true;
     document.getElementById("ai-suggest-btn").hidden = true;
-    document.getElementById("ai-simulate-timeout").hidden = true;
     typeSelect.disabled = true;
     codeInput.disabled = true;
     nameInput.disabled = true;
@@ -144,28 +238,70 @@ async function isCodeTaken(codeValue, excludeId) {
   const aiWaiting = document.getElementById("ai-waiting");
   const aiBlock = document.getElementById("ai-type-block");
   const aiTimeoutMsg = document.getElementById("ai-timeout-msg");
-  const aiTimeoutLink = document.getElementById("ai-simulate-timeout");
-  let aiTimer = null;
 
-  function runAISuggest(forceTimeout) {
+  await loadOpenRouterConfig();
+
+  async function runAISuggest() {
+    if (!openRouterConfig) {
+      window.showToast("ฟีเจอร์นี้ใช้ได้เฉพาะตอนรันบนเครื่อง (local dev) เท่านั้น", "danger");
+      return;
+    }
+    if (!nameInput.value.trim()) {
+      window.showToast("กรุณากรอกชื่อหน้าจอก่อนให้ AI ช่วยแนะนำ", "danger");
+      return;
+    }
+
     aiBlock.hidden = true;
     aiTimeoutMsg.hidden = true;
     aiWaiting.hidden = false;
-    if (aiTimer) clearTimeout(aiTimer);
-    aiTimer = setTimeout(function () {
+
+    const prompt = buildTypePrompt(nameInput.value.trim(), descInput.value.trim());
+    const logEntry = {
+      source: "screenType",
+      input: prompt,
+      output: null,
+      error: null,
+      created_by: window.CURRENT_USER.id,
+      created_by_name: window.CURRENT_USER.name,
+      createdAt: new Date().toISOString()
+    };
+
+    try {
+      const suggestion = await fetchAISuggestion(prompt);
+      logEntry.output = { raw: suggestion.raw, parsed: suggestion.parsed };
+
       aiWaiting.hidden = true;
-      if (forceTimeout) {
-        aiTimeoutMsg.hidden = false;
-      } else {
-        aiBlock.hidden = false;
-        aiBlock.classList.remove("is-confirmed");
-        const suggestedValue = aiBlock.getAttribute("data-suggested-value");
-        document.getElementById("ai-suggested-label").textContent = typeLabels[suggestedValue] || suggestedValue;
+      aiBlock.hidden = false;
+      aiBlock.classList.remove("is-confirmed");
+      aiBlock.setAttribute("data-suggested-value", suggestion.typeId);
+      aiBlock.setAttribute("data-suggested-confidence", String(suggestion.confidence));
+      document.getElementById("ai-suggested-label").textContent = typeLabels[suggestion.typeId] || suggestion.typeId;
+      document.getElementById("ai-suggested-confidence-label").textContent = Math.round(suggestion.confidence * 100) + "%";
+
+      if (currentId) {
+        const summary = "AI แนะนำประเภทหน้าจอ: " + (typeLabels[suggestion.typeId] || suggestion.typeId) +
+          " (ความมั่นใจ " + Math.round(suggestion.confidence * 100) + "%)";
+        try {
+          await updateDoc(doc(db, "screens", currentId), {
+            aiSuggestion: {
+              summary: summary,
+              source: "screenType",
+              confidence: suggestion.confidence,
+              createdAt: logEntry.createdAt
+            }
+          });
+        } catch (e) { /* ไม่ critical — ไม่บล็อก UX การแนะนำถ้าบันทึก aiSuggestion ไม่สำเร็จ */ }
       }
-    }, 1200);
+    } catch (e) {
+      logEntry.error = String((e && e.message) || e);
+      if (e && e.raw) logEntry.output = { raw: e.raw, parsed: null };
+      aiWaiting.hidden = true;
+      aiTimeoutMsg.hidden = false;
+    }
+
+    await logAICall(currentId, logEntry);
   }
-  aiSuggestBtn.addEventListener("click", function () { runAISuggest(false); });
-  aiTimeoutLink.addEventListener("click", function (e) { e.preventDefault(); runAISuggest(true); });
+  aiSuggestBtn.addEventListener("click", runAISuggest);
   document.getElementById("ai-dismiss-btn").addEventListener("click", function () { aiBlock.hidden = true; });
   document.getElementById("ai-confirm-btn").addEventListener("click", function () {
     const suggestedValue = aiBlock.getAttribute("data-suggested-value");

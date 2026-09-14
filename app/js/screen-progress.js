@@ -44,8 +44,10 @@ function renderAssignees(assignees) {
     return '<span class="avatar-empty">— ยังไม่มอบหมาย —</span>';
   }
   return assignees.map(function (a) {
+    const reasonAttr = a.ai_reason ? ' title="AI แนะนำ: ' + esc(a.ai_reason) + '"' : "";
     return '<span class="avatar">' + esc(avatarInitial(a.user_name)) +
-      '</span><span class="assignee-name">' + esc(a.user_name) + " (" + esc(a.role) + ")</span>";
+      '</span><span class="assignee-name"' + reasonAttr + '>' + esc(a.user_name) + " (" + esc(a.role) + ")" +
+      (a.ai_reason ? " ⓘ" : "") + "</span>";
   }).join(" ");
 }
 

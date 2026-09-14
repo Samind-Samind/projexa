@@ -22,8 +22,9 @@ function renderAssignees(assignees) {
     return '<span class="avatar-row"><span class="avatar-empty">— ยังไม่มอบหมาย —</span></span>';
   }
   return assignees.map(function (a) {
+    const reasonAttr = a.ai_reason ? ' title="AI แนะนำ: ' + esc(a.ai_reason) + '"' : "";
     return '<span class="avatar-row"><span class="avatar">' + esc(avatarInitial(a.user_name)) +
-      '</span><span>' + esc(a.user_name) + ' (' + esc(a.role) + ')</span></span>';
+      '</span><span' + reasonAttr + '>' + esc(a.user_name) + ' (' + esc(a.role) + ')' + (a.ai_reason ? " ⓘ" : "") + '</span></span>';
   }).join("<br>");
 }
 
